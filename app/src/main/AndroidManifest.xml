@@ -35,7 +35,10 @@
 
         <activity
             android:name=".ui.activity.PlayerActivity"
-            android:launchMode="singleTop" />
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@style/App.NoActionBar.Fullscreen" />
 
         <activity android:name=".ui.activity.SettingActivity" />
 

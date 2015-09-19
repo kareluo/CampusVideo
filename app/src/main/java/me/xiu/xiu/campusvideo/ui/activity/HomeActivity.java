@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.common.video.Video;
 
 /**
  * Created by felix on 15/9/18.
@@ -22,7 +23,11 @@ public class HomeActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_player:
-                startActivity(new Intent(this, PlayerActivity.class));
+                Video video = new Video();
+                video.setName("霓虹");
+                video.setPath("http://vod.gs.edu.cn/kuuF/687474703A2F2F6D382E6E65746B75752E636F6D2F642F64792F7A68756F79616F6A692F312E6D7034.mp4");
+                video.setVid("sadsada");
+                PlayerActivity.play(this, video);
                 break;
         }
     }
