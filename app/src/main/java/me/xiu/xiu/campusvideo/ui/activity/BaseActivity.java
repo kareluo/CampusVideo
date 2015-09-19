@@ -12,18 +12,25 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setElevation(0);
+    }
+
+    protected void initialization() {
 
     }
 
 
-
-    protected void setOnClickListener(int... resIds) {
+    protected void addOnClickListener(int... resIds) {
+        if (resIds == null) return;
         for (int id : resIds) {
-            findViewById(id).setOnClickListener(this);
+            View v = findViewById(id);
+            if (v != null)
+                v.setOnClickListener(this);
         }
     }
 
-    protected void setOnClickListener(View... views) {
+    protected void addOnClickListener(View... views) {
+        if (views == null) return;
         for (View v : views) {
             v.setOnClickListener(this);
         }

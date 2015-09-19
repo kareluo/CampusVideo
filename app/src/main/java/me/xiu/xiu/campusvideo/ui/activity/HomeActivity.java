@@ -1,6 +1,8 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import me.xiu.xiu.campusvideo.R;
 
@@ -10,10 +12,18 @@ import me.xiu.xiu.campusvideo.R;
 public class HomeActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        addOnClickListener(R.id.btn_player);
     }
 
-    
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_player:
+                startActivity(new Intent(this, PlayerActivity.class));
+                break;
+        }
+    }
 }
