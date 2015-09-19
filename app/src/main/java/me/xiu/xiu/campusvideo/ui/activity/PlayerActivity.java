@@ -2,12 +2,9 @@ package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.view.View;
+import android.widget.TextView;
 
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
@@ -24,6 +21,8 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
 
     private VideoView mVideoView;
     private Video mVideo;
+    private View mLoadingView;
+    private TextView mLoadingProgress;
 
     private static final String EXTRA_VIDEO = "video";
     private static final String TAG = PlayerActivity.class.getSimpleName();
@@ -55,6 +54,8 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
     @Override
     protected void initialization() {
         mVideoView = (VideoView) findViewById(R.id.vv_player);
+        mLoadingView = findViewById(R.id.loading_view);
+        mLoadingProgress = (TextView) findViewById(R.id.tv_progress);
         mVideoView.setMediaController(new MediaController(this));
         mVideoView.requestFocus();
         mVideoView.setOnInfoListener(this);
@@ -77,11 +78,28 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
 
     @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        return false;
+        switch (what) {
+            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                if (mVideoView.isPlaying()) {
+                    mVideoView.pause();
+                    mLoadingProgress.setText("");
+                    mLoadingView.setVisibility(View.VISIBLE);
+                }
+                break;
+            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                mVideoView.start();
+                mLoadingView.setVisibility(View.GONE);
+                break;
+            case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+                //mRateText.setText(extra + "kb/s" + "  ");
+                break;
+        }
+        return true;
     }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
         Logger.i(TAG, "buffer: " + percent);
+        mLoadingProgress.setText(percent + "%");
     }
 }
