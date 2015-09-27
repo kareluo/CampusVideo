@@ -1,6 +1,7 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -12,13 +13,41 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initWindow();
+        initialization();
+        initActionBar();
     }
 
+    /**
+     * 初始化窗口
+     */
+    protected void initWindow() {
+
+    }
+
+    /**
+     * 初始化view等
+     */
     protected void initialization() {
 
     }
 
+    /**
+     * 初始化ActionBar
+     */
+    protected void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0f);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+    }
 
+    /**
+     * 添加事件监听
+     * @param resIds
+     */
     protected void addOnClickListener(int... resIds) {
         if (resIds == null) return;
         for (int id : resIds) {
@@ -28,6 +57,10 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 添加事件监听
+     * @param views
+     */
     protected void addOnClickListener(View... views) {
         if (views == null) return;
         for (View v : views) {
@@ -35,8 +68,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 事件监听回调
+     * @param v
+     */
     @Override
     public void onClick(View v) {
 
     }
+
 }

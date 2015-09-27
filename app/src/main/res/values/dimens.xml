@@ -3,6 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="smenu_home_width">100dp</dimen>
-    <dimen name="smenu_home_offset">100dp</dimen>
+    <dimen name="smenu_home_width">200dp</dimen>
+
 </resources>

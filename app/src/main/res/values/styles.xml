@@ -1,13 +1,23 @@
 <resources>
 
     <style name="App" parent="Theme.AppCompat">
-        <item name="background">@color/color_primary</item>
-        <item name="colorPrimary">@color/primary_material_dark</item>
-        <item name="colorPrimaryDark">@color/primary_material_dark</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="actionBarWidgetTheme">@null</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
+        <!-- Panel attributes -->
+        <item name="listChoiceBackgroundIndicator">@drawable/abc_list_selector_holo_dark</item>
+
+        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+        <item name="colorPrimary">@color/primary_material_dark</item>
     </style>
 
-    <style name="App.NoActionBar" parent="App">
+    <style name="App.Base" parent="App">
+        <!-- Base attributes -->
+    </style>
+
+    <!---->
+    <style name="App.NoActionBar" parent="App.Base">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -15,6 +25,16 @@
     <style name="App.NoActionBar.Fullscreen" parent="App.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- Default activity theme -->
+    <style name="App.Common" parent="App.Base">
+
+    </style>
+
+    <!-- Home activity theme -->
+    <style name="App.Home" parent="App.NoActionBar">
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
 
