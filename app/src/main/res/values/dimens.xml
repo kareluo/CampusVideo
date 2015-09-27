@@ -5,4 +5,7 @@
 
     <dimen name="smenu_home_width">200dp</dimen>
 
+    <dimen name="video_poster_width">111dp</dimen>
+    <dimen name="video_poster_height">148dp</dimen>
+
 </resources>

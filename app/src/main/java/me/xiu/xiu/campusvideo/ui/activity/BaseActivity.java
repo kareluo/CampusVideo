@@ -3,6 +3,7 @@ package me.xiu.xiu.campusvideo.ui.activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 
 /**
@@ -46,6 +47,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 添加事件监听
+     *
      * @param resIds
      */
     protected void addOnClickListener(int... resIds) {
@@ -59,6 +61,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 添加事件监听
+     *
      * @param views
      */
     protected void addOnClickListener(View... views) {
@@ -70,6 +73,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 事件监听回调
+     *
      * @param v
      */
     @Override
@@ -77,4 +81,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

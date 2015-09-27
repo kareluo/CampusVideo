@@ -9,7 +9,7 @@ import me.xiu.xiu.campusvideo.R;
 /**
  * Created by felix on 15/9/20.
  */
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends SwipeBackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

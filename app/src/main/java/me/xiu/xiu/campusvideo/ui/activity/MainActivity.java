@@ -3,8 +3,6 @@ package me.xiu.xiu.campusvideo.ui.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements DrawerListener,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements DrawerListener,
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        if (item.getItemId() == R.id.action_settings) {
+        if (item.getItemId() == R.id.action_search) {
             startActivity(new Intent(this, HomeActivity.class));
             return true;
         }
