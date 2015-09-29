@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <me.xiu.xiu.campusvideo.ui.view.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    app:insetForeground="#9eee">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"

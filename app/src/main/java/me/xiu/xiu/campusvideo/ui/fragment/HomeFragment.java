@@ -7,8 +7,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.util.Dimension;
 
 /**
  * Created by felix on 15/9/19.
@@ -32,15 +34,15 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //mHomePager = (ViewPager) view.findViewById(R.id.home_pager);
-        //mHomePager.setAdapter(mHomePagerAdapter);
+        mHomePager = (ViewPager) view.findViewById(R.id.home_pager);
+        mHomePager.setAdapter(mHomePagerAdapter);
     }
 
     private class HomePagerAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
-            return 0;
+            return 1;
         }
 
         @Override
@@ -50,14 +52,19 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-
-            return super.instantiateItem(container, position);
+            ImageView banner = new ImageView(getContext());
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            banner.setLayoutParams(lp);
+            banner.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            banner.setBackgroundResource(R.color.video_img_bg);
+            container.addView(banner);
+            return banner;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             super.destroyItem(container, position, object);
-
+            container.removeView((View) object);
         }
     }
 }

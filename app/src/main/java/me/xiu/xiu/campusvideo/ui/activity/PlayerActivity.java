@@ -12,7 +12,7 @@ import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.video.Video;
-import me.xiu.xiu.campusvideo.uitl.Logger;
+import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
  * Created by felix on 15/9/19.

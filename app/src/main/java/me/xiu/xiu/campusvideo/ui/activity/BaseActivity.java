@@ -1,5 +1,7 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -89,5 +91,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected Context getContext() {
+        return this;
     }
 }

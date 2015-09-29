@@ -8,4 +8,6 @@
     <dimen name="video_poster_width">111dp</dimen>
     <dimen name="video_poster_height">148dp</dimen>
 
+    <dimen name="video_banner_height">140dp</dimen>
+
 </resources>

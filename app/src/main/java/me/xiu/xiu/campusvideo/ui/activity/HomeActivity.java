@@ -1,26 +1,18 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.ActionBarSlidingToggle;
-import me.xiu.xiu.campusvideo.common.video.Video;
-import me.xiu.xiu.campusvideo.uitl.Logger;
 
 /**
  * Created by felix on 15/9/18.
