@@ -13,6 +13,7 @@ public class CampusVideo {
     public static String host = "vod.gs.edu.cn";
     public static String post = "80";
     private final static String colon = ":";
+    private final static String mov = "/mov/";
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
     public static String getUrl(String path) {
@@ -37,5 +38,9 @@ public class CampusVideo {
      */
     public static String getPoster2(String vid) {
         return getUrl("/mov/" + vid + "/2.jpg");
+    }
+
+    public static String getFilm(String vid) {
+        return getUrl(mov + vid + "/film.xml");
     }
 }

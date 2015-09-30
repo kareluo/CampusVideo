@@ -27,4 +27,5 @@ dependencies {
     compile project(':slidingmenu')
     compile project(':pulltorefresh')
     compile files('libs/universal-image-loader-1.9.4.jar')
+    compile 'org.apmem.tools:layouts:1.10'
 }

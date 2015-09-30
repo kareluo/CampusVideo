@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true"
     app:behindWidth="@dimen/smenu_home_width"
     app:selectorEnabled="true"
+    app:shadowDrawable="@null"
     app:touchModeAbove="fullscreen"
     app:viewAbove="@layout/home_above"
     app:viewBehind="@layout/home_behind" />

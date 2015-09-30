@@ -33,12 +33,15 @@
         <activity
             android:name=".ui.activity.HomeActivity"
             android:launchMode="singleTask"
-            android:theme="@style/App.Home" />
+            android:theme="@style/App.Video" />
 
-        <activity android:name=".ui.activity.SearchActivity"
-            android:windowSoftInputMode="adjustNothing"/>
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:windowSoftInputMode="adjustNothing" />
 
-        <activity android:name=".ui.activity.VideoActivity" />
+        <activity
+            android:name=".ui.activity.VideoActivity"
+            android:theme="@style/App.Video" />
 
         <activity
             android:name=".ui.activity.PlayerActivity"

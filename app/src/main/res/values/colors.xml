@@ -7,4 +7,6 @@
     <color name="player_loading_text">#212121</color>
     <color name="video_img_bg">#2eee</color>
 
+    <color name="bg_video_actor">#4000</color>
+
 </resources>

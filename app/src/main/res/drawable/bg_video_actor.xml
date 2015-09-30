@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:inset="1dp">
+    <shape>
+        <corners android:radius="@dimen/video_actor_half" />
+        <solid android:color="@color/bg_video_actor" />
+        <size android:height="@dimen/video_actor_height" />
+        <padding
+            android:left="@dimen/video_actor_half"
+            android:right="@dimen/video_actor_half" />
+
+    </shape>
+</inset>

@@ -37,6 +37,11 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="App.Video" parent="App.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
+    </style>
+
     <style name="SwipeBackLayout">
         <item name="edge_size">50dip</item>
         <item name="shadow_left">@drawable/shadow_left</item>

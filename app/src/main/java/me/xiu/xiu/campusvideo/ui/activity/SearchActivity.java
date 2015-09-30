@@ -66,7 +66,9 @@ public class SearchActivity extends SwipeBackActivity implements SearchView.OnQu
 
             @Override
             public void onParseError(int code, String message) {
-                mProgressDialog.dismiss();
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
                 ToastUtil.show(getContext(), message);
             }
         });

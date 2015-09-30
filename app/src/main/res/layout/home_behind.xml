@@ -2,12 +2,12 @@
 <me.xiu.xiu.campusvideo.ui.view.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryDark"
     android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#eee"
         android:orientation="vertical">
 
         <TextView
@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Behind"
-            android:textColor="#4000"
+            android:textColor="#eee"
             android:textSize="32dp" />
     </LinearLayout>
 </me.xiu.xiu.campusvideo.ui.view.ScrimInsetsFrameLayout>
