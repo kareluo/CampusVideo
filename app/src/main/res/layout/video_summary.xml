@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/video_summary_language"
+                android:textColor="?attr/colorAccent" />
+
+            <TextView
+                android:id="@+id/language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="国语【中字】" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/video_summary_public"
+                android:textColor="?attr/colorAccent" />
+
+            <TextView
+                android:id="@+id/public_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2015-9-19" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/video_summary_summary"
+                android:textColor="?attr/colorAccent" />
+
+            <TextView
+                android:id="@+id/summary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lineSpacingExtra="2dp"
+                tools:text="南梁大通年间，北魏兴兵南下，林燮携年方十七岁的独生爱子林殊率赤焰军七万将士出征，不料遭奸人陷害，以致刚刚经历浴血奋战、击退北魏大军的赤焰将士冤死于梅岭。得部下拼死相救、侥幸生还的林殊，在琅琊阁的帮助下建立江左盟，于十二年后以宗主梅长苏的身份归来，暗中相助虽身为皇子、但因个性耿直遭到武帝厌弃的挚友智除奸佞，以病弱之躯拨开重重迷雾、扫除积弊，抢在生命的尽头为七万赤焰忠魂洗雪了污名。此时由于武帝多年的昏乱治理，南朝境内纷乱四起，已代北魏而立的东魏趁机兴兵南下，朝中无人能够领兵。为解国难，梅长苏服下激发体力的草药，毅然奔赴战场，在生命最后的三个月里，平定北境狼烟，以林殊的方式在沙场上结束了自己的一生……" />
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

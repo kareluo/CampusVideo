@@ -6,4 +6,10 @@
 
     <string name="action_search">Search</string>
     <string name="action_share">share</string>
+
+    <string name="video_summary_language">语言</string>
+    <string name="video_summary_public">上映日期</string>
+    <string name="video_summary_summary">简介</string>
+
+    
 </resources>

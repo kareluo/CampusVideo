@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.renderscript.Matrix2f;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,10 +26,18 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.xml.XmlObject;
 import me.xiu.xiu.campusvideo.common.xml.XmlParser;
+import me.xiu.xiu.campusvideo.ui.fragment.BaseFragment;
+import me.xiu.xiu.campusvideo.ui.fragment.VideoEpisodeFragment;
+import me.xiu.xiu.campusvideo.ui.fragment.VideoStillFragment;
+import me.xiu.xiu.campusvideo.ui.fragment.VideoSummaryFragment;
 import me.xiu.xiu.campusvideo.util.FastBlur;
 import me.xiu.xiu.campusvideo.util.ToastUtil;
 
@@ -44,6 +57,11 @@ public class VideoActivity extends SwipeBackActivity {
     private FlowLayout mActors;
     private View mLoading;
 
+    private ViewPager mViewPager;
+    private VideoPagerAdapter mPagerAdapter;
+
+    private List<BaseFragment> mFragments;
+
     @Override
     protected void initialization() {
         setContentView(R.layout.activity_video);
@@ -56,6 +74,14 @@ public class VideoActivity extends SwipeBackActivity {
         mVideoPoster = (ImageView) findViewById(R.id.poster);
         mDirector = (TextView) findViewById(R.id.director);
         mActors = (FlowLayout) findViewById(R.id.actors);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+
+        mFragments = new ArrayList<>(3);
+        mFragments.add(new VideoEpisodeFragment());
+        mFragments.add(new VideoSummaryFragment());
+        mFragments.add(new VideoStillFragment());
+        mPagerAdapter = new VideoPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
 
         initDatas();
 
@@ -104,6 +130,7 @@ public class VideoActivity extends SwipeBackActivity {
             actorView.setText(actor);
             mActors.addView(actorView);
         }
+        EventBus.getDefault().post(mVideoInfo);
     }
 
     @Override
@@ -139,5 +166,22 @@ public class VideoActivity extends SwipeBackActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class VideoPagerAdapter extends FragmentPagerAdapter {
+
+        public VideoPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
     }
 }

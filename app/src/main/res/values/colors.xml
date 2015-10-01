@@ -9,4 +9,6 @@
 
     <color name="bg_video_actor">#4000</color>
 
+    <color name="video_summary_title">#FF1A610F</color>
+
 </resources>

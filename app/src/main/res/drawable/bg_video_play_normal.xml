@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="@dimen/video_play_half" />
+    <solid android:color="#f31f891c" />
+    <size android:height="@dimen/video_play_height" />
+    <padding
+        android:left="@dimen/video_play_half"
+        android:right="@dimen/video_play_half" />
+</shape>

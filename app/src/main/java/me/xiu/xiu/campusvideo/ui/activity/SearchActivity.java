@@ -61,7 +61,9 @@ public class SearchActivity extends SwipeBackActivity implements SearchView.OnQu
             @Override
             public void onParseSuccess(XmlObject obj) {
                 mSearchXmls = obj;
-                mProgressDialog.dismiss();
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
             }
 
             @Override
