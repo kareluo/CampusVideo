@@ -5,21 +5,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.renderscript.Matrix2f;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import jp.co.recruit_mp.android.widget.HeaderFooterGridView;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.xml.XmlObject;
@@ -75,6 +78,7 @@ public class VideoActivity extends SwipeBackActivity {
         mDirector = (TextView) findViewById(R.id.director);
         mActors = (FlowLayout) findViewById(R.id.actors);
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(2);
 
         mFragments = new ArrayList<>(3);
         mFragments.add(new VideoEpisodeFragment());
@@ -84,7 +88,6 @@ public class VideoActivity extends SwipeBackActivity {
         mViewPager.setAdapter(mPagerAdapter);
 
         initDatas();
-
     }
 
     private void initDatas() {
@@ -117,6 +120,25 @@ public class VideoActivity extends SwipeBackActivity {
                 mLoading.setVisibility(View.GONE);
                 mVideoInfo = obj.getElements()[0];
                 update();
+            }
+        });
+
+        new XmlParser().parse(getContext(), CampusVideo.getEpisode(mVideoId), "root", "root", 1, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
+            @Override
+            public void onParseSuccess(XmlObject obj) {
+                VideoEpisodeFragment.Episode episode = new VideoEpisodeFragment.Episode();
+                episode.setEpi(1);
+                SparseBooleanArray sba = new SparseBooleanArray();
+                try {
+                    String[] bs = obj.getElements()[0].getString("b").split(",");
+                    for (int i = 0; i < bs.length; i++) {
+                        sba.put(i, bs[i].trim().length() != 0);
+                    }
+                } catch (Exception e) {
+
+                }
+                episode.setEpisode(sba);
+                EventBus.getDefault().post(episode);
             }
         });
     }

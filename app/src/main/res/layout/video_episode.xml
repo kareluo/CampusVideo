@@ -4,11 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <GridView
+    <jp.co.recruit_mp.android.widget.HeaderFooterGridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="@integer/video_epis_num" />
+        android:layout_margin="8dp"
+        android:choiceMode="singleChoice"
+        android:horizontalSpacing="4dp"
+        android:listSelector="@drawable/bg_video_episode"
+        android:numColumns="@integer/video_epis_num"
+        android:verticalSpacing="4dp" />
 
     <FrameLayout
         android:id="@+id/loading"

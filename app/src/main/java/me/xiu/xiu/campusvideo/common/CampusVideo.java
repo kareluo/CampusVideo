@@ -40,7 +40,22 @@ public class CampusVideo {
         return getUrl("/mov/" + vid + "/2.jpg");
     }
 
+    /**
+     * 获取视频详细信息
+     *
+     * @param vid
+     * @return
+     */
     public static String getFilm(String vid) {
         return getUrl(mov + vid + "/film.xml");
+    }
+
+    /**
+     * 获取视频剧集详细信息
+     * @param vid
+     * @return
+     */
+    public static String getEpisode(String vid) {
+        return getUrl(mov + vid + "/url2.xml");
     }
 }

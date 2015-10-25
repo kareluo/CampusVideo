@@ -30,4 +30,6 @@ dependencies {
     compile 'org.apmem.tools:layouts:1.10'
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     compile 'de.greenrobot:java-common:2.0.0'
+    compile 'org.apache.directory.studio:org.apache.commons.codec:1.8'
+    compile 'jp.co.recruit_mp:android-HeaderFooterGridView:0.2.4'
 }
