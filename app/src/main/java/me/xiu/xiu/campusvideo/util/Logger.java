@@ -23,4 +23,28 @@ public class Logger {
             Log.i(tag, msg);
         }
     }
+
+    public static void w(String tag, String msg) {
+        if (DEBUG) {
+            Log.w(tag, msg);
+        }
+    }
+
+    public static void w(String tag, Throwable tr) {
+        if (DEBUG) {
+            Log.w(tag, tr);
+        }
+    }
+
+    public static void e(String tag, String msg) {
+        if (DEBUG) {
+            Log.e(tag, msg);
+        }
+    }
+
+    public static void e(String tag, String msg, Throwable tr) {
+        if (DEBUG) {
+            Log.e(tag, msg, tr);
+        }
+    }
 }

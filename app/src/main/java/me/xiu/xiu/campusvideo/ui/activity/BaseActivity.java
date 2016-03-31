@@ -1,50 +1,70 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+
+import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.common.Presenter;
+import me.xiu.xiu.campusvideo.common.Viewer;
+import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
  * Created by felix on 15/9/18.
  */
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class BaseActivity<P extends Presenter> extends AppCompatActivity implements
+        View.OnClickListener, Viewer {
+    private static final String TAG = "BaseActivity";
+
+    private AlertDialog mLoadingDialog;
+
+    private P mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initWindow();
-        initialization();
-        initActionBar();
+        mPresenter = newPresenter();
+        initialize(savedInstanceState);
+    }
+
+    private void initialize(Bundle savedInstanceState) {
+        mLoadingDialog = new AlertDialog.Builder(this).create();
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        initToolbarBar();
+    }
+
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        initToolbarBar();
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        super.setContentView(view, params);
+        initToolbarBar();
     }
 
     /**
-     * 初始化窗口
+     * 初始化Toolbar
      */
-    protected void initWindow() {
-
-    }
-
-    /**
-     * 初始化view等
-     */
-    protected void initialization() {
-
-    }
-
-    /**
-     * 初始化ActionBar
-     */
-    protected void initActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(0f);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
+    protected void initToolbarBar() {
+//        View view = findViewById(R.id.toolbar);
+//        if (view != null) {
+//            Toolbar toolbar = (Toolbar) view;
+//            setSupportActionBar(toolbar);
+//        }
     }
 
     /**
@@ -93,7 +113,64 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    protected Context getContext() {
+    @Override
+    public Context getContext() {
         return this;
+    }
+
+    public P getPresenter() {
+        return mPresenter;
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        mLoadingDialog.setMessage("加载中...");
+        if (!mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
+        }
+    }
+
+    @Override
+    public void showLoadingDialog(String mes) {
+        mLoadingDialog.setMessage(mes);
+        if (!mLoadingDialog.isShowing()) {
+            showLoadingDialog();
+        }
+    }
+
+    @Override
+    public void showLoadingDialog(int resId) {
+        mLoadingDialog.setMessage(getString(resId));
+        if (!mLoadingDialog.isShowing()) {
+            showLoadingDialog();
+        }
+    }
+
+    @Override
+    public void cancelLoadingDialog() {
+        if (mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mPresenter != null) {
+            try {
+                mPresenter.unsubscribeAll();
+            } catch (Exception e) {
+                Logger.w(TAG, e);
+            }
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public String obtainString(int resId) {
+        return getString(resId);
+    }
+
+    public P newPresenter() {
+        return null;
     }
 }

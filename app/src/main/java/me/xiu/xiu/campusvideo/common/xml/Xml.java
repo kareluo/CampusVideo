@@ -14,8 +14,8 @@ public class Xml {
      * [0]gkk|jlp|jz/gkk|jlp|jz: EDU_BANNER
      */
 
-    public static final String TAG_M = "m";
-    public static final String TAG_IMG = "img";
+//    public static final String TAG_M = "m";
+//    public static final String TAG_IMG = "img";
     public static final String TAG_CONTENT = "content";
 
     public static final String[] start = new String[]{"root", "m", "img"};
@@ -23,6 +23,14 @@ public class Xml {
 
     public static final String[][] starts = new String[][]{new String[]{"gkk", "jlp", "jz"}};
     public static final String[][] ends = new String[][]{new String[]{"gkk", "jlp", "jz"}};
+
+    public static final XmlObject.Tag TAG_M = XmlObject.Tag.create("m", "m");
+    public static final XmlObject.Tag TAG_FILM = XmlObject.Tag.create("film", "film");
+    public static final XmlObject.Tag TAG_IMG = XmlObject.Tag.create("img", "content");
+    public static final XmlObject.Tag TAG_ROOT = XmlObject.Tag.create("root", "root");
+
+    public static final XmlObject.Tag[] TAGS = {XmlObject.Tag.create("gkk", "gkk"),
+            XmlObject.Tag.create("jlp", "jlp"), XmlObject.Tag.create("jz", "jz")};
 
     public static final String ENCODING = "GB-2312";
 

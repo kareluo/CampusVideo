@@ -13,7 +13,7 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar_layout" />
+        <include layout="@layout/common_toolbar" />
 
         <FrameLayout
             android:id="@+id/content_frame"

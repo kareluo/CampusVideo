@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.jeremyfeinstein.slidingmenu.lib.SlidingMenu xmlns:android="http://schemas.android.com/apk/res/android"
+<me.xiu.xiu.campusvideo.ui.widget.sliding.SlidingLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/home_slingmenu"
+    android:id="@+id/sm_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    app:behindWidth="@dimen/smenu_home_width"
+    app:behindOffset="@dimen/sm_width"
     app:selectorEnabled="true"
     app:shadowDrawable="@null"
     app:touchModeAbove="fullscreen"
     app:viewAbove="@layout/home_above"
     app:viewBehind="@layout/home_behind" />
-

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 320dpi ~ 480dpi -->
+    <dimen name="video_poster_width">111dp</dimen>
+    <dimen name="video_poster_height">148dp</dimen>
+</resources>

@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<me.xiu.xiu.campusvideo.ui.view.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimaryDark"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/fragment_sliding"
+        class="me.xiu.xiu.campusvideo.ui.fragment.SlidingFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Behind"
-            android:textColor="#eee"
-            android:textSize="32dp" />
-    </LinearLayout>
-</me.xiu.xiu.campusvideo.ui.view.ScrimInsetsFrameLayout>
+</LinearLayout>

@@ -17,12 +17,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import me.xiu.xiu.campusvideo.ui.widget.sliding.SlidingLayout;
+
 
 /**
  * Created by felix on 15/9/20.
  */
-public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener {
+public class ActionBarSlidingToggle implements SlidingLayout.CanvasTransformer, SlidingLayout.OnOpenedListener, SlidingLayout.OnClosedListener {
 
     @Override
     public void transformCanvas(Canvas canvas, float percentOpen) {
@@ -90,7 +91,7 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
     }
 
     private final Delegate mActivityImpl;
-    private final SlidingMenu mSlidingMenu;
+    private final SlidingLayout mSlidingLayout;
 
     private DrawerToggle mSlider;
     private Drawable mHomeAsUpIndicator;
@@ -116,16 +117,16 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
      * accessibility services.</p>
      *
      * @param activity                  The Activity hosting the drawer. Should have an ActionBar.
-     * @param slidingMenu               The SlidingMenu to link to the given Activity's ActionBar
+     * @param SlidingLayout               The SlidingLayout to link to the given Activity's ActionBar
      * @param openDrawerContentDescRes  A String resource to describe the "open drawer" action
      *                                  for accessibility
      * @param closeDrawerContentDescRes A String resource to describe the "close drawer" action
      *                                  for accessibility
      */
-    public ActionBarSlidingToggle(Activity activity, SlidingMenu slidingMenu,
+    public ActionBarSlidingToggle(Activity activity, SlidingLayout SlidingLayout,
                                   @StringRes int openDrawerContentDescRes,
                                   @StringRes int closeDrawerContentDescRes) {
-        this(activity, null, slidingMenu, null, openDrawerContentDescRes,
+        this(activity, null, SlidingLayout, null, openDrawerContentDescRes,
                 closeDrawerContentDescRes);
     }
 
@@ -142,21 +143,21 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
      * String resources must be provided to describe the open/close drawer actions for
      * accessibility services.
      * <p/>
-     * Please use {@link #ActionBarSlidingToggle(Activity, SlidingMenu, Toolbar, int, int)}  if you are
+     * Please use {@link #ActionBarSlidingToggle(Activity, SlidingLayout, Toolbar, int, int)}  if you are
      * setting the Toolbar as the ActionBar of your activity.
      *
      * @param activity                  The Activity hosting the drawer.
      * @param toolbar                   The toolbar to use if you have an independent Toolbar.
-     * @param slidingMenu               The DrawerLayout to link to the given Activity's ActionBar
+     * @param SlidingLayout               The DrawerLayout to link to the given Activity's ActionBar
      * @param openDrawerContentDescRes  A String resource to describe the "open drawer" action
      *                                  for accessibility
      * @param closeDrawerContentDescRes A String resource to describe the "close drawer" action
      *                                  for accessibility
      */
-    public ActionBarSlidingToggle(Activity activity, SlidingMenu slidingMenu,
+    public ActionBarSlidingToggle(Activity activity, SlidingLayout SlidingLayout,
                                   Toolbar toolbar, @StringRes int openDrawerContentDescRes,
                                   @StringRes int closeDrawerContentDescRes) {
-        this(activity, toolbar, slidingMenu, null, openDrawerContentDescRes,
+        this(activity, toolbar, SlidingLayout, null, openDrawerContentDescRes,
                 closeDrawerContentDescRes);
     }
 
@@ -166,7 +167,7 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
      * animation.
      */
     <T extends Drawable & DrawerToggle> ActionBarSlidingToggle(Activity activity, Toolbar toolbar,
-                                                               SlidingMenu slidingMenu, T slider,
+                                                               SlidingLayout SlidingLayout, T slider,
                                                                @StringRes int openDrawerContentDescRes,
                                                                @StringRes int closeDrawerContentDescRes) {
         if (toolbar != null) {
@@ -191,7 +192,7 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
             mActivityImpl = new DummyDelegate(activity);
         }
 
-        mSlidingMenu = slidingMenu;
+        mSlidingLayout = SlidingLayout;
         mOpenDrawerContentDescRes = openDrawerContentDescRes;
         mCloseDrawerContentDescRes = closeDrawerContentDescRes;
         if (slider == null) {
@@ -214,14 +215,14 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
      * (For example, if you stop forwarding appropriate drawer events for a period of time.)</p>
      */
     public void syncState() {
-        if (mSlidingMenu.isMenuShowing()) {
+        if (mSlidingLayout.isMenuShowing()) {
             mSlider.setPosition(1);
         } else {
             mSlider.setPosition(0);
         }
         if (mDrawerIndicatorEnabled) {
             setActionBarUpIndicator((Drawable) mSlider,
-                    mSlidingMenu.isMenuShowing() ?
+                    mSlidingLayout.isMenuShowing() ?
                             mCloseDrawerContentDescRes : mOpenDrawerContentDescRes);
         }
     }
@@ -260,10 +261,10 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
     }
 
     private void toggle() {
-        if (mSlidingMenu.isMenuShowing()) {
-            mSlidingMenu.showContent(true);
+        if (mSlidingLayout.isMenuShowing()) {
+            mSlidingLayout.showContent(true);
         } else {
-            mSlidingMenu.showContent(true);
+            mSlidingLayout.showContent(true);
         }
     }
 
@@ -306,7 +307,7 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
     public void setHomeAsUpIndicator(int resId) {
         Drawable indicator = null;
         if (resId != 0) {
-            indicator = mSlidingMenu.getResources().getDrawable(resId);
+            indicator = mSlidingLayout.getResources().getDrawable(resId);
         }
         setHomeAsUpIndicator(indicator);
     }
@@ -333,7 +334,7 @@ public class ActionBarSlidingToggle implements SlidingMenu.CanvasTransformer, Sl
         if (enable != mDrawerIndicatorEnabled) {
             if (enable) {
                 setActionBarUpIndicator((Drawable) mSlider,
-                        mSlidingMenu.isMenuShowing() ?
+                        mSlidingLayout.isMenuShowing() ?
                                 mCloseDrawerContentDescRes : mOpenDrawerContentDescRes);
             } else {
                 setActionBarUpIndicator(mHomeAsUpIndicator, 0);

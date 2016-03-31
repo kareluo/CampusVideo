@@ -4,12 +4,13 @@ package me.xiu.xiu.campusvideo.ui.activity;
 import android.os.Bundle;
 import android.view.View;
 
+import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.SwipeBackLayout;
 import me.xiu.xiu.campusvideo.common.SwipeBackUtils;
 import me.xiu.xiu.campusvideo.common.SwipeBackActivityBase;
 import me.xiu.xiu.campusvideo.common.SwipeBackActivityHelper;
 
-public class SwipeBackActivity extends BaseActivity implements SwipeBackActivityBase {
+public class SwipeBackActivity<P extends Presenter> extends BaseActivity<P> implements SwipeBackActivityBase {
     private SwipeBackActivityHelper mHelper;
 
     @Override
@@ -17,6 +18,11 @@ public class SwipeBackActivity extends BaseActivity implements SwipeBackActivity
         super.onCreate(savedInstanceState);
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
+    }
+
+    @Override
+    public P newPresenter() {
+        return null;
     }
 
     @Override

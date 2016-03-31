@@ -11,21 +11,23 @@ import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.video.Video;
 import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
  * Created by felix on 15/9/19.
  */
-public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener {
+public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoListener,
+        MediaPlayer.OnBufferingUpdateListener {
+    private static final String TAG = "PlayerActivity";
 
     private VideoView mVideoView;
     private Video mVideo;
     private View mLoadingView;
-    private TextView mLoadingProgress;
 
+    private TextView mLoadingProgress;
     private static final String EXTRA_VIDEO = "video";
-    private static final String TAG = PlayerActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,25 +36,30 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
             return;
         }
         setContentView(R.layout.activity_player);
-        initialization();
+        initViews();
+        initParams(getIntent());
         play();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        initParams(intent);
         play();
     }
 
+    private void initParams(Intent intent) {
+        if (intent == null) return;
+        mVideo = intent.getParcelableExtra(EXTRA_VIDEO);
+    }
+
     private void play() {
-        mVideo = getIntent().getParcelableExtra(EXTRA_VIDEO);
-        if (mVideo != null && mVideoView != null) {
-            mVideoView.setVideoPath(mVideo.getPath());
+        if (mVideo != null) {
+            mVideoView.setVideoPath(mVideo.getCurrentEpisode().getViewPath());
         }
     }
 
-    @Override
-    protected void initialization() {
+    protected void initViews() {
         mVideoView = (VideoView) findViewById(R.id.vv_player);
         mLoadingView = findViewById(R.id.loading_view);
         mLoadingProgress = (TextView) findViewById(R.id.tv_progress);
@@ -68,6 +75,11 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
                 mediaPlayer.setPlaybackSpeed(1.0f);
             }
         });
+    }
+
+    @Override
+    public Presenter newPresenter() {
+        return null;
     }
 
     public static void play(Context c, Video video) {

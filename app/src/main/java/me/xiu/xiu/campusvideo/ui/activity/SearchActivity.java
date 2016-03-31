@@ -1,7 +1,6 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,70 +9,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
-
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.xiu.xiu.campusvideo.R;
-import me.xiu.xiu.campusvideo.common.CampusVideo;
-import me.xiu.xiu.campusvideo.common.xml.Xml;
-import me.xiu.xiu.campusvideo.common.xml.XmlObject;
-import me.xiu.xiu.campusvideo.common.xml.XmlParser;
+import me.xiu.xiu.campusvideo.ui.view.SearchItemView;
 import me.xiu.xiu.campusvideo.util.ToastUtil;
+import me.xiu.xiu.campusvideo.work.presenter.SearchPresenter;
+import me.xiu.xiu.campusvideo.work.viewer.SearchViewer;
 
 /**
  * Created by felix on 15/9/20.
  */
-public class SearchActivity extends SwipeBackActivity implements SearchView.OnQueryTextListener, AdapterView.OnItemClickListener {
+public class SearchActivity extends SwipeBackActivity<SearchPresenter>
+        implements SearchViewer, SearchView.OnQueryTextListener, AdapterView.OnItemClickListener {
+    private static final String TAG = "SearchActivity";
 
-    private static final String TAG = SearchActivity.class.getSimpleName();
-    private XmlObject mSearchXmls;
     private ListView mListView;
     private SearchAdapter mAdapter;
-    private List<Bundle> mSearchDatas;
+    private List<Bundle> mSearchData;
 
     @Override
-    protected void initialization() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        mSearchDatas = new ArrayList<>();
+        initParams();
+
+        mSearchData = new ArrayList<>();
         mAdapter = new SearchAdapter();
-        mListView = ((PullToRefreshListView) findViewById(R.id.search_listview)).getRefreshableView();
+        mListView = (ListView) findViewById(R.id.lv_search);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
 
-        new XmlParser().parse(this, CampusVideo.getUrl(Xml.TOTAL_VIDEOS), Xml.TAG_M, Xml.TAG_M, 100, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
-            private AlertDialog mProgressDialog;
+        getPresenter().loadVideoSet();
+    }
 
-            @Override
-            public void onPreParse() {
-                mProgressDialog = new ProgressDialog.Builder(getContext()).setMessage("正在加载中...").create();
-                mProgressDialog.show();
-            }
-
-            @Override
-            public void onParseSuccess(XmlObject obj) {
-                mSearchXmls = obj;
-                if (mProgressDialog.isShowing()) {
-                    mProgressDialog.dismiss();
-                }
-            }
-
-            @Override
-            public void onParseError(int code, String message) {
-                if (mProgressDialog.isShowing()) {
-                    mProgressDialog.dismiss();
-                }
-                ToastUtil.show(getContext(), message);
-            }
-        });
+    private void initParams() {
+        String text = getIntent().getStringExtra(IntentKey.INTENT_TEXT.name());
     }
 
     @Override
@@ -86,31 +62,21 @@ public class SearchActivity extends SwipeBackActivity implements SearchView.OnQu
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void search(String text) {
-        if (mSearchXmls == null) return;
-        mSearchDatas.clear();
-        Bundle[] elements = mSearchXmls.getElements();
-        for (int i = 0; i < elements.length; i++) {
-            if (elements[i].getString("a", "").contains(text)) {
-                mSearchDatas.add(elements[i]);
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-        if (mSearchDatas.size() == 0) {
-            ToastUtil.show(getContext(), "没有找到！");
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public SearchPresenter newPresenter() {
+        return new SearchPresenter(this);
     }
 
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         ToastUtil.show(getContext(), query);
-        search(query);
+        getPresenter().search(query);
         return true;
     }
 
@@ -121,21 +87,28 @@ public class SearchActivity extends SwipeBackActivity implements SearchView.OnQu
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Bundle bundle = mSearchDatas.get(position - 1);
+        Bundle bundle = mSearchData.get(position);
         if (bundle != null) {
             startActivity(VideoActivity.newIntent(this, bundle.getString("b")));
         }
     }
 
+    @Override
+    public void onSearchResult(List<Bundle> result) {
+        mSearchData.clear();
+        mSearchData.addAll(result);
+        mAdapter.notifyDataSetChanged();
+    }
+
     private class SearchAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return mSearchDatas.size();
+            return mSearchData.size();
         }
 
         @Override
         public Bundle getItem(int position) {
-            return mSearchDatas.get(position);
+            return mSearchData.get(position);
         }
 
         @Override
@@ -146,44 +119,33 @@ public class SearchActivity extends SwipeBackActivity implements SearchView.OnQu
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_search, parent, false);
+                convertView = new SearchItemView(getContext());
             }
-            Bundle bundle = getItem(position);
-            ViewHolder holder = getHolder(convertView);
-            ImageLoader.getInstance().displayImage(CampusVideo.getPoster(bundle.getString("b")), holder.poster);
-            holder.name.setText(bundle.getString("a", ""));
-            holder.director.setText(bundle.getString("d", ""));
-            holder.actor.setText(bundle.getString("c", ""));
-            holder.type.setText(bundle.getString("e", ""));
-            holder.date.setText(bundle.getString("v", ""));
-            return convertView;
-        }
+            SearchItemView searchItemView = (SearchItemView) convertView;
 
-        private ViewHolder getHolder(View view) {
-            ViewHolder holder = (ViewHolder) view.getTag();
-            if (holder == null) {
-                holder = new ViewHolder(view);
-                view.setTag(holder);
-            }
-            return holder;
+            searchItemView.update(getItem(position));
+//
+//
+//            Bundle bundle = getItem(position);
+//            ViewHolder holder = getHolder(convertView);
+//            ImageLoader.getInstance().displayImage(CampusVideo.getPoster(bundle.getString("b")), holder.poster);
+//            holder.name.setText(bundle.getString("a", ""));
+//            holder.director.setText(bundle.getString("d", ""));
+//            holder.actor.setText(bundle.getString("c", ""));
+//            holder.type.setText(bundle.getString("e", ""));
+//            holder.date.setText(bundle.getString("v", ""));
+            return convertView;
         }
     }
 
-    private static final class ViewHolder {
-        ImageView poster;
-        TextView name;
-        TextView director;
-        TextView actor;
-        TextView type;
-        TextView date;
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        context.startActivity(intent);
+    }
 
-        public ViewHolder(View view) {
-            poster = (ImageView) view.findViewById(R.id.poster);
-            name = (TextView) view.findViewById(R.id.name);
-            director = (TextView) view.findViewById(R.id.director);
-            actor = (TextView) view.findViewById(R.id.actor);
-            type = (TextView) view.findViewById(R.id.type);
-            date = (TextView) view.findViewById(R.id.date);
-        }
+    public static void start(Context context, String text) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(IntentKey.INTENT_TEXT.name(), text);
+        context.startActivity(intent);
     }
 }

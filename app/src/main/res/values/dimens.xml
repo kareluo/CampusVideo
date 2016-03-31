@@ -3,12 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="smenu_home_width">260dp</dimen>
+    <dimen name="sm_width">160dp</dimen>
+
+    <dimen name="video_width">99dp</dimen>
+    <dimen name="video_height">132dp</dimen>
 
     <dimen name="video_poster_width">111dp</dimen>
     <dimen name="video_poster_height">148dp</dimen>
 
-    <dimen name="video_banner_height">140dp</dimen>
+    <dimen name="video_banner_height">160dp</dimen>
 
     <dimen name="video_actor_height">26dp</dimen>
     <dimen name="video_actor_half">12dp</dimen>
@@ -16,5 +19,22 @@
     <dimen name="video_play_half">23dp</dimen>
     <dimen name="video_episode_radius">6dp</dimen>
     <dimen name="video_footer_height">50dp</dimen>
+
+    <dimen name="video_search_poster_width">90dp</dimen>
+    <dimen name="video_search_poster_height">120dp</dimen>
+
+
+    <dimen name="video_tiny">4dp</dimen>
+    <dimen name="video_small">6dp</dimen>
+    <dimen name="video_normal">8dp</dimen>
+    <dimen name="video_large">10dp</dimen>
+
+
+    <dimen name="margin_normal">8dp</dimen>
+
+    <dimen name="padding_normal">8dp</dimen>
+
+    <dimen name="text_normal">14sp</dimen>
+
 
 </resources>

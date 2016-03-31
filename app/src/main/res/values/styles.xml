@@ -1,16 +1,25 @@
 <resources>
 
-    <style name="App" parent="Theme.AppCompat">
+    <style name="Base" parent="Theme.AppCompat">
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
-        <!-- Panel attributes -->
-        <item name="listChoiceBackgroundIndicator">@drawable/abc_list_selector_holo_dark</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorPrimary">@color/color_primary</item>
 
-        <item name="colorPrimaryDark">@color/primary_material_dark</item>
-        <item name="colorPrimary">@color/primary_material_dark</item>
+        <item name="android:displayOptions">homeAsUp</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
     </style>
+
+    <style name="App" parent="Base">
+        <item name="navigationIcon">@drawable/ic_back</item>
+    </style>
+
+    <style name="App.Default">
+
+    </style>
+
 
     <style name="App.Base" parent="App">
         <!-- Base attributes -->
@@ -33,13 +42,13 @@
     </style>
 
     <!-- Home activity theme -->
-    <style name="App.Home" parent="App.NoActionBar">
+    <style name="App.Home">
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="App.Video" parent="App.NoActionBar">
+    <style name="App.Video">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
+
     </style>
 
     <style name="SwipeBackLayout">
@@ -47,6 +56,10 @@
         <item name="shadow_left">@drawable/shadow_left</item>
         <item name="shadow_right">@drawable/shadow_right</item>
         <item name="shadow_bottom">@drawable/shadow_bottom</item>
+    </style>
+
+    <style name="TextTitleStyle">
+        <item name="android:textColorPrimary">#fff</item>
     </style>
 
 </resources>

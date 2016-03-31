@@ -1,15 +1,20 @@
 <resources>
     <string name="app_name">校园视频</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
 
-    <string name="action_search">Search</string>
-    <string name="action_share">share</string>
+    <string name="action_search">搜索</string>
+    <string name="action_share">分享</string>
 
     <string name="video_summary_language">语言</string>
     <string name="video_summary_public">上映日期</string>
     <string name="video_summary_summary">简介</string>
+    <string name="search_poster">搜索海报</string>
+    <string name="video_poster">海报</string>
+    <string name="video_play">播放</string>
+    <string name="home_banner">首页Banner</string>
+    <string name="classify">分类</string>
+    <string name="more">更多</string>
 
-    
+
 </resources>

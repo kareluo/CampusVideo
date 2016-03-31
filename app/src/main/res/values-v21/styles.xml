@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="App.Base" parent="App">
-
+    <style name="App" parent="Base">
+        <item name="navigationIcon">@drawable/ic_back</item>
+        <item name="android:navigationIcon">@drawable/ic_back</item>
     </style>
 
-    <style name="App.Home" parent="App.NoActionBar">
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <style name="App.Home">
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="App.Video" parent="App.NoActionBar">

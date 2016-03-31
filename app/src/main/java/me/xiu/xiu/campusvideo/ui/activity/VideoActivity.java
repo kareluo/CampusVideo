@@ -2,171 +2,143 @@ package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.util.SparseBooleanArray;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.bumptech.glide.Glide;
 
 import org.apmem.tools.layouts.FlowLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import jp.co.recruit_mp.android.widget.HeaderFooterGridView;
+import de.greenrobot.event.Subscribe;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
-import me.xiu.xiu.campusvideo.common.xml.XmlObject;
-import me.xiu.xiu.campusvideo.common.xml.XmlParser;
-import me.xiu.xiu.campusvideo.ui.fragment.BaseFragment;
+import me.xiu.xiu.campusvideo.common.Constants;
+import me.xiu.xiu.campusvideo.common.video.Video;
 import me.xiu.xiu.campusvideo.ui.fragment.VideoEpisodeFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.VideoStillFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.VideoSummaryFragment;
-import me.xiu.xiu.campusvideo.util.FastBlur;
+import me.xiu.xiu.campusvideo.ui.view.ActorView;
+import me.xiu.xiu.campusvideo.util.CommonUtil;
 import me.xiu.xiu.campusvideo.util.ToastUtil;
+import me.xiu.xiu.campusvideo.work.presenter.VideoPresenter;
+import me.xiu.xiu.campusvideo.work.viewer.VideoViewer;
 
 /**
  * Created by felix on 15/9/29.
  */
-public class VideoActivity extends SwipeBackActivity {
+public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements VideoViewer {
 
     private String mVideoId;
-    private ViewGroup mRoot;
-    public static final String VIDEO_ID = "video_id";
-    private Toolbar mToolBar;
-    private Bundle mVideoInfo;
 
-    private ImageView mVideoPoster;
+    private ImageView mPosterImage;
     private TextView mDirector;
     private FlowLayout mActors;
-    private View mLoading;
 
     private ViewPager mViewPager;
     private VideoPagerAdapter mPagerAdapter;
 
-    private List<BaseFragment> mFragments;
+    private Video mVideo;
+
+    private String[] mFragmentNames = {
+            VideoEpisodeFragment.class.getName(),
+            VideoSummaryFragment.class.getName(),
+            VideoStillFragment.class.getName()
+    };
 
     @Override
-    protected void initialization() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        mRoot = (ViewGroup) findViewById(R.id.video_root);
-        mVideoId = getIntent().getStringExtra(VIDEO_ID);
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolBar);
+        mVideo = new Video();
+        mVideoId = getIntent().getStringExtra(Constants.Common.PARAM_VIDEO_ID);
 
-        mLoading = findViewById(R.id.loading);
-        mVideoPoster = (ImageView) findViewById(R.id.poster);
+        initViews();
+
+        getPresenter().load(mVideoId);
+
+        EventBus.getDefault().register(this);
+    }
+
+    private void initViews() {
+        mPosterImage = (ImageView) findViewById(R.id.iv_poster);
         mDirector = (TextView) findViewById(R.id.director);
         mActors = (FlowLayout) findViewById(R.id.actors);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(2);
-
-        mFragments = new ArrayList<>(3);
-        mFragments.add(new VideoEpisodeFragment());
-        mFragments.add(new VideoSummaryFragment());
-        mFragments.add(new VideoStillFragment());
         mPagerAdapter = new VideoPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
-
-        initDatas();
-    }
-
-    private void initDatas() {
-        ImageLoader.getInstance().loadImage(CampusVideo.getPoster(mVideoId), new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                BitmapDrawable drawable = new BitmapDrawable(FastBlur.doBlur(bitmap, 50, false));
-                mRoot.setBackgroundDrawable(drawable);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        });
-        ImageLoader.getInstance().displayImage(CampusVideo.getPoster(mVideoId), mVideoPoster);
-        new XmlParser().parse(getContext(), CampusVideo.getFilm(mVideoId), "film", "film", 1, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
-            @Override
-            public void onParseSuccess(XmlObject obj) {
-                mLoading.setVisibility(View.GONE);
-                mVideoInfo = obj.getElements()[0];
-                update();
-            }
-        });
-
-        new XmlParser().parse(getContext(), CampusVideo.getEpisode(mVideoId), "root", "root", 1, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
-            @Override
-            public void onParseSuccess(XmlObject obj) {
-                VideoEpisodeFragment.Episode episode = new VideoEpisodeFragment.Episode();
-                episode.setEpi(1);
-                SparseBooleanArray sba = new SparseBooleanArray();
-                try {
-                    String[] bs = obj.getElements()[0].getString("b").split(",");
-                    for (int i = 0; i < bs.length; i++) {
-                        sba.put(i, bs[i].trim().length() != 0);
-                    }
-                } catch (Exception e) {
-
-                }
-                episode.setEpisode(sba);
-                EventBus.getDefault().post(episode);
-            }
-        });
-    }
-
-    private void update() {
-        setTitle(mVideoInfo.getString("name"));
-        mDirector.setText(mVideoInfo.getString("director"));
-        String[] actors = mVideoInfo.getString("actor").split(",");
-        for (String actor : actors) {
-            TextView actorView = (TextView) getLayoutInflater().inflate(R.layout.video_actor, null);
-            actorView.setText(actor);
-            mActors.addView(actorView);
-        }
-        EventBus.getDefault().post(mVideoInfo);
     }
 
     @Override
-    protected void initActionBar() {
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setHomeButtonEnabled(true);
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
+    public VideoPresenter getPresenter() {
+        return new VideoPresenter(this);
+    }
+
+    private void initDatas() {
+//        new XmlParser().parse(getContext(), CampusVideo.getFilm(mVideoId), "film", "film", 1, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
+//            @Override
+//            public void onParseSuccess(XmlObject obj) {
+//                mVideoInfo = obj.getElements()[0];
+//                update();
+//            }
+//        });
+//
+//        new XmlParser().parse(getContext(), CampusVideo.getEpisode(mVideoId), "root", "root", 1, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
+//            @Override
+//            public void onParseSuccess(XmlObject obj) {
+//                VideoEpisodeFragment.Episode episode = new VideoEpisodeFragment.Episode();
+//                episode.setEpi(1);
+//                SparseBooleanArray sba = new SparseBooleanArray();
+//                try {
+//                    String[] bs = obj.getElements()[0].getString("b").split(",");
+//                    for (int i = 0; i < bs.length; i++) {
+//                        sba.put(i, bs[i].trim().length() != 0);
+//                    }
+//                } catch (Exception e) {
+//
+//                }
+//                episode.setEpisode(sba);
+//                EventBus.getDefault().post(episode);
+//            }
+//        });
+    }
+
+    @Subscribe
+    public void onEpisodeClick(Integer epi) {
+        mVideo.setEpi(epi);
+        PlayerActivity.play(this, mVideo);
+    }
+
+    private void updateInfo() {
+        setTitle(mVideo.getName());
+        Glide.with(this).load(CampusVideo.getPoster(mVideoId)).into(mPosterImage);
+        mDirector.setText(mVideo.getDirector());
+        String[] actors = mVideo.getActors();
+        if (!CommonUtil.isEmpty(actors)) {
+            for (String actor : actors) {
+                ActorView actorView = new ActorView(this);
+                actorView.setText(actor);
+                mActors.addView(actorView);
+            }
         }
     }
 
-    public static final Intent newIntent(Context c, String vid) {
+    public static Intent newIntent(Context c, String vid) {
         Intent intent = new Intent(c, VideoActivity.class);
-        intent.putExtra(VIDEO_ID, vid);
+        intent.putExtra(Constants.Common.PARAM_VIDEO_ID, vid);
         return intent;
     }
 
@@ -190,6 +162,18 @@ public class VideoActivity extends SwipeBackActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onUpdateInfo(Bundle bundle) {
+        mVideo.setInfo(bundle);
+        updateInfo();
+    }
+
+    @Override
+    public void onUpdateEpisodes(List<Video.Episode> episodes) {
+        mVideo.setEpisodes(episodes);
+        EventBus.getDefault().post(episodes);
+    }
+
     private class VideoPagerAdapter extends FragmentPagerAdapter {
 
         public VideoPagerAdapter(FragmentManager fm) {
@@ -198,12 +182,24 @@ public class VideoActivity extends SwipeBackActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return mFragments.get(position);
+            return Fragment.instantiate(getContext(), mFragmentNames[position]);
         }
 
         @Override
         public int getCount() {
-            return mFragments.size();
+            return mFragmentNames.length;
         }
+    }
+
+    public static void start(Context context, String videoId) {
+        Intent intent = new Intent(context, VideoActivity.class);
+        intent.putExtra(Constants.Common.PARAM_VIDEO_ID, videoId);
+        context.startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
