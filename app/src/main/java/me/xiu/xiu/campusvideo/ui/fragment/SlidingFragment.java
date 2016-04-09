@@ -5,19 +5,23 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.ui.view.SlidingGroupView;
 import me.xiu.xiu.campusvideo.ui.view.SlidingItemView;
 import me.xiu.xiu.campusvideo.work.model.SlidingItem;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.SlidingPresenter;
+import me.xiu.xiu.campusvideo.work.viewer.fragment.SlidingViewer;
 
 /**
  * Created by felix on 16/3/28.
  */
-public class SlidingFragment extends BaseFragment<SlidingPresenter> {
+public class SlidingFragment extends BaseFragment<SlidingPresenter> implements SlidingViewer,
+        AdapterView.OnItemClickListener {
 
     private SlidingAdapter mAdapter;
 
@@ -40,6 +44,13 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> {
         super.onViewCreated(view, savedInstanceState);
         ListView mListView = (ListView) view.findViewById(R.id.lv_sliding);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        SlidingItem item = (SlidingItem) parent.getItemAtPosition(position);
+        EventBus.getDefault().post(item);
     }
 
     private class SlidingAdapter extends BaseAdapter {

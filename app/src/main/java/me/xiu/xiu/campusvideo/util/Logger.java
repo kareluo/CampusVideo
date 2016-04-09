@@ -42,6 +42,12 @@ public class Logger {
         }
     }
 
+    public static void e(String tag, Throwable tr) {
+        if (DEBUG) {
+            Log.e(tag, "", tr);
+        }
+    }
+
     public static void e(String tag, String msg, Throwable tr) {
         if (DEBUG) {
             Log.e(tag, msg, tr);

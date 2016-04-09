@@ -104,6 +104,7 @@ public class XmlParser {
 
     /**
      * 解析全url的
+     *
      * @param url
      * @param tag
      * @param subscription
@@ -127,8 +128,70 @@ public class XmlParser {
         return getInstance()._parse(CampusVideo.getUrl(shortUrl), tag, Integer.MAX_VALUE, subscription);
     }
 
+    public static ParseSubscription<List<XmlObject>> parse(
+            String[] shortUrls, XmlObject.Tag[] tags, int[] counts,
+            ParseSubscription<List<XmlObject>> subscription) {
+        String[] urls = new String[shortUrls.length];
+        for (int i = 0; i < shortUrls.length; i++) {
+            urls[i] = CampusVideo.getUrl(shortUrls[i]);
+        }
+        return getInstance()._parse(urls, tags, counts, subscription);
+    }
+
+    private ParseSubscription<List<XmlObject>> _parse(
+            final String[] urls, final XmlObject.Tag[] tags, final int[] counts,
+            ParseSubscription<List<XmlObject>> subscription) {
+        Observable
+                .create(new Observable.OnSubscribe<List<XmlObject>>() {
+                            @Override
+                            public void call(Subscriber<? super List<XmlObject>> subscriber) {
+                                subscriber.onStart();
+                                List<XmlObject> results = new ArrayList<>();
+                                for (int i = 0; i < urls.length; i++) {
+                                    try {
+                                        String filename = CommonUtil.hashName(urls[i]);
+                                        File cacheFile = new File(mXmlCacheDir, filename);
+                                        if (cacheFile.exists() && cacheFile.length() > 0) {
+                                            Logger.d(TAG, "Cache-file exists.");
+                                            results.add(parse(cacheFile, tags[i], counts[i]));
+                                            Response response = obtainXml(urls[i]);
+                                            if (response.isSuccessful()) {
+                                                cacheFile(response.body().byteStream(), cacheFile);
+                                            }
+                                        } else {
+                                            Logger.d(TAG, "Cache-file not exists.");
+                                            Response response = obtainXml(urls[i]);
+                                            if (response.isSuccessful()) {
+                                                cacheFile(response.body().byteStream(), cacheFile);
+                                            }
+                                            if (cacheFile.exists() && cacheFile.length() > 0) {
+                                                Logger.d(TAG, "Cache success.");
+                                                results.add(parse(cacheFile, tags[i], counts[i]));
+                                            } else {
+                                                Logger.d(TAG, "Cache failed, from stream.");
+                                                response = obtainXml(urls[i]);
+                                                results.add(parse(response.body().byteStream(),
+                                                        tags[i], counts[i], ENCODING));
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        subscriber.onError(e);
+                                    }
+                                }
+                                subscriber.onNext(results);
+                                subscriber.onCompleted();
+                            }
+                        }
+                )
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscription);
+        return subscription;
+    }
+
     /**
      * 解析没有root tag的
+     *
      * @param shortUrl
      * @param tag
      * @param count
@@ -554,7 +617,7 @@ public class XmlParser {
 
         @Override
         public void onError(Throwable e) {
-
+            Logger.e(TAG, e);
         }
 
         @Override

@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/srl_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="4dp">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp_banner"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/video_banner_height" />
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_home"
@@ -22,6 +16,5 @@
             android:orientation="vertical"
             app:layoutManager="LinearLayoutManager"
             app:reverseLayout="false" />
-
-    </LinearLayout>
+    </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

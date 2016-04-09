@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">#f222</color>
-    <color name="color_primary_dark">#f111</color>
+    <color name="color_primary_dark">#f23e</color>
     <color name="player_loading_bg">#9eee</color>
 
     <color name="player_loading_text">#212121</color>
@@ -10,5 +10,11 @@
     <color name="bg_video_actor">#4000</color>
 
     <color name="video_summary_title">#FF1A610F</color>
+
+    <color name="video_background">#eee</color>
+
+    <color name="text_color">#222</color>
+
+    <color name="windowBackground">#444</color>
 
 </resources>

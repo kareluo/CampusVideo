@@ -29,7 +29,7 @@ import java.util.List;
 public class CustomViewAbove extends FrameLayout {
 
     private static final String TAG = "CustomViewAbove";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private static final boolean USE_CACHE = false;
 
@@ -110,7 +110,7 @@ public class CustomViewAbove extends FrameLayout {
          * @param positionOffset       Value from [0, 1) indicating the offset from the page at position.
          * @param positionOffsetPixels Value in pixels indicating the offset from position.
          */
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+        void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
 
         /**
          * This method will be invoked when a new page becomes selected. Animation is not
@@ -118,7 +118,7 @@ public class CustomViewAbove extends FrameLayout {
          *
          * @param position Position index of the new selected page.
          */
-        public void onPageSelected(int position);
+        void onPageSelected(int position);
 
     }
 
@@ -246,15 +246,6 @@ public class CustomViewAbove extends FrameLayout {
         mOnPageChangeListener = listener;
     }
 
-    /*
-    public void setOnOpenListener(OnOpenListener l) {
-        mOpenListener = l;
-    }
-
-    public void setOnCloseListener(OnCloseListener l) {
-        mCloseListener = l;
-    }
-     */
     public void setOnOpenedListener(SlidingLayout.OnOpenedListener l) {
         mOpenedListener = l;
     }

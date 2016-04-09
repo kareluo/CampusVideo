@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?colorPrimaryDark"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
-
-    <include layout="@layout/common_toolbar" />
+    android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/home_container"
+        android:name="me.xiu.xiu.campusvideo.ui.fragment.HomeFragment"
         class="me.xiu.xiu.campusvideo.ui.fragment.HomeFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:tag="me.xiu.xiu.campusvideo.ui.fragment.HomeFragment" />
 
-</LinearLayout>
+</FrameLayout>

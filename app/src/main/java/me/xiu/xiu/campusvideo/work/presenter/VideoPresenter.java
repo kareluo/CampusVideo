@@ -1,6 +1,7 @@
 package me.xiu.xiu.campusvideo.work.presenter;
 
 import android.os.Bundle;
+import android.util.SparseArray;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -29,11 +30,14 @@ public class VideoPresenter extends Presenter<VideoViewer> {
     private static final String TAG = "VideoPresenter";
     private volatile int mEpi = 1;
 
+    SparseArray<String> s;
+
     public VideoPresenter(VideoViewer viewer) {
         super(viewer);
     }
 
     public void load(String vid) {
+
         mEpi = index(vid);
         subscribe(XmlParser.parseXml(CampusVideo.getFilm(vid),
                 Xml.TAG_FILM, new XmlParser.ParseSubscription<XmlObject>() {

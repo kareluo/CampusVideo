@@ -3,6 +3,7 @@ package me.xiu.xiu.campusvideo.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.Viewer;
 
@@ -37,6 +38,11 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
     @Override
     public void cancelLoadingDialog() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

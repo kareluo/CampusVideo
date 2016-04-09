@@ -14,22 +14,30 @@
         android:padding="@dimen/video_tiny">
 
         <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="电影" />
 
         <TextView
+            android:id="@+id/tv_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="@string/more" />
+            android:background="@drawable/bg_more"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="2dp"
+            android:text="@string/more"
+            android:textColor="@color/text_color" />
 
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_videos"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/video_poster_height"
+        android:layout_height="@dimen/video_item_height"
         android:orientation="horizontal"
         app:layoutManager="LinearLayoutManager"
         app:reverseLayout="false" />

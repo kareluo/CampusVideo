@@ -10,7 +10,6 @@ import android.widget.FrameLayout;
 
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.view.OnItemClickListener;
-import me.xiu.xiu.campusvideo.common.view.OnVideoInfoClickListener;
 import me.xiu.xiu.campusvideo.ui.activity.VideoActivity;
 import me.xiu.xiu.campusvideo.work.model.video.VInfo;
 import me.xiu.xiu.campusvideo.work.model.video.VideoSeries;
@@ -42,6 +41,9 @@ public class VideoSeriesItemView extends FrameLayout implements OnItemClickListe
 
         mVideoAdapter = new VideoAdapter(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_videos);
+
+        int horizontalSpace = getResources().getDimensionPixelSize(R.dimen.video_horizontal_space);
+        mRecyclerView.addItemDecoration(new SpaceItemDecoration(horizontalSpace, 0));
 
         mRecyclerView.setAdapter(mVideoAdapter);
     }

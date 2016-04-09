@@ -32,6 +32,12 @@ public class Xml {
     public static final XmlObject.Tag[] TAGS = {XmlObject.Tag.create("gkk", "gkk"),
             XmlObject.Tag.create("jlp", "jlp"), XmlObject.Tag.create("jz", "jz")};
 
+    public static final XmlObject.Tag TAG_GKK = XmlObject.Tag.create("gkk", "gkk");
+
+    public static final XmlObject.Tag TAG_JLP = XmlObject.Tag.create("jlp", "jlp");
+
+    public static final XmlObject.Tag TAG_JZ = XmlObject.Tag.create("jz", "jz");
+
     public static final String ENCODING = "GB-2312";
 
     public static final String BARSET = "/bar/BarSet.xml";

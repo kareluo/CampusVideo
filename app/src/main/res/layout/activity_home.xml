@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     app:behindOffset="@dimen/sm_width"
     app:selectorEnabled="true"
-    app:shadowDrawable="@null"
-    app:touchModeAbove="fullscreen"
+    app:shadowDrawable="@drawable/shadow_left"
+    app:shadowWidth="16dp"
+    app:touchModeAbove="margin"
     app:viewAbove="@layout/home_above"
     app:viewBehind="@layout/home_behind" />

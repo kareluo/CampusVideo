@@ -10,6 +10,15 @@
 
         <item name="android:displayOptions">homeAsUp</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
+
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+
+        <item name="android:fitsSystemWindows">false</item>
+    </style>
+
+    <style name="ActivityAnimation" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/open_enter</item>
+        <item name="android:windowExitAnimation">@anim/close_exit</item>
     </style>
 
     <style name="App" parent="Base">
@@ -17,33 +26,23 @@
     </style>
 
     <style name="App.Default">
-
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
-
-    <style name="App.Base" parent="App">
-        <!-- Base attributes -->
-    </style>
-
-    <style name="App.NoActionBar" parent="App.Base">
+    <style name="App.Player">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="App.NoActionBar.Fullscreen" parent="App.NoActionBar">
+    <style name="App.Fullscreen">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <!-- Default activity theme -->
-    <style name="App.Common" parent="App.Base">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
-    </style>
-
-    <!-- Home activity theme -->
     <style name="App.Home">
-        <item name="windowActionModeOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="App.Video">

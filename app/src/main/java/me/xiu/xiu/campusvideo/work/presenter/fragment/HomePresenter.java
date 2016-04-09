@@ -5,11 +5,13 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.xml.Xml;
 import me.xiu.xiu.campusvideo.common.xml.XmlObject;
 import me.xiu.xiu.campusvideo.common.xml.XmlParser;
 import me.xiu.xiu.campusvideo.util.CommonUtil;
+import me.xiu.xiu.campusvideo.util.ValueUtil;
 import me.xiu.xiu.campusvideo.work.model.HomeBanner;
 import me.xiu.xiu.campusvideo.work.model.video.VInfo;
 import me.xiu.xiu.campusvideo.work.model.video.VideoInfo;
@@ -26,6 +28,11 @@ public class HomePresenter extends Presenter<HomeViewer> {
 
     public HomePresenter(HomeViewer viewer) {
         super(viewer);
+    }
+
+    public void load() {
+        loadBanner();
+        loadVideoSeries();
     }
 
     public void loadBanner() {
@@ -52,18 +59,62 @@ public class HomePresenter extends Presenter<HomeViewer> {
     }
 
     public void loadVideoSeries() {
-        subscribe(XmlParser.parseMesses(Xml.MOVIE_BANNER, Xml.TAG_IMG, MAX_ITEMS,
-                new XmlParser.ParseSubscription<XmlObject>() {
+        subscribe(XmlParser.parse(
+                new String[]{
+                        Xml.PUBLICLASS_DATE,
+                        Xml.DOCUMENTARY_DATE,
+                        Xml.CATHEDRA_DATE,
+                        Xml.MOVIE_ACTION_DATE,
+                        Xml.TELEPLAY_MAINLAND_DATE,
+                        Xml.ANIME_DATE,
+                        Xml.TVSHOW_DATE
+                },
+                new XmlObject.Tag[]{
+                        Xml.TAG_M,
+                        Xml.TAG_M,
+                        Xml.TAG_M,
+                        Xml.TAG_M,
+                        Xml.TAG_M,
+                        Xml.TAG_M,
+                        Xml.TAG_M
+                },
+                new int[]{
+                        MAX_ITEMS,
+                        MAX_ITEMS,
+                        MAX_ITEMS,
+                        MAX_ITEMS,
+                        MAX_ITEMS,
+                        MAX_ITEMS,
+                        MAX_ITEMS
+                },
+                new XmlParser.ParseSubscription<List<XmlObject>>() {
                     @Override
-                    public void onResult(XmlObject result) {
+                    public void onResult(List<XmlObject> result) {
+                        if (ValueUtil.isEmpty(result)) return;
                         List<VideoSeries> videoSeries = new ArrayList<>();
-                        VideoSeries series = obtainMovieSeries(result);
-                        if (series != null) {
-                            videoSeries.add(series);
+                        for (XmlObject xmlObject : result) {
+                            VideoSeries series = obtainMovieSeries(xmlObject);
+                            if (series != null) {
+                                videoSeries.add(series);
+                            }
                         }
                         getViewer().onUpdateVideoSeries(videoSeries);
                     }
                 }));
+
+//
+//        subscribe(XmlParser.parseMesses(Xml.MOVIE_BANNER, Xml.TAG_IMG, MAX_ITEMS,
+//                new XmlParser.ParseSubscription<XmlObject>() {
+//                    @Override
+//                    public void onResult(XmlObject result) {
+//                        List<VideoSeries> videoSeries = new ArrayList<>();
+//                        VideoSeries series = obtainMovieSeries(result);
+//                        if (series != null) {
+//                            videoSeries.add(series);
+//                        }
+//                        getViewer().onUpdateVideoSeries(videoSeries);
+//                    }
+//                }));
     }
 
     private VideoSeries obtainMovieSeries(XmlObject result) {
@@ -72,9 +123,9 @@ public class HomePresenter extends Presenter<HomeViewer> {
             Bundle[] elements = result.getElements();
             for (Bundle element : elements) {
                 VideoInfo info = new VideoInfo();
-                info.setVid(element.getString("url"));
-                info.setName(element.getString("title"));
-                info.setDescription(element.getString("content"));
+                info.setVid(element.getString("b"));
+                info.setName(element.getString("a"));
+                info.setDescription(element.getString("d"));
                 vInfos.add(info);
             }
             return new VideoSeries("电影", vInfos);

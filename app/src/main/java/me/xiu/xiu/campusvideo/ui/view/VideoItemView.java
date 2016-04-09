@@ -1,6 +1,8 @@
 package me.xiu.xiu.campusvideo.ui.view;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,7 +38,6 @@ public class VideoItemView extends FrameLayout {
 
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
         inflate(context, R.layout.layout_video_item, this);
-
         mImageView = (ImageView) findViewById(R.id.iv_video);
         mNameText = (TextView) findViewById(R.id.tv_name);
     }

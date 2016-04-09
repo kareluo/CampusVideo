@@ -8,7 +8,7 @@ import me.xiu.xiu.campusvideo.BuildConfig;
 public class CampusVideo {
 
     public static String protocol = "http://";
-    public static String host = "vod.tju.edu.cn";
+    public static String host = "vod.shou.edu.cn";
     public static String post = "80";
     private final static String colon = ":";
     private final static String mov = "/mov/";

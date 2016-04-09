@@ -2,18 +2,15 @@ package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -50,7 +47,7 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
     private ViewPager mViewPager;
     private VideoPagerAdapter mPagerAdapter;
 
-    private Video mVideo;
+    private Video mVideo = new Video();
 
     private String[] mFragmentNames = {
             VideoEpisodeFragment.class.getName(),
@@ -62,7 +59,7 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        mVideo = new Video();
+
         mVideoId = getIntent().getStringExtra(Constants.Common.PARAM_VIDEO_ID);
 
         initViews();

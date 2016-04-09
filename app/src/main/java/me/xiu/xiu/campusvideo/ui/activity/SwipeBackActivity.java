@@ -2,6 +2,7 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 
 import me.xiu.xiu.campusvideo.common.Presenter;
@@ -18,11 +19,6 @@ public class SwipeBackActivity<P extends Presenter> extends BaseActivity<P> impl
         super.onCreate(savedInstanceState);
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
-    }
-
-    @Override
-    public P newPresenter() {
-        return null;
     }
 
     @Override

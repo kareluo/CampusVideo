@@ -7,4 +7,5 @@ import me.xiu.xiu.campusvideo.common.Viewer;
  */
 public interface SlidingViewer extends Viewer {
 
+
 }

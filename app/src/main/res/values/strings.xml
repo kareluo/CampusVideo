@@ -15,6 +15,8 @@
     <string name="home_banner">首页Banner</string>
     <string name="classify">分类</string>
     <string name="more">更多</string>
+    <string name="poster">海报</string>
+    <string name="banner">Banner</string>
 
 
 </resources>
