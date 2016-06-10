@@ -5,7 +5,6 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.xml.Xml;
 import me.xiu.xiu.campusvideo.common.xml.XmlObject;
@@ -25,6 +24,8 @@ public class HomePresenter extends Presenter<HomeViewer> {
 
     private static final int MAX_BANNER = 15;
     private static final int MAX_ITEMS = 8;
+
+    private static final String[] TITLES = {"公开课", "纪录片", "讲座", "电影", "电视剧", "动漫", "综艺"};
 
     public HomePresenter(HomeViewer viewer) {
         super(viewer);
@@ -61,13 +62,13 @@ public class HomePresenter extends Presenter<HomeViewer> {
     public void loadVideoSeries() {
         subscribe(XmlParser.parse(
                 new String[]{
-                        Xml.PUBLICLASS_DATE,
+                        Xml.PUBLIC_CLASS_DATE,
                         Xml.DOCUMENTARY_DATE,
                         Xml.CATHEDRA_DATE,
                         Xml.MOVIE_ACTION_DATE,
                         Xml.TELEPLAY_MAINLAND_DATE,
                         Xml.ANIME_DATE,
-                        Xml.TVSHOW_DATE
+                        Xml.TV_SHOW_DATE
                 },
                 new XmlObject.Tag[]{
                         Xml.TAG_M,
@@ -92,8 +93,8 @@ public class HomePresenter extends Presenter<HomeViewer> {
                     public void onResult(List<XmlObject> result) {
                         if (ValueUtil.isEmpty(result)) return;
                         List<VideoSeries> videoSeries = new ArrayList<>();
-                        for (XmlObject xmlObject : result) {
-                            VideoSeries series = obtainMovieSeries(xmlObject);
+                        for (int i = 0; i < result.size(); i++) {
+                            VideoSeries series = obtainMovieSeries(i, result.get(i));
                             if (series != null) {
                                 videoSeries.add(series);
                             }
@@ -101,23 +102,9 @@ public class HomePresenter extends Presenter<HomeViewer> {
                         getViewer().onUpdateVideoSeries(videoSeries);
                     }
                 }));
-
-//
-//        subscribe(XmlParser.parseMesses(Xml.MOVIE_BANNER, Xml.TAG_IMG, MAX_ITEMS,
-//                new XmlParser.ParseSubscription<XmlObject>() {
-//                    @Override
-//                    public void onResult(XmlObject result) {
-//                        List<VideoSeries> videoSeries = new ArrayList<>();
-//                        VideoSeries series = obtainMovieSeries(result);
-//                        if (series != null) {
-//                            videoSeries.add(series);
-//                        }
-//                        getViewer().onUpdateVideoSeries(videoSeries);
-//                    }
-//                }));
     }
 
-    private VideoSeries obtainMovieSeries(XmlObject result) {
+    private VideoSeries obtainMovieSeries(int index, XmlObject result) {
         if (result != null && !result.isEmpty()) {
             List<VInfo> vInfos = new ArrayList<>();
             Bundle[] elements = result.getElements();
@@ -128,7 +115,7 @@ public class HomePresenter extends Presenter<HomeViewer> {
                 info.setDescription(element.getString("d"));
                 vInfos.add(info);
             }
-            return new VideoSeries("电影", vInfos);
+            return new VideoSeries(TITLES[index], vInfos);
         }
         return null;
     }

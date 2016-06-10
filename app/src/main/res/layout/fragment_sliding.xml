@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,6 +9,33 @@
     <ListView
         android:id="@+id/lv_sliding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:divider="@color/gray_light_alpha"
+        android:dividerHeight="@dimen/sliding_divider_height"
+        android:paddingBottom="60dp"
+        android:paddingTop="25dp" />
 
-</LinearLayout>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/margin_4"
+        app:cardBackgroundColor="@color/video_card_background"
+        app:cardCornerRadius="@dimen/video_radius"
+        app:cardElevation="@dimen/video_elevation"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:id="@+id/adLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            tools:layout_height="60dp" />
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

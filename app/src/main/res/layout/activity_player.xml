@@ -17,44 +17,49 @@
             android:layout_centerVertical="true" />
     </io.vov.vitamio.widget.CenterLayout>
 
-    <LinearLayout
-        android:id="@+id/loading_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/bg_player_loading"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="visible">
+    <me.xiu.xiu.campusvideo.ui.widget.MediaController
+        android:id="@+id/mc_controller"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/loading_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:background="@drawable/bg_player_loading"-->
+    <!--android:orientation="vertical"-->
+    <!--android:padding="16dp"-->
+    <!--android:visibility="visible">-->
 
-            <ProgressBar
-                android:id="@+id/pb_loading"
-                style="?android:progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+    <!--<FrameLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal">-->
 
-            <TextView
-                android:id="@+id/tv_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="78%"
-                android:textColor="@color/player_loading_text" />
-        </FrameLayout>
+    <!--<ProgressBar-->
+    <!--android:id="@+id/pb_loading"-->
+    <!--style="?android:progressBarStyleLarge"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center" />-->
 
-        <TextView
-            android:id="@+id/tv_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:text="123kb/s"
-            android:textColor="@color/player_loading_text" />
-    </LinearLayout>
+    <!--<TextView-->
+    <!--android:id="@+id/tv_progress"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:text="78%"-->
+    <!--android:textColor="@color/player_loading_text" />-->
+    <!--</FrameLayout>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_rate"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|center_horizontal"-->
+    <!--android:text="123kb/s"-->
+    <!--android:textColor="@color/player_loading_text" />-->
+    <!--</LinearLayout>-->
 
 </FrameLayout>

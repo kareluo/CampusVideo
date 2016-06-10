@@ -5,6 +5,9 @@
 
     <dimen name="sm_width">80dp</dimen>
 
+    <dimen name="video_width_small">60dp</dimen>
+    <dimen name="video_height_small">80dp</dimen>
+
     <dimen name="video_width">99dp</dimen>
     <dimen name="video_height">132dp</dimen>
 
@@ -29,12 +32,17 @@
     <dimen name="video_normal">8dp</dimen>
     <dimen name="video_large">10dp</dimen>
 
-
+    <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_4">4dp</dimen>
     <dimen name="margin_normal">8dp</dimen>
 
     <dimen name="padding_normal">8dp</dimen>
+    <dimen name="padding_large">12dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
 
+    <dimen name="text_small">12sp</dimen>
     <dimen name="text_normal">14sp</dimen>
+    <dimen name="text_large">16sp</dimen>
 
     <dimen name="video_horizontal_space">8dp</dimen>
     <dimen name="video_vertical_space">8dp</dimen>
@@ -43,5 +51,6 @@
     <dimen name="video_elevation">6dp</dimen>
 
     <dimen name="video_item_height">154dp</dimen>
+    <dimen name="sliding_divider_height">1px</dimen>
 
 </resources>

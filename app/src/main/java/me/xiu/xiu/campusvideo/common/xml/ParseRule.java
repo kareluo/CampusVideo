@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by felix on 16/4/6.
  */
-public class ParseRule implements Parcelable {
+public class ParseRule<T> implements Parcelable {
 
     private String shortUrl;
 
@@ -14,16 +14,37 @@ public class ParseRule implements Parcelable {
 
     private int count;
 
+    private Filter<T> filter;
+
     public ParseRule(String shortUrl, XmlObject.Tag tag, int count) {
+        this(shortUrl, tag, count, null);
+    }
+
+    public ParseRule(String shortUrl, XmlObject.Tag tag, int count, Filter<T> filter) {
         this.shortUrl = shortUrl;
         this.tag = tag;
         this.count = count;
+        this.filter = filter;
     }
 
     protected ParseRule(Parcel in) {
         shortUrl = in.readString();
         tag = in.readParcelable(XmlObject.Tag.class.getClassLoader());
         count = in.readInt();
+        filter = in.readParcelable(Filter.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(shortUrl);
+        dest.writeParcelable(tag, flags);
+        dest.writeInt(count);
+        dest.writeParcelable(filter, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<ParseRule> CREATOR = new Creator<ParseRule>() {
@@ -62,15 +83,11 @@ public class ParseRule implements Parcelable {
         this.count = count;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public Filter<T> getFilter() {
+        return filter;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(shortUrl);
-        dest.writeParcelable(tag, flags);
-        dest.writeInt(count);
+    public void setFilter(Filter<T> filter) {
+        this.filter = filter;
     }
 }

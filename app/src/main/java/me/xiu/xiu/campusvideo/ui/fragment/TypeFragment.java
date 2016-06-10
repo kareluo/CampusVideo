@@ -1,7 +1,6 @@
 package me.xiu.xiu.campusvideo.ui.fragment;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -33,10 +32,6 @@ public class TypeFragment extends BaseFragment<TypePresenter> implements TypeVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mPageRule = (PageRule[]) arguments.getParcelableArray(KEY_PAGES);
-        }
         mAdapter = new TypeAdapter(getChildFragmentManager());
     }
 
@@ -47,21 +42,23 @@ public class TypeFragment extends BaseFragment<TypePresenter> implements TypeVie
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (isVisible()) {
+            if (mArgument != null) {
+                mPageRule = (PageRule[]) mArgument.getParcelableArray(KEY_PAGES);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mTabLayout = (TabLayout) view.findViewById(R.id.tl_tabs);
-        updateTabs();
         mViewPager = (ViewPager) view.findViewById(R.id.vp_videos);
         mViewPager.setAdapter(mAdapter);
-    }
-
-    private void updateTabs() {
-        if (mTabLayout.getTabCount() > 0) {
-            mTabLayout.removeAllTabs();
-        }
-        for (PageRule rule : mPageRule) {
-            mTabLayout.addTab(mTabLayout.newTab().setText(rule.name));
-        }
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override
@@ -83,6 +80,16 @@ public class TypeFragment extends BaseFragment<TypePresenter> implements TypeVie
         @Override
         public int getCount() {
             return mPageRule.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mPageRule[position].name;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
     }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:id="@+id/pf_dest"
+        android:key="config_dest"
+        android:text="sadasd"
+        android:title="离线保存目录" />
+
+</PreferenceScreen>

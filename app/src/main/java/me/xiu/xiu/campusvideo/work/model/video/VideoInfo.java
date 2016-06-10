@@ -1,5 +1,7 @@
 package me.xiu.xiu.campusvideo.work.model.video;
 
+import android.os.Bundle;
+
 /**
  * Created by felix on 16/3/30.
  */
@@ -52,5 +54,13 @@ public class VideoInfo implements VInfo {
     @Override
     public Quality getQuality() {
         return quality;
+    }
+
+    public static VideoInfo from(Bundle bundle) {
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setName(bundle.getString("a"));
+        videoInfo.setVid(bundle.getString("b"));
+        videoInfo.setDescription(bundle.getString("c"));
+        return videoInfo;
     }
 }

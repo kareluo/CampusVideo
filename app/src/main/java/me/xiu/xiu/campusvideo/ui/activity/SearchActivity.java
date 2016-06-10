@@ -49,7 +49,7 @@ public class SearchActivity extends SwipeBackActivity<SearchPresenter>
     }
 
     private void initParams() {
-        String text = getIntent().getStringExtra(IntentKey.INTENT_TEXT.name());
+        String text = getIntent().getStringExtra(IntentKey.TEXT.name());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SearchActivity extends SwipeBackActivity<SearchPresenter>
         SearchView search = (SearchView) item.getActionView();
         search.setOnQueryTextListener(this);
         search.setActivated(true);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -122,18 +122,7 @@ public class SearchActivity extends SwipeBackActivity<SearchPresenter>
                 convertView = new SearchItemView(getContext());
             }
             SearchItemView searchItemView = (SearchItemView) convertView;
-
             searchItemView.update(getItem(position));
-//
-//
-//            Bundle bundle = getItem(position);
-//            ViewHolder holder = getHolder(convertView);
-//            ImageLoader.getInstance().displayImage(CampusVideo.getPoster(bundle.getString("b")), holder.poster);
-//            holder.name.setText(bundle.getString("a", ""));
-//            holder.director.setText(bundle.getString("d", ""));
-//            holder.actor.setText(bundle.getString("c", ""));
-//            holder.type.setText(bundle.getString("e", ""));
-//            holder.date.setText(bundle.getString("v", ""));
             return convertView;
         }
     }
@@ -145,7 +134,7 @@ public class SearchActivity extends SwipeBackActivity<SearchPresenter>
 
     public static void start(Context context, String text) {
         Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(IntentKey.INTENT_TEXT.name(), text);
+        intent.putExtra(IntentKey.TEXT.name(), text);
         context.startActivity(intent);
     }
 }

@@ -1,6 +1,7 @@
 package me.xiu.xiu.campusvideo.ui.view;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -35,5 +36,11 @@ public class EpisodeItemView extends FrameLayout {
 
     public void update(Video.Episode episode) {
         mEpisodeText.setText(String.valueOf(episode.getEpi()));
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        getChildAt(0).setEnabled(enabled);
     }
 }

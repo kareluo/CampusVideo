@@ -2,6 +2,8 @@ package me.xiu.xiu.campusvideo.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.xiu.xiu.campusvideo.R;
-import me.xiu.xiu.campusvideo.common.adapter.VideoAdapter;
+import me.xiu.xiu.campusvideo.common.adapter.VideosAdapter;
+import me.xiu.xiu.campusvideo.common.xml.Filter;
 import me.xiu.xiu.campusvideo.common.xml.ParseRule;
 import me.xiu.xiu.campusvideo.common.xml.XmlObject;
 import me.xiu.xiu.campusvideo.work.model.video.VInfo;
@@ -25,11 +28,15 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
 
     private RecyclerView mRecyclerView;
 
-    private VideoAdapter mAdapter;
+    private VideosAdapter mAdapter;
 
     private List<VInfo> mVideoInfos;
 
-    private ParseRule mParseRule;
+    private ParseRule<XmlObject> mParseRule;
+
+    private GridLayoutManager mGridLayoutManager;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,21 +52,37 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_grid, container, false);
+        return inflater.inflate(R.layout.fragment_videos, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_videos);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_grid);
-        mAdapter = new VideoAdapter(getContext(), mVideoInfos);
+        mAdapter = new VideosAdapter(getContext(), mVideoInfos);
         mRecyclerView.setAdapter(mAdapter);
+        mGridLayoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mSwipeRefreshLayout.setEnabled(mGridLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+            }
+        });
         getPresenter().load(mParseRule);
     }
 
     @Override
     public VideosPresenter newPresenter() {
         return new VideosPresenter(this);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -70,9 +93,11 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
     }
 
     public static Bundle newArgument(String shortUrl, XmlObject.Tag tag, int count) {
-        Bundle args = new Bundle();
-        args.putParcelable(KEY_VIDEOS, new ParseRule(shortUrl, tag, count));
-        return args;
+        return newArgument(shortUrl, tag, count, null);
+    }
+
+    public static <T> Bundle newArgument(String shortUrl, XmlObject.Tag tag, int count, Filter<T> filter) {
+        return newArgument(new ParseRule<>(shortUrl, tag, count, filter));
     }
 
     public static Bundle newArgument(ParseRule rule) {

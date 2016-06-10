@@ -5,7 +5,7 @@ package me.xiu.xiu.campusvideo.work.model;
  */
 public enum SlidingItem {
     OFFLINE("离线", 0, Type.ITEM),
-    LOCAL_MEDIA("本地视频", 0, Type.ITEM),
+    MEDIA("本地视频", 0, Type.ITEM),
     VIDEO_CATE("视频分类", 0, Type.GROUP),
     HOME("主页", 0, Type.ITEM),
     PUBLIC_CLASS("公开课", 0, Type.ITEM),
@@ -14,7 +14,9 @@ public enum SlidingItem {
     MOVIE("电影", 0, Type.ITEM),
     TELEPLAY("电视剧", 0, Type.ITEM),
     ANIME("动漫", 0, Type.ITEM),
-    TV_SHOW("综艺", 0, Type.ITEM);
+    TV_SHOW("综艺", 0, Type.ITEM),
+    OTHER("其他", 0, Type.GROUP),
+    SETTING("设置", 0, Type.ITEM);
 
     public int icon;
     public int type;

@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.umeng.analytics.MobclickAgent;
+
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.Viewer;
 import me.xiu.xiu.campusvideo.util.Logger;
@@ -147,6 +149,18 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
         if (mLoadingDialog.isShowing()) {
             mLoadingDialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

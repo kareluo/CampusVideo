@@ -7,7 +7,7 @@ public class Xml {
     /**
      * single:
      * [0]root/root: BARSET,
-     * [1]m/m: TOTAL_VIDEOS, PUBLICLASS_DATE
+     * [1]m/m: TOTAL_VIDEOS, PUBLI_CCLASS_DATE
      * [2]img/content: HOME_BANNER, MOVIE_BANNER, TELEPLAY_BANNER
      * <p/>
      * multi:
@@ -52,7 +52,7 @@ public class Xml {
     // 电视剧的推荐列表
     public static final String TELEPLAY_BANNER = "/banner1/rbjc/flash.xml";
 
-    public static final String PUBLICLASS_DATE = "/bar/list/52_adddate.xml";
+    public static final String PUBLIC_CLASS_DATE = "/bar/list/52_adddate.xml";
     public static final String CATHEDRA_DATE = "/bar/list/54_adddate.xml";
     public static final String DOCUMENTARY_DATE = "/bar/list/53_adddate.xml";
 
@@ -65,15 +65,27 @@ public class Xml {
     public static final String MOVIE_CRIMINAL_DATE = "/bar/list/25_9_adddate.xml";
     public static final String MOVIE_FRESH_DATE = "/bar/list/25_270_adddate.xml";
 
+    /**
+     * 内地
+     */
     public static final String MOVIE_MAINLAND_DATE = "/bar/list/25_12_adddate.xml";
     public static final String MOVIE_FICTION_RANK = "/bar/list/25_12_click.xml";
 
+    /**
+     * 港台
+     */
     public static final String MOVIE_HKTW_DATE = "/bar/list/25_15_adddate.xml";
     public static final String MOVIE_HKTW_RANK = "/bar/list/25_15_click.xml";
 
+    /**
+     * 欧美
+     */
     public static final String MOVIE_XVIDEO_DATE = "/bar/list/25_13_adddate.xml";
     public static final String MOVIE_XVIDEO_RANK = "/bar/list/25_13_click.xml";
 
+    /**
+     * 日韩
+     */
     public static final String MOVIE_KKC_DATE = "/bar/list/25_14_adddate.xml";
     public static final String MOVIE_KKC_RANK = "/bar/list/25_14_click.xml";
 
@@ -93,5 +105,5 @@ public class Xml {
     public static final String ANIME_DATE = "/bar/list/37_adddate.xml";
     public static final String ANIME_RANK = "/bar/list/37_click.xml";
 
-    public static final String TVSHOW_DATE = "/bar/list/41_2_adddate.xml";
+    public static final String TV_SHOW_DATE = "/bar/list/41_2_adddate.xml";
 }

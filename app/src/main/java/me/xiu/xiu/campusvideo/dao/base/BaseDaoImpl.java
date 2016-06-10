@@ -4,6 +4,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by felix on 16/3/20.
@@ -20,5 +21,22 @@ public class BaseDaoImpl<T, ID> extends com.j256.ormlite.dao.BaseDaoImpl<T, ID> 
 
     protected BaseDaoImpl(ConnectionSource connectionSource, DatabaseTableConfig<T> tableConfig) throws SQLException {
         super(connectionSource, tableConfig);
+    }
+
+    @Override
+    public boolean isEmpty() throws SQLException {
+        return queryBuilder().countOf() == 0;
+    }
+
+    @Override
+    public void createIfNotExists(List<T> datas) throws SQLException {
+        if (datas == null) return;
+        for (T data : datas) createIfNotExists(data);
+    }
+
+    @Override
+    public void createOrUpdate(List<T> datas) throws SQLException {
+        if (datas == null) return;
+        for (T data : datas) createOrUpdate(data);
     }
 }

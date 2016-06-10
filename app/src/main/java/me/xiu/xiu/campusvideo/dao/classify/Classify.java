@@ -23,6 +23,10 @@ public class Classify {
     @DatabaseField(columnName = FIELD_URL)
     private String url;
 
+    public Classify() {
+
+    }
+
     public Classify(int type, String name, String url) {
         this.type = type;
         this.name = name;

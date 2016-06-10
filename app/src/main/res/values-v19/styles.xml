@@ -6,7 +6,4 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="App.Default">
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
 </resources>

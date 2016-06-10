@@ -2,6 +2,7 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -27,6 +28,7 @@ public class SwipeBackActivity<P extends Presenter> extends BaseActivity<P> impl
         mHelper.onPostCreate();
     }
 
+    @NonNull
     @Override
     public View findViewById(int id) {
         View v = super.findViewById(id);

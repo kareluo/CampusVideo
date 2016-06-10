@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">#f222</color>
-    <color name="color_primary_dark">#f23e</color>
+    <color name="color_primary_dark">#f222</color>
     <color name="player_loading_bg">#9eee</color>
 
     <color name="player_loading_text">#212121</color>
@@ -15,6 +15,32 @@
 
     <color name="text_color">#222</color>
 
-    <color name="windowBackground">#444</color>
+    <color name="video_card_background">#444</color>
+
+    <color name="video_dark_alpha">#4000</color>
+
+    <color name="transparent">#0000</color>
+
+    <color name="green">#126e12</color>
+
+    <color name="red">#890505</color>
+
+    <color name="white">#fff</color>
+
+    <color name="black">#000</color>
+
+    <color name="gray">#666</color>
+    <color name="gray_light">#999</color>
+    <color name="gray_light_alpha">#9999</color>
+    <color name="gray_dark">#333</color>
+    <color name="gray_dark_alpha">#9333</color>
+
+
+    <color name="text_normal">#fefefe</color>
+
+    <color name="bg_sliding">#e0e0e0</color>
+
+    <color name="while_milk">#e8e8e8</color>
+
 
 </resources>

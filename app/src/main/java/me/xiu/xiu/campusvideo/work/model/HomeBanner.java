@@ -60,7 +60,7 @@ public class HomeBanner {
     }
 
     public String getImageUrl() {
-        return CampusVideo.getUrl(img);
+        return CampusVideo.getBanner(img);
     }
 
     @Override

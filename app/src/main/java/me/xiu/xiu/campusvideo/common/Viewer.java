@@ -7,6 +7,12 @@ import android.content.Context;
  */
 public interface Viewer {
 
+    enum IntentKey {
+        VIDEO_ID,
+        VIDEO_NAME,
+        TEXT;
+    }
+
     void showLoadingDialog();
 
     void showLoadingDialog(String mes);

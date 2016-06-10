@@ -7,15 +7,12 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="App.Default">
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
-
     <style name="App.Home">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
 </resources>

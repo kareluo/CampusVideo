@@ -2,15 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/video_normal"
+    android:paddingTop="@dimen/video_normal">
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/video_normal"
+        android:textColor="@color/gray_dark"
         android:textSize="@dimen/text_normal"
-        tools:text="电影" />
+        tools:text="校园视频"
+        tools:textColor="@color/while_milk" />
 
 </LinearLayout>

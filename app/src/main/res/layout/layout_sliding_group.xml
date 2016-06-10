@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray_light_alpha"
     android:orientation="vertical">
 
     <TextView
@@ -13,6 +14,8 @@
         android:paddingLeft="@dimen/video_normal"
         android:paddingStart="@dimen/video_normal"
         android:paddingTop="@dimen/video_tiny"
+        android:singleLine="true"
+        android:textColor="@color/gray_dark_alpha"
         tools:text="视频分类" />
 
 </LinearLayout>

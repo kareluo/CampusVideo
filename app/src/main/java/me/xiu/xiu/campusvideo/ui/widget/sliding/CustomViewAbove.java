@@ -990,4 +990,14 @@ public class CustomViewAbove extends FrameLayout {
         }
         return false;
     }
+
+    @Override
+    protected boolean fitSystemWindows(Rect insets) {
+//        setPadding(paddingLeft + insets.left, paddingTop + insets.top, ...);
+//        insets.left = insets.top = insets.right = insets.bottom = 0;
+//        return true;
+
+        Log.d(TAG, insets.toString());
+        return super.fitSystemWindows(insets);
+    }
 }

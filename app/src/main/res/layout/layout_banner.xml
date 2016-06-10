@@ -6,13 +6,19 @@
     android:layout_margin="@dimen/video_normal"
     app:cardBackgroundColor="@color/video_background"
     app:cardCornerRadius="@dimen/video_radius"
-    app:cardElevation="@dimen/video_elevation">
+    app:cardElevation="@dimen/video_elevation"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
 
-    <ImageView
+    <com.joooonho.SelectableRoundedImageView
         android:id="@+id/iv_banner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/banner"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        app:sriv_left_bottom_corner_radius="@dimen/video_radius"
+        app:sriv_left_top_corner_radius="@dimen/video_radius"
+        app:sriv_right_bottom_corner_radius="@dimen/video_radius"
+        app:sriv_right_top_corner_radius="@dimen/video_radius" />
 
 </android.support.v7.widget.CardView>

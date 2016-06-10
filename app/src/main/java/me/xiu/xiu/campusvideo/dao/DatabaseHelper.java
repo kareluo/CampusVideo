@@ -9,10 +9,12 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
 
 import me.xiu.xiu.campusvideo.dao.base.BaseDao;
 import me.xiu.xiu.campusvideo.dao.classify.Classify;
+import me.xiu.xiu.campusvideo.dao.common.Campus;
+import me.xiu.xiu.campusvideo.dao.offline.Offline;
+import me.xiu.xiu.campusvideo.dao.preference.AppPreference;
 
 /**
  * Created by felix on 16/3/20.
@@ -22,12 +24,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements DatabaseC
 
     private Context mContext;
     private static DatabaseHelper mInstance;
-    private ConcurrentHashMap<Class<?>, BaseDao<?, ?>> mDaoMap;
 
     public DatabaseHelper(Context context) {
         this(context, DATABASE_NAME, DB_VERSION);
         mContext = context;
-        mDaoMap = new ConcurrentHashMap<>();
     }
 
     public DatabaseHelper(Context context, String databaseName, int databaseVersion) {
@@ -43,22 +43,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements DatabaseC
     }
 
     public static <T extends BaseDao<?, ?>> T getDao(DaoAlias daoAlias) throws Exception {
-        return (T) getInstance().getDaoInstance(daoAlias.daoClass);
+        return getInstance().getDaoInstance(daoAlias);
     }
 
-    public <T extends BaseDao<?, ?>> T getDaoInstance(Class<T> clazz) throws Exception {
-        BaseDao<?, ?> baseDao = mDaoMap.get(clazz);
-        if (baseDao == null) {
-            baseDao = clazz.getConstructor(ConnectionSource.class).newInstance(getConnectionSource());
-            mDaoMap.put(clazz, baseDao);
-        }
-        return (T) baseDao;
+    public <T extends BaseDao<?, ?>> T getDaoInstance(DaoAlias daoAlias) throws Exception {
+        return daoAlias.getDao(getConnectionSource());
     }
 
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, Classify.class);
+            TableUtils.createTableIfNotExists(connectionSource, Campus.class);
+            TableUtils.createTableIfNotExists(connectionSource, AppPreference.class);
+            TableUtils.createTableIfNotExists(connectionSource, Offline.class);
         } catch (SQLException e) {
             Log.w(TAG, e);
         }

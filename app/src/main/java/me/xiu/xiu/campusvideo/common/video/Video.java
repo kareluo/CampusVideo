@@ -172,6 +172,10 @@ public class Video implements Parcelable {
             this.epi = epi;
         }
 
+        public String getSid() {
+            return path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."));
+        }
+
         public String getPath() {
             return path;
         }
@@ -194,7 +198,7 @@ public class Video implements Parcelable {
             return !TextUtils.isEmpty(path);
         }
 
-        public String getViewPath() {
+        public String getVideoPath() {
             return CampusVideo.getVideoUrl(path);
         }
 

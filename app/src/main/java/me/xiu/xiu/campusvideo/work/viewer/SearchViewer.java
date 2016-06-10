@@ -12,8 +12,4 @@ import me.xiu.xiu.campusvideo.common.Viewer;
 public interface SearchViewer extends Viewer {
 
     void onSearchResult(List<Bundle> result);
-
-    enum IntentKey {
-        INTENT_TEXT;
-    }
 }

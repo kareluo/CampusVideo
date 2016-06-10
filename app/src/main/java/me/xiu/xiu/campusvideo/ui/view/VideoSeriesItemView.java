@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.view.OnItemClickListener;
@@ -22,6 +23,7 @@ public class VideoSeriesItemView extends FrameLayout implements OnItemClickListe
 
     private VideoAdapter mVideoAdapter;
     private RecyclerView mRecyclerView;
+    private TextView mNameText;
 
     public VideoSeriesItemView(Context context) {
         this(context, null, 0);
@@ -39,8 +41,12 @@ public class VideoSeriesItemView extends FrameLayout implements OnItemClickListe
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
         inflate(context, R.layout.layout_series_item, this);
 
+        mNameText = (TextView) findViewById(R.id.tv_name);
+
         mVideoAdapter = new VideoAdapter(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_videos);
+
+        mRecyclerView.getLayoutManager().setAutoMeasureEnabled(true);
 
         int horizontalSpace = getResources().getDimensionPixelSize(R.dimen.video_horizontal_space);
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(horizontalSpace, 0));
@@ -49,6 +55,7 @@ public class VideoSeriesItemView extends FrameLayout implements OnItemClickListe
     }
 
     public void update(VideoSeries videoSeries) {
+        mNameText.setText(videoSeries.getName());
         mVideoAdapter.update(videoSeries);
     }
 

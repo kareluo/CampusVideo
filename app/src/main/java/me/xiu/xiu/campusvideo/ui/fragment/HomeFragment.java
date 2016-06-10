@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 
@@ -23,11 +22,12 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.ui.activity.SearchActivity;
 import me.xiu.xiu.campusvideo.ui.activity.VideoActivity;
-import me.xiu.xiu.campusvideo.ui.view.BannerPagerView;
 import me.xiu.xiu.campusvideo.ui.view.BannerView;
 import me.xiu.xiu.campusvideo.ui.view.SpaceItemDecoration;
 import me.xiu.xiu.campusvideo.ui.view.VideoSeriesItemView;
+import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.work.model.HomeBanner;
 import me.xiu.xiu.campusvideo.work.model.video.VideoSeries;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.HomePresenter;
@@ -37,7 +37,8 @@ import me.xiu.xiu.campusvideo.work.viewer.fragment.HomeViewer;
  * Created by felix on 15/9/19.
  */
 public class HomeFragment extends BaseFragment<HomePresenter> implements
-        HomeViewer, Toolbar.OnMenuItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+        HomeViewer, SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = "HomeFragment";
 
     private ViewPager mBannerPager;
 
@@ -77,6 +78,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -110,13 +116,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_home, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    public void onCreateOptionsMenu() {
+        if (mToolbar != null) {
+            mToolbar.inflateMenu(R.menu.menu_home);
+            mToolbar.setOnMenuItemClickListener(this);
+        }
     }
 
     @Override
@@ -139,18 +143,18 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
             case android.R.id.home:
                 EventBus.getDefault().post(true);
                 return true;
+            case R.id.menu_search:
+                SearchActivity.start(getContext());
+                return true;
         }
-        return false;
+        return super.onMenuItemClick(item);
     }
 
     @Override
     public void onRefresh() {
-        mSwipeRefreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getPresenter().load();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
+        mSwipeRefreshLayout.postDelayed(() -> {
+            getPresenter().load();
+            mSwipeRefreshLayout.setRefreshing(false);
         }, 1000);
     }
 
@@ -171,12 +175,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
             BannerView bannerView = new BannerView(getContext());
             final HomeBanner homeBanner = mBanners.get(position);
             bannerView.update(homeBanner);
-            bannerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    VideoActivity.start(getContext(), homeBanner.getVid());
-                }
-            });
+            bannerView.setOnClickListener(v -> VideoActivity.start(getContext(), homeBanner.getVid()));
             container.addView(bannerView);
             return bannerView;
         }

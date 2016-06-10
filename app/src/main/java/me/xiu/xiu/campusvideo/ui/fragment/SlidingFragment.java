@@ -9,8 +9,12 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
+
 import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.common.Threshold;
 import me.xiu.xiu.campusvideo.ui.view.SlidingGroupView;
 import me.xiu.xiu.campusvideo.ui.view.SlidingItemView;
 import me.xiu.xiu.campusvideo.work.model.SlidingItem;
@@ -27,10 +31,13 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
 
     private SlidingItem[] mSlidingItems = SlidingItem.values();
 
+    private Threshold mThreshold = new Threshold(10000, 3);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new SlidingAdapter();
+        mThreshold.reset();
     }
 
     @Nullable
@@ -45,6 +52,9 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
         ListView mListView = (ListView) view.findViewById(R.id.lv_sliding);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+        ViewGroup adLayout = (ViewGroup) view.findViewById(R.id.adLayout);
+        AdView adView = new AdView(getContext(), AdSize.FIT_SCREEN);
+        adLayout.addView(adView);
     }
 
     @Override
@@ -52,7 +62,7 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
         SlidingItem item = (SlidingItem) parent.getItemAtPosition(position);
         EventBus.getDefault().post(item);
     }
-
+    
     private class SlidingAdapter extends BaseAdapter {
 
         @Override
@@ -105,6 +115,16 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
         public int getViewTypeCount() {
             return SlidingItem.Type.COUNT;
         }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return getItemViewType(position) != SlidingItem.Type.GROUP;
+        }
+    }
+
+    public enum SlidingState {
+        OPENED,
+        CLOSED;
     }
 
 }

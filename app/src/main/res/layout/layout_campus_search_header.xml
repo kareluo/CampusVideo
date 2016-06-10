@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:padding="@dimen/video_normal">
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/bg_campus_search"
+        android:gravity="center_vertical"
+        android:hint="@string/please_input_campus_name"
+        android:imeOptions="actionSearch"
+        android:maxLength="32"
+        android:paddingLeft="20dp"
+        android:paddingRight="36dp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray"
+        android:textSize="@dimen/text_large" />
+
+    <ImageButton
+        android:id="@+id/ib_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:padding="@dimen/video_normal"
+        android:src="@drawable/ic_clear_all"
+        android:tint="@color/gray"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+</FrameLayout>

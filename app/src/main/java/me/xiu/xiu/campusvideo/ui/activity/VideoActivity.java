@@ -3,16 +3,21 @@ package me.xiu.xiu.campusvideo.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
 
 import org.apmem.tools.layouts.FlowLayout;
 
@@ -47,13 +52,17 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
     private ViewPager mViewPager;
     private VideoPagerAdapter mPagerAdapter;
 
+    private TabLayout mTabLayout;
+
     private Video mVideo = new Video();
 
-    private String[] mFragmentNames = {
-            VideoEpisodeFragment.class.getName(),
-            VideoSummaryFragment.class.getName(),
-            VideoStillFragment.class.getName()
+    private String[] mTabNames = {"剧集", "简介", "剧照"};
+
+    private Class<?>[] mFragments = {
+            VideoEpisodeFragment.class, VideoSummaryFragment.class, VideoStillFragment.class
     };
+
+    private Bundle mArguments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,9 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
         setContentView(R.layout.activity_video);
 
         mVideoId = getIntent().getStringExtra(Constants.Common.PARAM_VIDEO_ID);
+
+        mArguments = new Bundle();
+        mArguments.putString(Constants.Common.PARAM_VIDEO_ID, mVideoId);
 
         initViews();
 
@@ -73,44 +85,22 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
         mPosterImage = (ImageView) findViewById(R.id.iv_poster);
         mDirector = (TextView) findViewById(R.id.director);
         mActors = (FlowLayout) findViewById(R.id.actors);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mTabLayout = (TabLayout) findViewById(R.id.tl_tabs);
+
+        mViewPager = (ViewPager) findViewById(R.id.vp_pager);
+
         mViewPager.setOffscreenPageLimit(2);
         mPagerAdapter = new VideoPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
+
+        mTabLayout.setupWithViewPager(mViewPager);
+        ViewGroup adlayout = (ViewGroup) findViewById(R.id.adLayout);
+        adlayout.addView(new AdView(this, AdSize.FIT_SCREEN));
     }
 
     @Override
     public VideoPresenter getPresenter() {
         return new VideoPresenter(this);
-    }
-
-    private void initDatas() {
-//        new XmlParser().parse(getContext(), CampusVideo.getFilm(mVideoId), "film", "film", 1, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
-//            @Override
-//            public void onParseSuccess(XmlObject obj) {
-//                mVideoInfo = obj.getElements()[0];
-//                update();
-//            }
-//        });
-//
-//        new XmlParser().parse(getContext(), CampusVideo.getEpisode(mVideoId), "root", "root", 1, new XmlParser.XmlParseCallbackAdapter<XmlObject>() {
-//            @Override
-//            public void onParseSuccess(XmlObject obj) {
-//                VideoEpisodeFragment.Episode episode = new VideoEpisodeFragment.Episode();
-//                episode.setEpi(1);
-//                SparseBooleanArray sba = new SparseBooleanArray();
-//                try {
-//                    String[] bs = obj.getElements()[0].getString("b").split(",");
-//                    for (int i = 0; i < bs.length; i++) {
-//                        sba.put(i, bs[i].trim().length() != 0);
-//                    }
-//                } catch (Exception e) {
-//
-//                }
-//                episode.setEpisode(sba);
-//                EventBus.getDefault().post(episode);
-//            }
-//        });
     }
 
     @Subscribe
@@ -155,6 +145,9 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
             case R.id.action_share:
                 share();
                 return true;
+            case R.id.menu_offline:
+                OfflineActivity.start(this, mVideo.getName(), mVideoId);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -179,12 +172,17 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
 
         @Override
         public Fragment getItem(int position) {
-            return Fragment.instantiate(getContext(), mFragmentNames[position]);
+            return Fragment.instantiate(getContext(), mFragments[position].getName(), mArguments);
         }
 
         @Override
         public int getCount() {
-            return mFragmentNames.length;
+            return mFragments.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTabNames[position];
         }
     }
 

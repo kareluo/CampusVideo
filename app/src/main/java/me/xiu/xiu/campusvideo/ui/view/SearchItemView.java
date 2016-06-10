@@ -55,9 +55,9 @@ public class SearchItemView extends FrameLayout {
                 .into(mPosterImage);
 
         mNameText.setText(bundle.getString("a"));
-        mDirectorText.setText(String.format("导演:%s", bundle.getString("d")));
-        mActorText.setText(String.format("演员:%s", bundle.getString("c")));
-        mTypeText.setText(String.format("类型:%s", bundle.getString("e")));
-        mDateText.setText(String.format("日期:%s", bundle.getString("v")));
+        mDirectorText.setText(bundle.getString("d"));
+        mActorText.setText(bundle.getString("c"));
+        mTypeText.setText(bundle.getString("e"));
+        mDateText.setText(bundle.getString("v"));
     }
 }

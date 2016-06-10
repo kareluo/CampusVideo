@@ -11,9 +11,9 @@
         <item name="android:displayOptions">homeAsUp</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
 
-        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
-
         <item name="android:fitsSystemWindows">false</item>
+        <item name="android:textColorPrimary">#fefefe</item>
+
     </style>
 
     <style name="ActivityAnimation" parent="@android:style/Animation">
@@ -26,17 +26,24 @@
     </style>
 
     <style name="App.Default">
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="App.Player">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
     <style name="App.Fullscreen">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="App.Home">
@@ -58,7 +65,7 @@
     </style>
 
     <style name="TextTitleStyle">
-        <item name="android:textColorPrimary">#fff</item>
+        <!--<item name="android:textColorPrimary">#fff</item>-->
     </style>
 
 </resources>

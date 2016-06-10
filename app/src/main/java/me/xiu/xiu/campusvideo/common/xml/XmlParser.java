@@ -170,7 +170,7 @@ public class XmlParser {
                                             } else {
                                                 Logger.d(TAG, "Cache failed, from stream.");
                                                 response = obtainXml(urls[i]);
-                                                results.add(parse(response.body().byteStream(),
+                                                results.add(_parse(response.body().byteStream(),
                                                         tags[i], counts[i], ENCODING));
                                             }
                                         }
@@ -261,7 +261,7 @@ public class XmlParser {
                                         } else {
                                             Logger.d(TAG, "Cache failed, from stream.");
                                             response = obtainXml(url);
-                                            subscriber.onNext(parse(
+                                            subscriber.onNext(_parse(
                                                     response.body().byteStream(), tag, count, ENCODING));
                                         }
                                     }
@@ -381,7 +381,7 @@ public class XmlParser {
         try {
             fileInputStream = new FileInputStream(file);
             bufferedInputStream = new BufferedInputStream(fileInputStream);
-            return parse(bufferedInputStream, tag, count, ENCODING);
+            return _parse(bufferedInputStream, tag, count, ENCODING);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -457,7 +457,11 @@ public class XmlParser {
         return false;
     }
 
-    private XmlObject parse(InputStream inputStream, XmlObject.Tag tag, int count, String encoding) {
+    public static XmlObject parse(InputStream inputStream, XmlObject.Tag tag, int count, String encoding) {
+        return getInstance()._parse(inputStream, tag, count, encoding);
+    }
+
+    private XmlObject _parse(InputStream inputStream, XmlObject.Tag tag, int count, String encoding) {
 
         boolean inside = false;
         Bundle element = new Bundle();
@@ -494,7 +498,7 @@ public class XmlParser {
         return XmlObject.create(tag, elements);
     }
 
-    private XmlObject parseMesses(InputStream inputStream, XmlObject.Tag tag, int count, String encoding) {
+    public XmlObject parseMesses(InputStream inputStream, XmlObject.Tag tag, int count, String encoding) {
 
         boolean inside = false;
         Bundle element = new Bundle();
@@ -529,7 +533,7 @@ public class XmlParser {
         return XmlObject.create(tag, elements);
     }
 
-    private XmlObject[] parse(
+    public XmlObject[] parse(
             InputStream inputStream, XmlObject.Tag[] tags, int[] counts, String encoding)
             throws XmlPullParserException, IOException {
 
@@ -605,6 +609,16 @@ public class XmlParser {
 
     public static abstract class ParseSubscription<T> extends Subscriber<T> {
 
+        private Filter<T> mFilter;
+
+        public ParseSubscription() {
+            this(null);
+        }
+
+        public ParseSubscription(Filter<T> filter) {
+            mFilter = filter;
+        }
+
         @Override
         public final void onStart() {
             onPreParse();
@@ -622,6 +636,9 @@ public class XmlParser {
 
         @Override
         public final void onNext(T next) {
+            if (mFilter != null) {
+                next = mFilter.call(next);
+            }
             onResult(next);
         }
 

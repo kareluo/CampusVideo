@@ -11,22 +11,15 @@
         android:layout_margin="8dp"
         android:columnWidth="80dp"
         android:horizontalSpacing="4dp"
-
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
         android:verticalSpacing="4dp" />
-    <!--android:listSelector="@drawable/bg_video_episode"-->
-    <FrameLayout
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#4fff"
-        tools:visibility="gone">
 
-        <ProgressBar
-            style="?attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+    <ProgressBar
+        android:id="@+id/loading"
+        style="?attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 </FrameLayout>

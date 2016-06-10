@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/video_normal"
-    android:paddingRight="@dimen/video_normal">
+    android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/iv_poster"
-        android:layout_width="@dimen/video_search_poster_width"
-        android:layout_height="@dimen/video_search_poster_height"
-        android:background="@color/color_primary"
-        android:contentDescription="@string/search_poster"
-        android:scaleType="centerCrop" />
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_normal"
+        app:cardBackgroundColor="@color/video_card_background"
+        app:cardCornerRadius="@dimen/video_radius"
+        app:cardElevation="@dimen/video_elevation">
+
+        <ImageView
+            android:id="@+id/iv_poster"
+            android:layout_width="@dimen/video_search_poster_width"
+            android:layout_height="@dimen/video_search_poster_height"
+            android:background="@color/color_primary"
+            android:contentDescription="@string/search_poster"
+            android:scaleType="centerCrop" />
+    </android.support.v7.widget.CardView>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/padding_normal"
         android:layout_marginLeft="@dimen/video_tiny"
         android:orientation="vertical">
 
@@ -29,38 +39,108 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:singleLine="true"
+            android:textColor="?colorAccent"
+            android:textSize="@dimen/text_large"
             tools:text="电影名称" />
 
-        <TextView
-            android:id="@+id/tv_director"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            tools:text="导演:" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_actor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            tools:text="演员:" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="@string/name_director"
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_normal" />
 
-        <TextView
-            android:id="@+id/tv_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            tools:text="类型:" />
+            <TextView
+                android:id="@+id/tv_director"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:textColor="@color/while_milk"
+                android:textSize="@dimen/text_normal"
+                tools:text="劳伦斯" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            tools:text="日期:" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/name_actor"
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_normal" />
+
+            <TextView
+                android:id="@+id/tv_actor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/while_milk"
+                android:textSize="@dimen/text_normal"
+                tools:text="妮可" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/name_type"
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_normal" />
+
+            <TextView
+                android:id="@+id/tv_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/while_milk"
+                android:textSize="@dimen/text_normal"
+                tools:text="科幻" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/name_date"
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_normal" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/while_milk"
+                android:textSize="@dimen/text_normal"
+                tools:text="2016年4月16日" />
+        </LinearLayout>
 
     </LinearLayout>
 
