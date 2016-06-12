@@ -89,6 +89,14 @@ public class OffliningDelegate {
                 });
     }
 
+    public List<Offlining> getOfflinings() {
+        List<Offlining> offlinings = new ArrayList<>();
+        for (int i = 0; i < mOfflinings.size(); i++) {
+            offlinings.add(mOfflinings.valueAt(i));
+        }
+        return offlinings;
+    }
+
     public void actionStart() {
         sync(new Action0() {
             @Override

@@ -9,10 +9,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -22,19 +20,23 @@ import me.xiu.xiu.campusvideo.aidls.IOffliningCallback;
 import me.xiu.xiu.campusvideo.aidls.IOffliningService;
 import me.xiu.xiu.campusvideo.aidls.Offlining;
 import me.xiu.xiu.campusvideo.ui.view.OffliningItemView;
+import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.work.presenter.OffliningPresenter;
 import me.xiu.xiu.campusvideo.work.service.OffliningService;
 import me.xiu.xiu.campusvideo.work.viewer.OffliningViewer;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by felix on 16/4/17.
  */
-public class OffliningActivity extends SwipeBackActivity<OffliningPresenter> implements OffliningViewer {
+public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
+        implements OffliningViewer {
+
     private static final String TAG = "OffliningActivity";
 
     private OffliningAdapter mAdapter;
-    private RecyclerView mRecyclerView;
-    private boolean mDeleteMode = false;
+    private volatile boolean mDeleteMode = false;
 
     private LongSparseArray<Offlining> mOfflinings;
 
@@ -46,7 +48,7 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter> imp
         setContentView(R.layout.activity_offlining);
         mOfflinings = new LongSparseArray<>();
         mAdapter = new OffliningAdapter();
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_offlining);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_offlining);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -80,7 +82,7 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter> imp
                 return true;
             case R.id.menu_delete:
                 mDeleteMode = !mDeleteMode;
-                mAdapter.notifyDataSetChanged();
+                refresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -131,8 +133,12 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter> imp
         @Override
         public void onOptClick() {
             int position = getLayoutPosition();
-            if (mDeleteMode) {
-                
+            if (mDeleteMode && position < mOfflinings.size()) {
+                try {
+                    mIOffliningService.remove(mOfflinings.keyAt(position));
+                } catch (RemoteException e) {
+                    Logger.w(TAG, e);
+                }
             }
         }
     }
@@ -140,37 +146,56 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter> imp
     private IOffliningCallback mCallback = new IOffliningCallback.Stub() {
 
         @Override
-        public void onProgressChanged(Offlining offlining) throws RemoteException {
-
-        }
-
-        @Override
-        public void onStateChanged(Offlining offlining) throws RemoteException {
-
-        }
-
-        @Override
         public void onUpdate(Offlining offlining) throws RemoteException {
             mOfflinings.put(offlining.getId(), offlining);
-            mRecyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.notifyItemChanged(mOfflinings.indexOfKey(offlining.getId()));
-                }
-            });
+            refresh(mOfflinings.indexOfKey(offlining.getId()));
+        }
+
+        @Override
+        public void onUpdateList(List<Offlining> offlinings) throws RemoteException {
+            mOfflinings.clear();
+            for (Offlining offlining : offlinings) {
+                mOfflinings.put(offlining.getId(), offlining);
+            }
+            refresh();
+        }
+
+        @Override
+        public void onRemove(long id, boolean success) throws RemoteException {
+            if (success) {
+                mOfflinings.remove(id);
+                refresh();
+            }
+        }
+
+        @Override
+        public void onAddition(Offlining offlining) throws RemoteException {
+            mOfflinings.put(offlining.getId(), offlining);
+            refresh();
         }
     };
+
+    private void refresh(int position) {
+        Observable.just(position).observeOn(AndroidSchedulers.mainThread()).subscribe(index -> {
+            mAdapter.notifyItemChanged(index);
+        });
+    }
+
+    private void refresh() {
+        Observable.empty().observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
+            mAdapter.notifyDataSetChanged();
+        });
+    }
 
     private ServiceConnection mOffliningConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "绑定成功:" + name);
             mIOffliningService = (IOffliningService) service;
             try {
                 mIOffliningService.registerCallback(mCallback);
-                getPresenter().queryAll(mIOffliningService);
+                mIOffliningService.obtainOfflinings();
             } catch (RemoteException e) {
-
+                Logger.w(TAG, e);
             }
         }
 
@@ -183,6 +208,11 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter> imp
     @Override
     protected void onStop() {
         super.onStop();
+        try {
+            mIOffliningService.unregisterCallback(mCallback);
+        } catch (RemoteException e) {
+            Logger.w(TAG, e);
+        }
         unbindService(mOffliningConnection);
     }
 }

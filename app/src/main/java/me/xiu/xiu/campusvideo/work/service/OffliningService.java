@@ -16,6 +16,7 @@ import me.xiu.xiu.campusvideo.aidls.IOffliningCallback;
 import me.xiu.xiu.campusvideo.aidls.IOffliningService;
 import me.xiu.xiu.campusvideo.aidls.Offlining;
 import me.xiu.xiu.campusvideo.dao.offline.OffliningDelegate;
+import rx.functions.Action0;
 
 /**
  * Created by felix on 16/4/30.
@@ -76,7 +77,12 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
 
         @Override
         public void obtainOfflinings() throws RemoteException {
-            mOffliningDelegate.sync(null);
+            mOffliningDelegate.sync(new Action0() {
+                @Override
+                public void call() {
+                    update(mOffliningDelegate.getOfflinings());
+                }
+            });
         }
 
         @Override
