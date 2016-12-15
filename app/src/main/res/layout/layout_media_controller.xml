@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,23 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize" />
 
-    <CheckBox
-        android:id="@+id/cb_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:button="@drawable/ic_play"
-        android:gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
     <LinearLayout
+        android:id="@+id/ll_ctl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/video_normal">
+
+        <CheckBox
+            android:id="@+id/cb_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@null"
+            android:button="@drawable/ic_play"
+            android:gravity="center"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_seek"
@@ -39,8 +42,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:progress="57"
-            android:secondaryProgress="76" />
+            android:max="1000"
+            tools:progress="57"
+            tools:secondaryProgress="76" />
 
         <TextView
             android:id="@+id/tv_total"
@@ -50,4 +54,45 @@
             tools:text="56:23" />
 
     </LinearLayout>
+
+    <ViewSwitcher
+        android:id="@+id/vs_opts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginTop="80dp"
+        android:inAnimation="@anim/open_enter"
+        android:outAnimation="@anim/close_exit">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/ib_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/padding_16"
+                android:src="@drawable/ic_skip_next_white" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_epis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            android:minWidth="100dp"
+            app:layoutManager="LinearLayoutManager" />
+    </ViewSwitcher>
+
+
 </FrameLayout>

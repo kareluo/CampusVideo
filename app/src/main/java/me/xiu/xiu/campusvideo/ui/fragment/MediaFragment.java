@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.dao.media.Media;
 import me.xiu.xiu.campusvideo.ui.view.MediaItemView;
@@ -44,6 +45,17 @@ public class MediaFragment extends BaseFragment<MediaPresenter> implements Media
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_local);
         mRecyclerView.setAdapter(mAdapter);
         getPresenter().scan();
+        setTitle(R.string.local_media);
+    }
+
+    @Override
+    public int onCreateOptionsMenu() {
+        return R.menu.menu_media;
+    }
+
+    @Override
+    public void onNavigationClick() {
+        EventBus.getDefault().post(true);
     }
 
     @Override

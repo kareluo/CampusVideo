@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import me.kareluo.intensify.gridview.IntensifyGridAdapter;
+import me.kareluo.intensify.gridview.IntensifyGridView;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.aidls.IOffliningCallback;
 import me.xiu.xiu.campusvideo.aidls.IOffliningService;
@@ -31,25 +34,25 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by felix on 16/4/17.
  */
 public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
-        implements OffliningViewer {
+        implements OffliningViewer, IntensifyGridView.OnItemClickListener {
 
     private static final String TAG = "OffliningActivity";
 
     private OffliningAdapter mAdapter;
+
     private volatile boolean mDeleteMode = false;
 
-    private LongSparseArray<Offlining> mOfflinings;
-
     private IOffliningService mIOffliningService;
+
+    private LongSparseArray<Offlining> mOfflinings = new LongSparseArray<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offlining);
-        mOfflinings = new LongSparseArray<>();
-        mAdapter = new OffliningAdapter();
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_offlining);
-        mRecyclerView.setAdapter(mAdapter);
+        IntensifyGridView intensifyGridView = (IntensifyGridView) findViewById(R.id.igv_offlining);
+        intensifyGridView.setItemAnimator(null);
+        mAdapter = new OffliningAdapter(intensifyGridView);
     }
 
     @Override
@@ -73,12 +76,11 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.menu_start_all:
-
+                OffliningService.postAction(this, OffliningService.ACTION_RESUME_ALL);
                 return true;
             case R.id.menu_pause_all:
-
+                OffliningService.postAction(this, OffliningService.ACTION_PAUSE_ALL);
                 return true;
             case R.id.menu_delete:
                 mDeleteMode = !mDeleteMode;
@@ -97,26 +99,35 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
         mAdapter.notifyDataSetChanged();
     }
 
-    private class OffliningAdapter extends RecyclerView.Adapter<OffliningViewHolder> {
+    @Override
+    public void onItemClick(RecyclerView.ViewHolder holder) {
 
-        @Override
-        public OffliningViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new OffliningViewHolder(new OffliningItemView(getContext()));
+    }
+
+    private class OffliningAdapter extends IntensifyGridAdapter<OffliningViewHolder> {
+
+        public OffliningAdapter(@NonNull IntensifyGridView intensifyGridView) {
+            super(intensifyGridView);
         }
 
         @Override
-        public void onBindViewHolder(OffliningViewHolder holder, int position) {
+        protected void onBindCommonViewHolder(OffliningViewHolder holder, int position) {
             holder.update(mOfflinings.valueAt(position));
         }
 
         @Override
-        public int getItemCount() {
+        public OffliningViewHolder onCreateCommonViewHolder(ViewGroup parent, int viewType) {
+            return new OffliningViewHolder(new OffliningItemView(getContext()));
+        }
+
+        @Override
+        public int getCount() {
             return mOfflinings.size();
         }
     }
 
     private class OffliningViewHolder extends RecyclerView.ViewHolder implements
-            OffliningItemView.OnOptClickListener {
+            OffliningItemView.OnItemClickListener {
 
         private OffliningItemView mOffliningItemView;
 
@@ -132,13 +143,22 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
 
         @Override
         public void onOptClick() {
-            int position = getLayoutPosition();
-            if (mDeleteMode && position < mOfflinings.size()) {
+            int position = getAdapterPosition();
+            if (mDeleteMode && position < mOfflinings.size() && position >= 0) {
                 try {
                     mIOffliningService.remove(mOfflinings.keyAt(position));
                 } catch (RemoteException e) {
                     Logger.w(TAG, e);
                 }
+            }
+        }
+
+        @Override
+        public void onItemClick() {
+            int position = getAdapterPosition();
+            if (position < mOfflinings.size()) {
+                startActivity(VideoActivity.newIntent(
+                        getContext(), mOfflinings.valueAt(position).getVid()));
             }
         }
     }
@@ -182,7 +202,7 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
     }
 
     private void refresh() {
-        Observable.empty().observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
+        Observable.just(true).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
             mAdapter.notifyDataSetChanged();
         });
     }

@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/srl_home"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <include layout="@layout/common_toolbar" />
 
-    <LinearLayout
+    <com.cjj.MaterialRefreshLayout
+        android:id="@+id/mrl_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:overlay="false"
+        app:wave_show="true">
 
-        <include layout="@layout/common_toolbar" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_home"
+        <me.xiu.xiu.campusvideo.ui.view.CanScrollingView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layoutManager="LinearLayoutManager"
-            app:reverseLayout="false" />
-    </LinearLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layoutManager="LinearLayoutManager" />
+
+            <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+                android:id="@+id/rvh_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top">
+
+                <include layout="@layout/layout_home_banner" />
+
+            </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
+        </me.xiu.xiu.campusvideo.ui.view.CanScrollingView>
+    </com.cjj.MaterialRefreshLayout>
+</LinearLayout>

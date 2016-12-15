@@ -6,19 +6,12 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <GridView
-        android:id="@+id/gv_offline"
+    <me.kareluo.intensify.gridview.IntensifyGridView
+        android:id="@+id/igv_videos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:choiceMode="multipleChoice"
-        android:numColumns="4" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_offline"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layoutManager="GridLayoutManager"
-        app:spanCount="4" />
+        app:horizontalSpacing="4dp"
+        app:spanCount="4"
+        app:verticalSpacing="4dp" />
 
 </LinearLayout>

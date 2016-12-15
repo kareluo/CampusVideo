@@ -9,6 +9,8 @@
 
     <color name="bg_video_actor">#4000</color>
 
+    <color name="bg_alpha_dark">#6000</color>
+
     <color name="video_summary_title">#FF1A610F</color>
 
     <color name="video_background">#eee</color>

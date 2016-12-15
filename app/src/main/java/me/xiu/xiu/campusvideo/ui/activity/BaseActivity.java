@@ -7,8 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.umeng.analytics.MobclickAgent;
+import android.widget.Toast;
 
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.Viewer;
@@ -121,6 +120,16 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
     }
 
     @Override
+    public void showToastMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToastMessage(int resId) {
+        showToastMessage(getString(resId));
+    }
+
+    @Override
     public void showLoadingDialog() {
         mLoadingDialog.setMessage("加载中...");
         if (!mLoadingDialog.isShowing()) {
@@ -154,13 +163,11 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     @Override

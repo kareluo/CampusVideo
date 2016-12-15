@@ -14,4 +14,8 @@ public class ValueUtil {
     public static <E> boolean isEmpty(E[] arrays) {
         return arrays == null || arrays.length == 0;
     }
+
+    public static boolean equals(Object a, Object b) {
+        return (a == null) ? (b == null) : a.equals(b);
+    }
 }

@@ -15,6 +15,10 @@ public interface Viewer {
 
     void showLoadingDialog();
 
+    void showToastMessage(String msg);
+
+    void showToastMessage(int resId);
+
     void showLoadingDialog(String mes);
 
     void showLoadingDialog(int resId);

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.xml.PageRule;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.TypePresenter;
@@ -39,6 +40,11 @@ public class TypeFragment extends BaseFragment<TypePresenter> implements TypeVie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_type, container, false);
+    }
+
+    @Override
+    public void onNavigationClick() {
+        EventBus.getDefault().post(true);
     }
 
     @Override

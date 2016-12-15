@@ -3,18 +3,19 @@ package me.xiu.xiu.campusvideo.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.kareluo.intensify.gridview.IntensifyGridAdapter;
+import me.kareluo.intensify.gridview.IntensifyGridView;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.video.Video;
 import me.xiu.xiu.campusvideo.ui.view.EpisodeItemView;
@@ -25,16 +26,14 @@ import me.xiu.xiu.campusvideo.work.viewer.OfflineViewer;
 /**
  * Created by felix on 16/4/30.
  */
-public class OfflineActivity extends SwipeBackActivity<OfflinePresenter> implements OfflineViewer, AdapterView.OnItemClickListener {
+public class OfflineActivity extends SwipeBackActivity<OfflinePresenter>
+        implements OfflineViewer, IntensifyGridView.OnItemClickListener {
 
     private String mVideoId;
-    private List<Video.Episode> mEpisodes;
-    private RecyclerView mRecyclerView;
+
+    private List<Video.Episode> mEpisodes = new ArrayList<>();
+
     private EpisodeAdapter mAdapter;
-
-    private VideoAdapter mVideoAdapter;
-
-    private GridView mGridView;
 
     private String mDestPath;
 
@@ -44,20 +43,26 @@ public class OfflineActivity extends SwipeBackActivity<OfflinePresenter> impleme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline);
-        Intent intent = getIntent();
-        mVideoName = intent.getStringExtra(IntentKey.VIDEO_NAME.name());
-        setTitle(mVideoName);
-        mVideoId = intent.getStringExtra(IntentKey.VIDEO_ID.name());
-        mEpisodes = new ArrayList<>();
-        mAdapter = new EpisodeAdapter();
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_offline);
-        mRecyclerView.setAdapter(mAdapter);
-        mVideoAdapter = new VideoAdapter();
-        mGridView = (GridView) findViewById(R.id.gv_offline);
-        mGridView.setAdapter(mVideoAdapter);
-        mGridView.setOnItemClickListener(this);
-        mDestPath = "/storage/sdcard0/Campusvideo/videos/";
+        IntensifyGridView intensifyGridView = (IntensifyGridView) findViewById(R.id.igv_videos);
+        mAdapter = new EpisodeAdapter(intensifyGridView);
+        intensifyGridView.setOnItemClickListener(this);
+
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            File path = Environment.getExternalStorageDirectory();
+            File file = new File(path, "Campusvideo/videos/");
+            file.mkdirs();
+            mDestPath = file.getAbsolutePath();
+        }
+
         getPresenter().load(mVideoId);
+    }
+
+    @Override
+    protected void onParseIntent(Intent intent) {
+        super.onParseIntent(intent);
+        mVideoName = intent.getStringExtra(IntentKey.VIDEO_NAME.name());
+        mVideoId = intent.getStringExtra(IntentKey.VIDEO_ID.name());
+        setTitle(mVideoName);
     }
 
     @Override
@@ -89,11 +94,21 @@ public class OfflineActivity extends SwipeBackActivity<OfflinePresenter> impleme
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        getPresenter().offline(mVideoName, mVideoId, mDestPath, mVideoAdapter.getItem(position));
+    public void onItemClick(RecyclerView.ViewHolder holder) {
+        int position = holder.getAdapterPosition();
+        getPresenter().offline(mVideoName, mVideoId, mDestPath, mEpisodes.get(position));
     }
 
-    private class VideoAdapter extends BaseAdapter {
+    private class EpisodeAdapter extends IntensifyGridAdapter<EpisodeVideoHolder> {
+
+        public EpisodeAdapter(@NonNull IntensifyGridView intensifyGridView) {
+            super(intensifyGridView);
+        }
+
+        @Override
+        public EpisodeVideoHolder onCreateCommonViewHolder(ViewGroup parent, int viewType) {
+            return new EpisodeVideoHolder(new EpisodeItemView(parent.getContext()));
+        }
 
         @Override
         public int getCount() {
@@ -101,45 +116,15 @@ public class OfflineActivity extends SwipeBackActivity<OfflinePresenter> impleme
         }
 
         @Override
-        public Video.Episode getItem(int position) {
-            return mEpisodes.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = new EpisodeItemView(getContext());
-            }
-            EpisodeItemView episodeItemView = (EpisodeItemView) convertView;
-            episodeItemView.update(getItem(position));
-            return convertView;
-        }
-    }
-
-    private class EpisodeAdapter extends RecyclerView.Adapter<EpisodeVideoHolder> {
-
-        @Override
-        public EpisodeVideoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new EpisodeVideoHolder(new EpisodeItemView(getContext()));
-        }
-
-        @Override
-        public void onBindViewHolder(EpisodeVideoHolder holder, int position) {
+        protected void onBindCommonViewHolder(EpisodeVideoHolder holder, int position) {
             holder.update(mEpisodes.get(position));
         }
 
-        @Override
-        public int getItemCount() {
-            return mEpisodes.size();
-        }
     }
 
-    private static class EpisodeVideoHolder extends RecyclerView.ViewHolder implements Updatable<Video.Episode> {
+    private static class EpisodeVideoHolder extends RecyclerView.ViewHolder
+            implements Updatable<Video.Episode> {
+
         private EpisodeItemView mEpisodeItemView;
 
         public EpisodeVideoHolder(EpisodeItemView itemView) {

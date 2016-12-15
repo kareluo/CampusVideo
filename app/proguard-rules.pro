@@ -50,3 +50,6 @@ public static final int *;
 -keep class net.youmi.android.** {
     *;
 }
+
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}

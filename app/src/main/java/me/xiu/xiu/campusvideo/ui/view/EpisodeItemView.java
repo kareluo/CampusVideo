@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.video.Video;
+import me.xiu.xiu.campusvideo.dao.offline.Offline;
 
 /**
  * Created by felix on 16/3/20.
@@ -36,6 +37,10 @@ public class EpisodeItemView extends FrameLayout {
 
     public void update(Video.Episode episode) {
         mEpisodeText.setText(String.valueOf(episode.getEpi()));
+    }
+
+    public void update(Offline offline) {
+        mEpisodeText.setText(String.valueOf(offline.getEpisode()));
     }
 
     @Override

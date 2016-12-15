@@ -7,15 +7,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ import me.xiu.xiu.campusvideo.ui.activity.VideoActivity;
 import me.xiu.xiu.campusvideo.ui.view.BannerView;
 import me.xiu.xiu.campusvideo.ui.view.SpaceItemDecoration;
 import me.xiu.xiu.campusvideo.ui.view.VideoSeriesItemView;
-import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.work.model.HomeBanner;
 import me.xiu.xiu.campusvideo.work.model.video.VideoSeries;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.HomePresenter;
@@ -37,7 +35,7 @@ import me.xiu.xiu.campusvideo.work.viewer.fragment.HomeViewer;
  * Created by felix on 15/9/19.
  */
 public class HomeFragment extends BaseFragment<HomePresenter> implements
-        HomeViewer, SwipeRefreshLayout.OnRefreshListener {
+        HomeViewer {
     private static final String TAG = "HomeFragment";
 
     private ViewPager mBannerPager;
@@ -46,15 +44,13 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
 
     private RecyclerView mRecyclerView;
 
-    private LinearLayoutManager mLinearLayoutManager;
-
     private VideoRecyclerAdapter mVideoSeriesAdapter;
 
     private List<HomeBanner> mBanners;
 
     private List<VideoSeries> mVideoSeries;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private MaterialRefreshLayout mMaterialRefreshLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +60,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
 
         mHomePagerAdapter = new HomePagerAdapter();
         mVideoSeriesAdapter = new VideoRecyclerAdapter();
+
+        SwipeRefreshLayout s;
     }
 
     @Override
@@ -85,29 +83,19 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setNavigationIcon(R.drawable.ic_view_headline_white);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_home);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mMaterialRefreshLayout = (MaterialRefreshLayout) view.findViewById(R.id.mrl_home);
+        mMaterialRefreshLayout.setMaterialRefreshListener(mOnRefreshListener);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_home);
         int verticalSpace = getResources().getDimensionPixelSize(R.dimen.video_vertical_space);
         mRecyclerView.addItemDecoration(new SpaceItemDecoration(0, verticalSpace));
-        mLinearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        RecyclerViewHeader header = (RecyclerViewHeader) view.findViewById(R.id.rvh_header);
+        header.attachTo(mRecyclerView, true);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                mSwipeRefreshLayout.setEnabled(mLinearLayoutManager
-                        .findFirstCompletelyVisibleItemPosition() == 0);
-            }
-        });
-
-        RecyclerViewHeader headerView =
-                RecyclerViewHeader.fromXml(getContext(), R.layout.layout_home_banner);
-        mBannerPager = (ViewPager) headerView.findViewById(R.id.vp_banner);
+        mBannerPager = (ViewPager) view.findViewById(R.id.vp_banner);
         mBannerPager.setAdapter(mHomePagerAdapter);
-
-        headerView.attachTo(mRecyclerView);
 
         mRecyclerView.setAdapter(mVideoSeriesAdapter);
 
@@ -116,11 +104,13 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     }
 
     @Override
-    public void onCreateOptionsMenu() {
-        if (mToolbar != null) {
-            mToolbar.inflateMenu(R.menu.menu_home);
-            mToolbar.setOnMenuItemClickListener(this);
-        }
+    public int onCreateOptionsMenu() {
+        return R.menu.menu_home;
+    }
+
+    @Override
+    public void onNavigationClick() {
+        EventBus.getDefault().post(true);
     }
 
     @Override
@@ -150,13 +140,16 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         return super.onMenuItemClick(item);
     }
 
-    @Override
-    public void onRefresh() {
-        mSwipeRefreshLayout.postDelayed(() -> {
-            getPresenter().load();
-            mSwipeRefreshLayout.setRefreshing(false);
-        }, 1000);
-    }
+    private MaterialRefreshListener mOnRefreshListener = new MaterialRefreshListener() {
+
+        @Override
+        public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+            mMaterialRefreshLayout.postDelayed(() -> {
+                getPresenter().load();
+                mMaterialRefreshLayout.finishRefresh();
+            }, 1000);
+        }
+    };
 
     private class HomePagerAdapter extends PagerAdapter {
 

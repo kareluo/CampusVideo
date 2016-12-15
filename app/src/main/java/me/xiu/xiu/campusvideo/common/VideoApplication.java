@@ -2,8 +2,7 @@ package me.xiu.xiu.campusvideo.common;
 
 import android.support.multidex.MultiDexApplication;
 
-import com.umeng.analytics.AnalyticsConfig;
-import com.umeng.analytics.MobclickAgent;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import net.youmi.android.AdManager;
 
@@ -18,11 +17,8 @@ public class VideoApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        CrashReport.initCrashReport(getApplicationContext(), "5a6c633bfa", false);
 
-
-        MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(this, Constants.Application.UMENG_KEY, "ME"));
-        MobclickAgent.enableEncrypt(true);
-        MobclickAgent.openActivityDurationTrack(false);
         AdManager.getInstance(this).init(Constants.Application.AD_ID, Constants.Application.AD_SECRET, true);
 
         CampusVideo.init(this);

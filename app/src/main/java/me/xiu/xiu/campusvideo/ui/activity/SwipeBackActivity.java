@@ -1,9 +1,11 @@
 
 package me.xiu.xiu.campusvideo.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 
 import me.xiu.xiu.campusvideo.common.Presenter;
@@ -18,6 +20,7 @@ public class SwipeBackActivity<P extends Presenter> extends BaseActivity<P> impl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        onParseIntent(getIntent());
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
     }
@@ -26,6 +29,10 @@ public class SwipeBackActivity<P extends Presenter> extends BaseActivity<P> impl
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mHelper.onPostCreate();
+    }
+
+    protected void onParseIntent(Intent intent) {
+
     }
 
     @NonNull
@@ -48,8 +55,27 @@ public class SwipeBackActivity<P extends Presenter> extends BaseActivity<P> impl
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                scrollToFinishActivity();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void scrollToFinishActivity() {
         SwipeBackUtils.convertActivityToTranslucent(this);
         getSwipeBackLayout().scrollToFinishActivity();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == keyCode) {
+            scrollToFinishActivity();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

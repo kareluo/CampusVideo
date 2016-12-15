@@ -20,11 +20,19 @@ public class FileUtils {
         return file;
     }
 
+    public static boolean delete(String path) {
+        return path != null && delete(new File(path));
+    }
+
+    public static boolean delete(File file) {
+        return file != null && file.exists() && file.delete();
+    }
+
     public static void close(Closeable closeable) {
         if (closeable != null) {
             try {
                 closeable.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
 
             }
         }

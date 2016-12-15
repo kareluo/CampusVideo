@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import me.xiu.xiu.campusvideo.aidls.Offlining;
-import me.xiu.xiu.campusvideo.common.DownloadState;
+import me.xiu.xiu.campusvideo.common.OfflineState;
 import me.xiu.xiu.campusvideo.common.video.Video;
 
 /**
@@ -61,7 +61,7 @@ public class Offline {
         this.sid = epi.getSid();
         this.progress = 0L;
         this.total = 0L;
-        this.state = DownloadState.WAITING.value;
+        this.state = OfflineState.WAITING.value;
     }
 
     public Offlining to() {
@@ -93,7 +93,7 @@ public class Offline {
     private Long total = Long.MAX_VALUE;
 
     @DatabaseField(columnName = FIELD_STATE, defaultValue = "0")
-    private Integer state = DownloadState.WAITING.value;
+    private Integer state = OfflineState.WAITING.value;
 
     @DatabaseField(columnName = FIELD_DEST)
     private String dest;

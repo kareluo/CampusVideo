@@ -1,13 +1,15 @@
 package me.xiu.xiu.campusvideo.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.umeng.analytics.MobclickAgent;
+import android.widget.Toast;
 
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.Presenter;
@@ -34,8 +36,32 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        if (mToolbar != null) mToolbar.setOnMenuItemClickListener(this);
-        onCreateOptionsMenu();
+        if (mToolbar != null) {
+            mToolbar.setOnMenuItemClickListener(this);
+            mToolbar.setNavigationOnClickListener(v -> onNavigationClick());
+        }
+        int resId = onCreateOptionsMenu();
+        if (resId != 0) {
+            mToolbar.inflateMenu(resId);
+        }
+    }
+
+    public void setNavigationIcon(@DrawableRes int resId) {
+        if (mToolbar != null) {
+            mToolbar.setNavigationIcon(resId);
+        }
+    }
+
+    public void setTitle(@StringRes int resId) {
+        if (mToolbar != null) {
+            mToolbar.setTitle(resId);
+        }
+    }
+
+    public void setTitle(String title) {
+        if (mToolbar != null) {
+            mToolbar.setTitle(title);
+        }
     }
 
     public void addOnClickListener(View... views) {
@@ -45,8 +71,19 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
         }
     }
 
-    public void onCreateOptionsMenu() {
+    @MenuRes
+    public int onCreateOptionsMenu() {
+        return 0;
+    }
 
+    @Override
+    public void showToastMessage(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToastMessage(int resId) {
+        showToastMessage(getString(resId));
     }
 
     @Override
@@ -72,13 +109,11 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart(getClass().getSimpleName());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd(getClass().getSimpleName());
     }
 
     @Override
@@ -106,6 +141,10 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
 
     @Override
     public void onClick(View v) {
+
+    }
+
+    public void onNavigationClick() {
 
     }
 

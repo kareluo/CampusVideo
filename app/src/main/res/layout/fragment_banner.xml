@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cjj.MaterialRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/srl_banner"
+    android:id="@+id/mrl_banner"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:isLoadMore="false"
+    app:overlay="false">
 
-    <FrameLayout
+    <me.xiu.xiu.campusvideo.ui.view.CanScrollingView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,6 +20,14 @@
             app:reverseLayout="false"
             app:spanCount="3" />
 
-    </FrameLayout>
+        <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+            android:id="@+id/rvh_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top">
 
-</android.support.v4.widget.SwipeRefreshLayout>
+            <include layout="@layout/layout_home_banner" />
+
+        </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
+    </me.xiu.xiu.campusvideo.ui.view.CanScrollingView>
+</com.cjj.MaterialRefreshLayout>

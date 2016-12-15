@@ -15,7 +15,7 @@
         android:clipToPadding="false"
         android:divider="@color/gray_light_alpha"
         android:dividerHeight="@dimen/sliding_divider_height"
-        android:paddingBottom="60dp"
+        android:paddingBottom="80dp"
         android:paddingTop="25dp" />
 
     <android.support.v7.widget.CardView

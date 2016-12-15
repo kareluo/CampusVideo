@@ -174,8 +174,8 @@ public class XmlParser {
                                                         tags[i], counts[i], ENCODING));
                                             }
                                         }
-                                    } catch (Exception e) {
-                                        subscriber.onError(e);
+                                    } catch (Exception ignored) {
+
                                     }
                                 }
                                 subscriber.onNext(results);

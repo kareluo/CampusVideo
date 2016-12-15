@@ -6,11 +6,11 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_offlining"
+    <me.kareluo.intensify.gridview.IntensifyGridView
+        android:id="@+id/igv_offlining"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="GridLayoutManager"
+        app:blockWidth="match_parent"
         app:spanCount="1" />
 
 </LinearLayout>

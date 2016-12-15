@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
 
     private GridLayoutManager mGridLayoutManager;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private MaterialRefreshLayout mMaterialRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,17 +61,11 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_videos);
+        mMaterialRefreshLayout = (MaterialRefreshLayout) view.findViewById(R.id.mrl_videos);
+        mMaterialRefreshLayout.setMaterialRefreshListener(mMaterialRefreshListener);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_grid);
         mAdapter = new VideosAdapter(getContext(), mVideoInfos);
         mRecyclerView.setAdapter(mAdapter);
-        mGridLayoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                mSwipeRefreshLayout.setEnabled(mGridLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-            }
-        });
         getPresenter().load(mParseRule);
     }
 
@@ -80,9 +77,6 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
     }
 
     @Override
@@ -105,4 +99,11 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
         args.putParcelable(KEY_VIDEOS, rule);
         return args;
     }
+
+    private MaterialRefreshListener mMaterialRefreshListener = new MaterialRefreshListener() {
+        @Override
+        public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+            materialRefreshLayout.finishRefresh();
+        }
+    };
 }

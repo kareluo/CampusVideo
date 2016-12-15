@@ -28,7 +28,6 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
     private static final String TAG = "HomeActivity";
 
     private SlidingLayout mSlidingLayout;
-    private Toolbar mToolbar;
     private Fragment mCurrentFragment;
     private SlidingItem mCurrentItem = SlidingItem.HOME;
 
@@ -47,8 +46,10 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
 
     private void initViews() {
         mSlidingLayout = (SlidingLayout) findViewById(R.id.sm_home);
-        mSlidingLayout.setOnOpenedListener(this);
-        mSlidingLayout.setOnClosedListener(this);
+        if (mSlidingLayout != null) {
+            mSlidingLayout.setOnOpenedListener(this);
+            mSlidingLayout.setOnClosedListener(this);
+        }
 
         mCurrentFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getName());
     }
@@ -131,7 +132,7 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
     }
 
     @Subscribe
-    public void shiftSlidingMenu(boolean animate) {
+    public void shiftSlidingMenu(Boolean animate) {
         if (!mSlidingLayout.isMenuShowing()) {
             mSlidingLayout.showMenu(animate);
         } else {
@@ -147,12 +148,12 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
 
     @Override
     public void onClosed() {
-//        Toast.makeText(this, "onClosed", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onOpened() {
-//        Toast.makeText(this, "onOpened", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

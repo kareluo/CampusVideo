@@ -7,5 +7,7 @@ import me.xiu.xiu.campusvideo.common.Viewer;
  */
 public interface TypeViewer extends Viewer {
     String KEY_PAGES = "PAGES";
+    String KEY_TITLE = "TITLE";
+
 
 }

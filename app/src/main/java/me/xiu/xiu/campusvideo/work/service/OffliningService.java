@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,6 +15,7 @@ import me.xiu.xiu.campusvideo.aidls.IOffliningCallback;
 import me.xiu.xiu.campusvideo.aidls.IOffliningService;
 import me.xiu.xiu.campusvideo.aidls.Offlining;
 import me.xiu.xiu.campusvideo.dao.offline.OffliningDelegate;
+import me.xiu.xiu.campusvideo.util.Logger;
 import rx.functions.Action0;
 
 /**
@@ -51,6 +51,12 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
             switch (action) {
                 case ACTION_START:
                     mOffliningDelegate.actionStart();
+                    break;
+                case ACTION_RESUME_ALL:
+                    mOffliningDelegate.actionResumeAll();
+                    break;
+                case ACTION_PAUSE_ALL:
+                    mOffliningDelegate.actionPauseAll();
                     break;
             }
         }
@@ -108,8 +114,8 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
         for (IOffliningCallback callback : mCallbacks) {
             try {
                 callback.onUpdate(offlining);
-            } catch (RemoteException ignored) {
-
+            } catch (RemoteException e) {
+                Logger.w(TAG, e);
             }
         }
     }
@@ -119,8 +125,8 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
         for (IOffliningCallback callback : mCallbacks) {
             try {
                 callback.onUpdateList(offlinings);
-            } catch (RemoteException ignored) {
-
+            } catch (RemoteException e) {
+                Logger.w(TAG, e);
             }
         }
     }
@@ -130,8 +136,8 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
         for (IOffliningCallback callback : mCallbacks) {
             try {
                 callback.onRemove(id, success);
-            } catch (RemoteException ignored) {
-
+            } catch (RemoteException e) {
+                Logger.w(TAG, e);
             }
         }
     }
@@ -141,8 +147,8 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
         for (IOffliningCallback callback : mCallbacks) {
             try {
                 callback.onAddition(offlining);
-            } catch (RemoteException ignored) {
-
+            } catch (RemoteException e) {
+                Logger.w(TAG, e);
             }
         }
     }

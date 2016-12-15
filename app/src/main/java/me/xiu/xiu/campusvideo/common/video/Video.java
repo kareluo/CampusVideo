@@ -8,10 +8,14 @@ import android.util.Pair;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 
+import com.a.a.a.V;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import me.xiu.xiu.campusvideo.common.CampusVideo;
+import me.xiu.xiu.campusvideo.dao.offline.Offline;
+import me.xiu.xiu.campusvideo.util.ValueUtil;
 
 /**
  * Created by felix on 15/9/19.
@@ -142,6 +146,23 @@ public class Video implements Parcelable {
         if (info != null) {
             name = info.getString("name", name);
         }
+    }
+
+    public static Video valueOf(List<Offline> offlines) {
+        Video video = new Video();
+        if (!ValueUtil.isEmpty(offlines)) {
+            Offline offline = offlines.get(0);
+            video.setName(offline.getName());
+            video.setPath(offline.getDest());
+            video.setType(Video.TYPE_OFFLINE);
+            video.setVid(offline.getVid());
+            List<Episode> episodes = new ArrayList<>();
+            for (Offline o : offlines) {
+                episodes.add(new Episode(o.getEpisode(), o.getDest()));
+            }
+            video.setEpisodes(episodes);
+        }
+        return video;
     }
 
     @Override

@@ -35,9 +35,12 @@
     <dimen name="margin_2">2dp</dimen>
     <dimen name="margin_4">4dp</dimen>
     <dimen name="margin_normal">8dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
 
     <dimen name="padding_normal">8dp</dimen>
     <dimen name="padding_large">12dp</dimen>
+    <dimen name="padding_2">2dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
     <dimen name="padding_16">16dp</dimen>
 
     <dimen name="text_small">12sp</dimen>

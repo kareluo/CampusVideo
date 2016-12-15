@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.dao.common.Campus;
@@ -46,6 +47,12 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements S
         addOnClickListener(view.findViewById(R.id.cv_campus), view.findViewById(R.id.cv_setting));
         mCampusText = (TextView) view.findViewById(R.id.tv_campus);
         mHostText = (TextView) view.findViewById(R.id.tv_host);
+        setTitle(R.string.setting);
+    }
+
+    @Override
+    public void onNavigationClick() {
+        EventBus.getDefault().post(true);
     }
 
     @Override

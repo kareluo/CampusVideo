@@ -14,4 +14,10 @@ public interface OfflineDao extends BaseDao<Offline, Long> {
     List<Offline> queryOfflines() throws SQLException;
 
     List<Offlining> queryOfflinings(long minId) throws SQLException;
+
+    List<Offlines> queryOfflineses() throws SQLException;
+
+    List<Offline> queryOfflinesByVid(String vid) throws SQLException;
+
+    void clear(String vid) throws SQLException;
 }
