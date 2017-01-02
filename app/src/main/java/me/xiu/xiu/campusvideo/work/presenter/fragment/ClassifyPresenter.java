@@ -2,15 +2,11 @@ package me.xiu.xiu.campusvideo.work.presenter.fragment;
 
 import android.widget.Toast;
 
-import java.sql.SQLException;
-
-import io.vov.vitamio.utils.Log;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.dao.DaoAlias;
 import me.xiu.xiu.campusvideo.dao.DatabaseHelper;
 import me.xiu.xiu.campusvideo.dao.classify.Classify;
 import me.xiu.xiu.campusvideo.dao.classify.ClassifyDao;
-import me.xiu.xiu.campusvideo.dao.classify.ClassifyDaoImpl;
 import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.ClassifyViewer;
 import rx.Observable;

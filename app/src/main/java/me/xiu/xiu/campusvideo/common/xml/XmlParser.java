@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.vov.vitamio.utils.Log;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.util.CommonUtil;
 import me.xiu.xiu.campusvideo.util.Logger;

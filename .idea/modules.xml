@@ -12,7 +12,6 @@
       <module fileurl="file://$PROJECT_DIR$/ijkplayer-java/ijkplayer-java.iml" filepath="$PROJECT_DIR$/ijkplayer-java/ijkplayer-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/ijkplayer-x86/ijkplayer-x86.iml" filepath="$PROJECT_DIR$/ijkplayer-x86/ijkplayer-x86.iml" />
       <module fileurl="file://$PROJECT_DIR$/ijkplayer-x86_64/ijkplayer-x86_64.iml" filepath="$PROJECT_DIR$/ijkplayer-x86_64/ijkplayer-x86_64.iml" />
-      <module fileurl="file://$PROJECT_DIR$/vitamio/vitamio.iml" filepath="$PROJECT_DIR$/vitamio/vitamio.iml" />
     </modules>
   </component>
 </project>

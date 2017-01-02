@@ -1,11 +1,11 @@
 package me.xiu.xiu.campusvideo.util;
 
+import android.util.Log;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-
-import io.vov.vitamio.utils.Log;
 
 /**
  * Created by felix on 16/3/18.
@@ -39,7 +39,7 @@ public class CommonUtil {
             try {
                 closeable.close();
             } catch (IOException e) {
-                Log.e(TAG, e);
+                Log.e(TAG, e.getMessage(), e);
             }
         }
     }

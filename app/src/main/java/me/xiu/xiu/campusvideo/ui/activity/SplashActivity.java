@@ -6,8 +6,6 @@ import net.youmi.android.spot.SplashView;
 import net.youmi.android.spot.SpotDialogListener;
 import net.youmi.android.spot.SpotManager;
 
-import io.vov.vitamio.utils.Log;
-import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.util.Logger;
 
 /**

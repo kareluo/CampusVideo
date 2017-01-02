@@ -2,44 +2,47 @@ package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TableLayout;
 
-import io.vov.vitamio.LibsChecker;
-import io.vov.vitamio.MediaPlayer;
-import io.vov.vitamio.widget.VideoView;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.video.Video;
-import me.xiu.xiu.campusvideo.ui.widget.MediaController;
+import tv.danmaku.ijk.media.example.widget.media.AndroidMediaController;
+import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
  * Created by felix on 15/9/19.
  */
 public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoListener,
-        MediaPlayer.OnBufferingUpdateListener, MediaController.OnCloseRequestListener,
-        MediaController.OnVisibilityChangeListener {
+        MediaPlayer.OnBufferingUpdateListener {
     private static final String TAG = "PlayerActivity";
-
-    private VideoView mVideoView;
 
     private Video mVideo;
 
     private View mWaitingView;
 
-    private MediaController mMediaController;
+    private IjkVideoView mVideoView;
+
+    private TableLayout mTableLayout;
+
+    private AndroidMediaController mMediaController;
 
     private static final String EXTRA_VIDEO = "video";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!LibsChecker.checkVitamioLibs(this)) {
-            return;
-        }
         setContentView(R.layout.activity_player);
+        // init player
+        IjkMediaPlayer.loadLibrariesOnce(null);
+        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+
         initViews();
         initParams(getIntent());
         play();
@@ -56,7 +59,6 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
         if (intent == null) return;
         mVideo = intent.getParcelableExtra(EXTRA_VIDEO);
         setTitle(mVideo.getName());
-        mMediaController.setEpisodes(mVideo.getEpisodes());
     }
 
     private void play() {
@@ -70,30 +72,17 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
                     mVideoView.setVideoPath(mVideo.getCurrentEpisode().getVideoPath());
                     break;
             }
+            mVideoView.start();
         }
     }
 
     protected void initViews() {
+        mTableLayout = (TableLayout) findViewById(R.id.tl_tabs);
+        mVideoView = (IjkVideoView) findViewById(R.id.video_view);
         mWaitingView = findViewById(R.id.loading_view);
-        mMediaController = (MediaController) findViewById(R.id.mc_controller);
-        if (mMediaController != null) {
-            setSupportActionBar(mMediaController.getToolbar());
-            mMediaController.setOnCloseRequestListener(this);
-            mMediaController.setOnVisibilityChangeListener(this);
-        }
-
-        mVideoView = (VideoView) findViewById(R.id.vv_player);
-        if (mVideoView != null) {
-            mVideoView.setMediaController(mMediaController);
-            mVideoView.requestFocus();
-            mVideoView.setOnInfoListener(this);
-            mVideoView.setOnBufferingUpdateListener(this);
-            mVideoView.setBufferSize(1024 * 1024);
-            mVideoView.setOnPreparedListener(mediaPlayer -> {
-                // optional need Vitamio 4.0
-                mediaPlayer.setPlaybackSpeed(1.0f);
-            });
-        }
+        mMediaController = new AndroidMediaController(this);
+        mVideoView.setHudView(mTableLayout);
+        mVideoView.setMediaController(mMediaController);
     }
 
     @Override
@@ -109,8 +98,8 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
                 finish();
                 return true;
             case R.id.menu_epis:
-                mMediaController.toggleDisplayMode(MediaController.DISPLAY_OPT_EPISODE);
-                mMediaController.show();
+//                mMediaController.toggleDisplayMode(MediaController.DISPLAY_OPT_EPISODE);
+//                mMediaController.show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -147,17 +136,5 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
 
-    }
-
-    @Override
-    public void onCloseRequest() {
-        finish();
-    }
-
-    @Override
-    public void onVisibilityChange(int visibility) {
-        if (visibility == View.VISIBLE) {
-            mWaitingView.setVisibility(View.GONE);
-        }
     }
 }

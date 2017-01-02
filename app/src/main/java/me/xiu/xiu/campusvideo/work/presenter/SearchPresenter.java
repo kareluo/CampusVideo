@@ -5,7 +5,6 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.vov.vitamio.utils.Log;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.xml.Xml;
 import me.xiu.xiu.campusvideo.common.xml.XmlObject;

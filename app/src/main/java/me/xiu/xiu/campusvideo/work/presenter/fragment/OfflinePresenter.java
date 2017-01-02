@@ -2,7 +2,6 @@ package me.xiu.xiu.campusvideo.work.presenter.fragment;
 
 import java.util.List;
 
-import io.vov.vitamio.utils.Log;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.dao.DaoAlias;
 import me.xiu.xiu.campusvideo.dao.DatabaseHelper;
@@ -16,7 +15,6 @@ import me.xiu.xiu.campusvideo.work.viewer.fragment.OfflineViewer;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
