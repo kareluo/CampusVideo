@@ -42,7 +42,6 @@ public class OfflineEpisActivity extends BaseActivity<OfflineEpisPresenter>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition(R.anim.zoom_in, 0);
         super.onCreate(savedInstanceState);
 
         String vid = getIntent().getStringExtra(EXTRA_VID);

@@ -100,8 +100,12 @@ public class CampusActivity extends SwipeBackActivity<CampusPresenter> implement
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Campus campus = mAdapter.getItem(position);
-        setResult(RESULT_OK, mResultData.putExtra(RESULT_CAMPUS, campus));
+        position -= mListView.getHeaderViewsCount();
+        if (position >= 0 && position < mAdapter.getCount()) {
+            Campus campus = mAdapter.getItem(position);
+            setResult(RESULT_OK, mResultData.putExtra(RESULT_CAMPUS, campus));
+            finish();
+        }
     }
 
     private class CampusAdapter extends BaseAdapter {

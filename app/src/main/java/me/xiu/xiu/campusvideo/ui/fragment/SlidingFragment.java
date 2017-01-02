@@ -15,6 +15,7 @@ import net.youmi.android.banner.AdView;
 import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.Threshold;
+import me.xiu.xiu.campusvideo.ui.view.CampusHeadView;
 import me.xiu.xiu.campusvideo.ui.view.SlidingGroupView;
 import me.xiu.xiu.campusvideo.ui.view.SlidingItemView;
 import me.xiu.xiu.campusvideo.work.model.SlidingItem;
@@ -26,6 +27,8 @@ import me.xiu.xiu.campusvideo.work.viewer.fragment.SlidingViewer;
  */
 public class SlidingFragment extends BaseFragment<SlidingPresenter> implements SlidingViewer,
         AdapterView.OnItemClickListener {
+
+    private ListView mListView;
 
     private SlidingAdapter mAdapter;
 
@@ -49,7 +52,12 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ListView mListView = (ListView) view.findViewById(R.id.lv_sliding);
+        mListView = (ListView) view.findViewById(R.id.lv_sliding);
+
+        CampusHeadView headView = new CampusHeadView(getContext());
+        headView.update(null);
+
+        mListView.addHeaderView(headView);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         ViewGroup adLayout = (ViewGroup) view.findViewById(R.id.adLayout);
@@ -59,10 +67,12 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SlidingItem item = (SlidingItem) parent.getItemAtPosition(position);
-        EventBus.getDefault().post(item);
+        position -= mListView.getHeaderViewsCount();
+        if (position >= 0 && position < mAdapter.getCount()) {
+            EventBus.getDefault().post(mAdapter.getItem(position));
+        }
     }
-    
+
     private class SlidingAdapter extends BaseAdapter {
 
         @Override

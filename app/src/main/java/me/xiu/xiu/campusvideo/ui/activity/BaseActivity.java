@@ -3,6 +3,7 @@ package me.xiu.xiu.campusvideo.ui.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,11 +58,10 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
      * 初始化Toolbar
      */
     protected void initToolbarBar() {
-//        View view = findViewById(R.id.toolbar);
-//        if (view != null) {
-//            Toolbar toolbar = (Toolbar) view;
-//            setSupportActionBar(toolbar);
-//        }
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0);
+        }
     }
 
     /**

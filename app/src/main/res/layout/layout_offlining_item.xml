@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:textColor="@color/while_milk"
+                android:textColor="@color/white_milk"
                 android:textSize="@dimen/text_large"
                 tools:text="火影忍者" />
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/video_normal"
                 android:gravity="right"
-                android:textColor="@color/while_milk"
+                android:textColor="@color/white_milk"
                 android:textSize="@dimen/text_normal"
                 tools:text="98%" />
         </LinearLayout>

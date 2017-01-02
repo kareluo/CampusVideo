@@ -75,11 +75,6 @@ public class VideosFragment extends BaseFragment<VideosPresenter> implements Vid
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-    }
-
-    @Override
     public void onUpdate(List<VInfo> infos) {
         mVideoInfos.clear();
         mVideoInfos.addAll(infos);

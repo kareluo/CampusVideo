@@ -13,6 +13,7 @@ import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.dao.common.Campus;
+import me.xiu.xiu.campusvideo.ui.activity.AboutActivity;
 import me.xiu.xiu.campusvideo.ui.activity.CampusActivity;
 import me.xiu.xiu.campusvideo.ui.activity.SettingActivity;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.SettingPresenter;
@@ -26,6 +27,7 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements S
     private static final int REQ_CAMPUS = 0x1001;
 
     private TextView mCampusText;
+
     private TextView mHostText;
 
     @Override
@@ -44,10 +46,20 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements S
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        addOnClickListener(view.findViewById(R.id.cv_campus), view.findViewById(R.id.cv_setting));
+        addOnClickListener(
+                view.findViewById(R.id.cv_campus),
+                view.findViewById(R.id.cv_setting),
+                view.findViewById(R.id.cv_about));
+
         mCampusText = (TextView) view.findViewById(R.id.tv_campus);
         mHostText = (TextView) view.findViewById(R.id.tv_host);
         setTitle(R.string.setting);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateCampus();
     }
 
     @Override
@@ -56,9 +68,9 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements S
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (isVisible()) {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isReady() && isVisibleToUser) {
             updateCampus();
         }
     }
@@ -77,6 +89,9 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements S
             case R.id.cv_setting:
                 startActivity(new Intent(getContext(), SettingActivity.class));
                 break;
+            case R.id.cv_about:
+                startActivity(new Intent(getContext(), AboutActivity.class));
+                break;
         }
     }
 
@@ -92,7 +107,10 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements S
             case REQ_CAMPUS:
                 if (resultCode == Activity.RESULT_OK) {
                     Campus campus = CampusActivity.getResult(data);
-                    CampusVideo.campus = campus;
+                    if (campus != null) {
+                        CampusVideo.campus = campus;
+                        updateCampus();
+                    }
                 }
                 break;
         }

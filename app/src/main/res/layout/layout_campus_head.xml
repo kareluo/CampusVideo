@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_normal">
+
+    <com.joooonho.SelectableRoundedImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="@dimen/logo_size"
+        android:layout_height="@dimen/logo_size"
+        android:layout_marginRight="@dimen/margin_4"
+        android:contentDescription="@string/server_logo"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher"
+        app:sriv_oval="true" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_larger"
+        tools:text="安徽师范大学" />
+
+</LinearLayout>

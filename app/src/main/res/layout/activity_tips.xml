@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_normal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/server_inaccessible"
+        android:textColor="@color/red"
+        android:textSize="@dimen/text_larger" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:background="@drawable/bg_desc"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_normal"
+            tools:text="上海大学" />
+
+        <TextView
+            android:id="@+id/tv_host"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_normal"
+            tools:text="172.168.1.192" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请尝试一下方式："
+            android:textColor="@color/green"
+            android:textSize="@dimen/text_large" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/switch_server" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:background="@drawable/bg_option"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/video_actor_half"
+                android:paddingRight="@dimen/video_actor_half"
+                android:text="@string/to_switch"
+                android:textColor="@color/white_milk" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal">
+
+        <TextView
+            android:id="@+id/tv_not_mind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_button"
+            android:clickable="true"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/not_mind"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/tv_ignore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:background="@drawable/bg_button"
+            android:clickable="true"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/ignore"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_normal" />
+
+    </FrameLayout>
+
+</LinearLayout>

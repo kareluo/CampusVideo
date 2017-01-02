@@ -6,7 +6,7 @@
     </item>
 
     <item>
-        <color android:color="@color/while_milk" />
+        <color android:color="@color/white_milk" />
     </item>
 
 </selector>

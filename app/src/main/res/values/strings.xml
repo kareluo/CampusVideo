@@ -40,4 +40,12 @@
     <string name="offline">离线视频</string>
     <string name="local_media">本地视频</string>
 
+    <string name="server_inaccessible">服务器无法连接</string>
+    <string name="not_mind">不在提醒</string>
+    <string name="ignore">忽略</string>
+    <string name="switch_server">切换服务器</string>
+    <string name="to_switch">去切换</string>
+
+    <string name="server_logo">服务器图标</string>
+
 </resources>

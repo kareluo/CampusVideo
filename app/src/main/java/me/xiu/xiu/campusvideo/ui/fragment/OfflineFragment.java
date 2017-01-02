@@ -41,7 +41,7 @@ public class OfflineFragment extends BaseFragment<OfflinePresenter>
 
     private Map<String, Offlines> mChecks;
 
-    private FloatingActionButton mDeleteButton;
+    private View mOptionView;
 
     private boolean mDeleteMode = false;
 
@@ -61,8 +61,8 @@ public class OfflineFragment extends BaseFragment<OfflinePresenter>
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mDeleteButton = (FloatingActionButton) view.findViewById(R.id.fab_ok);
-        mDeleteButton.setOnClickListener(this);
+        mOptionView = view.findViewById(R.id.layout_option);
+        view.findViewById(R.id.fab_ok).setOnClickListener(this);
         IntensifyGridView intensifyGridView = (IntensifyGridView) view.findViewById(R.id.rcv_offline);
         mAdapter = new OfflineAdapter(intensifyGridView);
         intensifyGridView.setOnItemClickListener(this);
@@ -108,7 +108,7 @@ public class OfflineFragment extends BaseFragment<OfflinePresenter>
     private void toggleDeleteMode() {
         mDeleteMode = !mDeleteMode;
         mAdapter.notifyDataSetChanged();
-        mDeleteButton.setVisibility(mDeleteMode ? View.VISIBLE : View.GONE);
+        mOptionView.setVisibility(mDeleteMode ? View.VISIBLE : View.GONE);
     }
 
     @Override

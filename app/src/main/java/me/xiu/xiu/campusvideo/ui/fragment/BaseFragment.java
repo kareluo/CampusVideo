@@ -27,6 +27,8 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
 
     protected Toolbar mToolbar;
 
+    private boolean mReady = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,16 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
         if (resId != 0) {
             mToolbar.inflateMenu(resId);
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mReady = true;
+    }
+
+    public boolean isReady() {
+        return mReady;
     }
 
     public void setNavigationIcon(@DrawableRes int resId) {
@@ -114,6 +126,12 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mReady = false;
     }
 
     @Override

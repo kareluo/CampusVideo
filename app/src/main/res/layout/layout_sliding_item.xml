@@ -15,6 +15,6 @@
         android:textColor="@color/gray_dark"
         android:textSize="@dimen/text_normal"
         tools:text="校园视频"
-        tools:textColor="@color/while_milk" />
+        tools:textColor="@color/white_milk" />
 
 </LinearLayout>

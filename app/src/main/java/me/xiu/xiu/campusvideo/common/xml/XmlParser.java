@@ -457,6 +457,20 @@ public class XmlParser {
         return false;
     }
 
+    public static XmlObject parse(String shortUrl, XmlObject.Tag tag, int count) {
+        return getInstance()._parse(CampusVideo.getUrl(shortUrl), tag, count);
+    }
+
+    private XmlObject _parse(String url, XmlObject.Tag tag, int count) {
+        try {
+            Response response = obtainXml(url);
+            return _parse(response.body().byteStream(), tag, count, ENCODING);
+        } catch (IOException e) {
+            Logger.w(TAG, e);
+        }
+        return null;
+    }
+
     public static XmlObject parse(InputStream inputStream, XmlObject.Tag tag, int count, String encoding) {
         return getInstance()._parse(inputStream, tag, count, encoding);
     }

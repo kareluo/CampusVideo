@@ -12,7 +12,9 @@
         android:id="@+id/igv_offline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:blockSize="wrap_content"
         app:horizontalSpacing="@dimen/video_small"
+        app:spacingGravity="share"
         app:spanCount="4"
         app:verticalSpacing="@dimen/video_small" />
 

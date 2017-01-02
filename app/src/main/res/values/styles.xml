@@ -13,6 +13,8 @@
 
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:textColorPrimary">#fefefe</item>
+        <item name="android:windowBackground">@color/color_primary</item>
+        <item name="android:windowContentOverlay">@null</item>
 
     </style>
 
@@ -68,12 +70,18 @@
         <!--<item name="android:textColorPrimary">#fff</item>-->
     </style>
 
-    <style name="App.Dialog" parent="Theme.AppCompat.Dialog">
+    <style name="App.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActionBar">false</item>
+        <item name="android:windowEnterAnimation">@anim/zoom_in</item>
+        <item name="android:windowExitAnimation">@anim/zoom_out</item>
+        <item name="android:activityOpenEnterAnimation">@anim/zoom_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/zoom_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/zoom_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/zoom_out</item>
     </style>
 
 </resources>

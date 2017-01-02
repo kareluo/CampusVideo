@@ -1,7 +1,4 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="sm_width">80dp</dimen>
 
@@ -46,6 +43,7 @@
     <dimen name="text_small">12sp</dimen>
     <dimen name="text_normal">14sp</dimen>
     <dimen name="text_large">16sp</dimen>
+    <dimen name="text_larger">18sp</dimen>
 
     <dimen name="video_horizontal_space">8dp</dimen>
     <dimen name="video_vertical_space">8dp</dimen>
@@ -55,5 +53,9 @@
 
     <dimen name="video_item_height">154dp</dimen>
     <dimen name="sliding_divider_height">1px</dimen>
+
+    <dimen name="radius_button">4dp</dimen>
+
+    <dimen name="logo_size">32dp</dimen>
 
 </resources>

@@ -104,6 +104,12 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setTitle(R.string.app_name);
+    }
+
+    @Override
     public int onCreateOptionsMenu() {
         return R.menu.menu_home;
     }

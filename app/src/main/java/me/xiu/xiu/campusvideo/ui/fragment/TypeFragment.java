@@ -43,18 +43,22 @@ public class TypeFragment extends BaseFragment<TypePresenter> implements TypeVie
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setUserVisibleHint(true);
+    }
+
+    @Override
     public void onNavigationClick() {
         EventBus.getDefault().post(true);
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (isVisible()) {
-            if (mArgument != null) {
-                mPageRule = (PageRule[]) mArgument.getParcelableArray(KEY_PAGES);
-                mAdapter.notifyDataSetChanged();
-            }
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isReady() && isVisibleToUser && mArgument != null) {
+            mPageRule = (PageRule[]) mArgument.getParcelableArray(KEY_PAGES);
+            mAdapter.notifyDataSetChanged();
         }
     }
 

@@ -11,6 +11,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.xml.Rules;
+import me.xiu.xiu.campusvideo.core.InspectService;
 import me.xiu.xiu.campusvideo.ui.fragment.BannerFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.MediaFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.OfflineFragment;
@@ -37,6 +38,7 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
         setContentView(R.layout.activity_home);
         EventBus.getDefault().register(this);
         initViews();
+        InspectService.inspect(this);
     }
 
     @Override
@@ -125,6 +127,7 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
         }
         toFragment.setArguments(args);
         fragmentManager.beginTransaction().hide(mCurrentFragment).show(toFragment).commit();
+        toFragment.setUserVisibleHint(true);
         mCurrentFragment = toFragment;
         if (mSlidingLayout.isMenuShowing()) {
             mSlidingLayout.showContent(true);
