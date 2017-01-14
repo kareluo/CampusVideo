@@ -12,7 +12,7 @@ def appVersionCode = 301
 
 def appVersionName = "3.0.0"
 
-def appPatchDir = "app-3.0.0.300"
+def appPatchDir = "*"
 
 bugly {
     appId = '5a6c633bfa' // 注册时分配的App ID

@@ -94,3 +94,14 @@ public static final int *;
     @de.greenrobot.event.Subscribe <methods>;
 }
 -keep enum de.greenrobot.event.ThreadMode { *; }
+
+-dontwarn tv.danmaku.ijk.media.**
+-keep class tv.danmaku.ijk.media.**{*;}
+-keep interface tv.danmaku.ijk.media.**{*;}
+
+-dontwarn tv.danmaku.ijk.media.example.**
+-keep class tv.danmaku.ijk.media.example.**{*;}
+-keep interface tv.danmaku.ijk.media.example.**{*;}
+
+-keep class com.google.android.exoplayer.**{*;}
+-keep interface com.google.android.exoplayer.**{*;}
