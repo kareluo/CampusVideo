@@ -40,7 +40,12 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         if (mToolbar != null) {
             mToolbar.setOnMenuItemClickListener(this);
-            mToolbar.setNavigationOnClickListener(v -> onNavigationClick());
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onNavigationClick();
+                }
+            });
         }
         int resId = onCreateOptionsMenu();
         if (resId != 0) {

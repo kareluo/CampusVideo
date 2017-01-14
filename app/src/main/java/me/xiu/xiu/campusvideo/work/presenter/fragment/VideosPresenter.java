@@ -47,23 +47,32 @@ public class VideosPresenter extends Presenter<VideosViewer> {
 
     private void map(Bundle[] bundles) {
         subscribe(Observable.just(bundles)
-                .map(bundles1 -> {
-                    List<VInfo> infos = new ArrayList<>();
-                    for (Bundle bundle : bundles1) {
-                        VideoInfo info = new VideoInfo();
-                        info.setName(bundle.getString("a"));
-                        info.setVid(bundle.getString("b"));
-                        info.setDescription(bundle.getString("c"));
-                        infos.add(info);
+                .map(new Func1<Bundle[], List<VInfo>>() {
+                    @Override
+                    public List<VInfo> call(Bundle[] bundles) {
+                        List<VInfo> infos = new ArrayList<>();
+                        for (Bundle bundle : bundles) {
+                            VideoInfo info = new VideoInfo();
+                            info.setName(bundle.getString("a"));
+                            info.setVid(bundle.getString("b"));
+                            info.setDescription(bundle.getString("c"));
+                            infos.add(info);
+                        }
+                        return infos;
                     }
-                    return infos;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(infos -> {
-                    getViewer().onUpdate(infos);
-                }, throwable -> {
-                    Logger.e(TAG, throwable);
+                .subscribe(new Action1<List<VInfo>>() {
+                    @Override
+                    public void call(List<VInfo> infos) {
+                        getViewer().onUpdate(infos);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.e(TAG, throwable);
+                    }
                 }));
     }
 

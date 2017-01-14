@@ -27,6 +27,8 @@ import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -59,26 +61,35 @@ public class OffliningDelegate {
         mOffliningScheduler = Schedulers.from(Executors.newFixedThreadPool(MAX_THREAD));
     }
 
-    public void sync(Action0 callback) {
+    public void sync(final Action0 callback) {
         Observable.just(getMaxId())
                 .observeOn(Schedulers.io())
-                .map(maxId -> {
-                    try {
-                        List<Offlining> offlinings = mOfflineDao.queryOfflinings(maxId);
-                        for (Offlining offlining : offlinings) {
-                            mOfflinings.put(offlining.getId(), offlining);
+                .map(new Func1<Long, Integer>() {
+                    @Override
+                    public Integer call(Long maxId) {
+                        try {
+                            List<Offlining> offlinings = mOfflineDao.queryOfflinings(maxId);
+                            for (Offlining offlining : offlinings) {
+                                mOfflinings.put(offlining.getId(), offlining);
+                            }
+                            return mOfflinings.size();
+                        } catch (SQLException ignored) {
+                            return 0;
                         }
-                        return mOfflinings.size();
-                    } catch (SQLException ignored) {
-                        return 0;
                     }
                 })
-                .subscribe(count -> {
-                    if (callback != null) {
-                        callback.call();
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer count) {
+                        if (callback != null) {
+                            callback.call();
+                        }
                     }
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
                 });
     }
 
@@ -91,52 +102,99 @@ public class OffliningDelegate {
     }
 
     public void actionStart() {
-        sync(() -> Observable.from(list())
-                .filter(offlining -> OfflineState.WAITING.value == offlining.getState())
-                .map(offlining -> {
-                    long id = offlining.getId();
-                    Subscription subscription = mSubscriptions.get(id);
-                    if (subscription != null) {
-                        subscription.unsubscribe();
-                    }
-                    mSubscriptions.remove(id);
-                    mSubscriptions.put(id, start(id));
-                    return null;
-                })
-                .subscribe(o -> {
+        sync(new Action0() {
+            @Override
+            public void call() {
+                Observable.from(list())
+                        .filter(new Func1<Offlining, Boolean>() {
+                            @Override
+                            public Boolean call(Offlining offlining) {
+                                return OfflineState.WAITING.value == offlining.getState();
+                            }
+                        })
+                        .map(new Func1<Offlining, Object>() {
+                            @Override
+                            public Object call(Offlining offlining) {
+                                long id = offlining.getId();
+                                Subscription subscription = mSubscriptions.get(id);
+                                if (subscription != null) {
+                                    subscription.unsubscribe();
+                                }
+                                mSubscriptions.remove(id);
+                                mSubscriptions.put(id, start(id));
+                                return null;
+                            }
+                        })
+                        .subscribe(new Action1<Object>() {
+                            @Override
+                            public void call(Object o) {
 
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
-                }));
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                Logger.w(TAG, throwable);
+                            }
+                        });
+            }
+        });
     }
 
     public void actionResumeAll() {
         Observable.from(list())
                 .observeOn(Schedulers.io())
-                .filter(offlining -> OfflineState.resume(offlining.getState()))
-                .map(offlining -> {
-                    offlining.setState(OfflineState.WAITING.value);
-                    return offlining;
+                .filter(new Func1<Offlining, Boolean>() {
+                    @Override
+                    public Boolean call(Offlining offlining) {
+                        return OfflineState.resume(offlining.getState());
+                    }
                 })
-                .subscribe(o -> {
-                    actionStart();
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
+                .map(new Func1<Offlining, Offlining>() {
+                    @Override
+                    public Offlining call(Offlining offlining) {
+                        offlining.setState(OfflineState.WAITING.value);
+                        return offlining;
+                    }
+                })
+                .subscribe(new Action1<Offlining>() {
+                    @Override
+                    public void call(Offlining offlining) {
+                        actionStart();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
                 });
     }
 
     public void actionPauseAll() {
         Observable.from(list())
                 .observeOn(Schedulers.io())
-                .filter(offlining -> OfflineState.valueOf(offlining.getState()).canPause())
-                .map(offlining -> {
-                    pauseSync(offlining);
-                    return true;
+                .filter(new Func1<Offlining, Boolean>() {
+                    @Override
+                    public Boolean call(Offlining offlining) {
+                        return OfflineState.valueOf(offlining.getState()).canPause();
+                    }
                 })
-                .subscribe(result -> {
+                .map(new Func1<Offlining, Boolean>() {
+                    @Override
+                    public Boolean call(Offlining offlining) {
+                        pauseSync(offlining);
+                        return true;
+                    }
+                })
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean result) {
 
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
                 });
     }
 
@@ -184,27 +242,36 @@ public class OffliningDelegate {
         return offlinings;
     }
 
-    public void remove(long id) {
+    public void remove(final long id) {
         Observable.just(id)
-                .map(oid -> {
-                    Subscription subscription = mSubscriptions.get(oid);
-                    if (subscription != null) {
-                        subscription.unsubscribe();
-                        mSubscriptions.remove(id);
+                .map(new Func1<Long, Boolean>() {
+                    @Override
+                    public Boolean call(Long oid) {
+                        Subscription subscription = mSubscriptions.get(oid);
+                        if (subscription != null) {
+                            subscription.unsubscribe();
+                            mSubscriptions.remove(id);
+                        }
+                        mOfflinings.remove(oid);
+                        try {
+                            return mOfflineDao.deleteById(oid) == 1;
+                        } catch (SQLException e) {
+                            Logger.w(TAG, e);
+                        }
+                        return false;
                     }
-                    mOfflinings.remove(oid);
-                    try {
-                        return mOfflineDao.deleteById(oid) == 1;
-                    } catch (SQLException e) {
-                        Logger.w(TAG, e);
-                    }
-                    return false;
                 })
                 .subscribeOn(Schedulers.io())
-                .subscribe(success -> {
-                    mCallback.remove(id, success);
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean success) {
+                        mCallback.remove(id, success);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
                 });
     }
 
@@ -228,7 +295,7 @@ public class OffliningDelegate {
         return false;
     }
 
-    public Subscription start(long id) {
+    public Subscription start(final long id) {
         return Observable
                 .create(new Observable.OnSubscribe<Offlining>() {
                     @Override
@@ -301,13 +368,28 @@ public class OffliningDelegate {
                     }
                 })
                 .subscribeOn(mOffliningScheduler)
-                .doOnUnsubscribe(() -> mCallback.update(get(id)))
-                .subscribe(offlining -> mCallback.update(offlining),
-                        throwable -> Logger.w(TAG, throwable),
-                        ()->{
-
-                            actionStart();
-                        });
+                .doOnUnsubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mCallback.update(get(id));
+                    }
+                })
+                .subscribe(new Action1<Offlining>() {
+                    @Override
+                    public void call(Offlining offlining) {
+                        mCallback.update(offlining);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
+                }, new Action0() {
+                    @Override
+                    public void call() {
+                        actionStart();
+                    }
+                });
     }
 
     public interface OffliningCallback {

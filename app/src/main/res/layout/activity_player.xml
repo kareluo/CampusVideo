@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:orientation="vertical">
 
     <tv.danmaku.ijk.media.example.widget.media.IjkVideoView
@@ -11,49 +12,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="center" />
 
-    <TableLayout
-        android:id="@+id/tl_tabs"
+    <me.xiu.xiu.campusvideo.ui.widget.CVMediaController
+        android:id="@+id/cv_media_controller"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/loading_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/bg_player_loading"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="visible">
+        <include layout="@layout/layout_media_controller" />
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <ProgressBar
-                android:id="@+id/pb_loading"
-                style="?android:progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <TextView
-                android:id="@+id/tv_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/player_loading_text"
-                tools:text="78%" />
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/tv_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:textColor="@color/player_loading_text"
-            tools:text="123kb/s" />
-    </LinearLayout>
+    </me.xiu.xiu.campusvideo.ui.widget.CVMediaController>
 
 </FrameLayout>

@@ -28,6 +28,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func3;
 import rx.schedulers.Schedulers;
 
@@ -62,13 +63,16 @@ public class OfflinePresenter extends Presenter<OfflineViewer> {
     public void mapEpisodes(Bundle bundle) {
         subscribe(Observable
                 .just(bundle)
-                .map(bundles -> {
-                    List<Video.Episode> es = new ArrayList<>();
-                    String[] episodes = bundles.getString("c", "").split(",");
-                    for (int i = 0; i < episodes.length; i++) {
-                        es.add(new Video.Episode(mEpi + i, episodes[i]));
+                .map(new Func1<Bundle, List<Video.Episode>>() {
+                    @Override
+                    public List<Video.Episode> call(Bundle bundles) {
+                        List<Video.Episode> es = new ArrayList<>();
+                        String[] episodes = bundles.getString("c", "").split(",");
+                        for (int i = 0; i < episodes.length; i++) {
+                            es.add(new Video.Episode(mEpi + i, episodes[i]));
+                        }
+                        return es;
                     }
-                    return es;
                 })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -100,7 +104,7 @@ public class OfflinePresenter extends Presenter<OfflineViewer> {
         return 1;
     }
 
-    public void offline(String name, String videoId, String destDir, Video.Episode... episodes) {
+    public void offline(String name, String videoId, final String destDir, Video.Episode... episodes) {
         Log.d(TAG, "offline:" + name);
         subscribe(Observable
                 .zip(Observable.just(name), Observable.just(videoId), Observable.just(episodes),

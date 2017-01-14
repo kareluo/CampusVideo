@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
@@ -33,6 +34,9 @@ import me.xiu.xiu.campusvideo.work.viewer.CampusViewer;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -93,86 +97,138 @@ public class CampusPresenter extends Presenter<CampusViewer> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(campuses -> {
-                    getViewer().onUpdateCampuses(campuses);
-                }, throwable -> {
-                    Logger.e(TAG, throwable);
+                .subscribe(new Action1<List<Campus>>() {
+                    @Override
+                    public void call(List<Campus> campuses) {
+                        getViewer().onUpdateCampuses(campuses);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.e(TAG, throwable);
+                    }
                 }));
     }
 
     public void sync(List<Campus> campuses) {
         if (ValueUtil.isEmpty(campuses)) return;
 
-        ScheduledExecutorService service = Executors.newScheduledThreadPool(10);
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(10);
 
         Observable.from(campuses)
-                .flatMap(campus -> Observable.just(campus)
-                        .doOnNext(campus1 -> {
-                            try {
-                                Response response = mOkHttpClient.newCall(
-                                        new Request.Builder().url(
-                                                CampusVideo.getConfigXml(campus1.host)
-                                        ).get().build()).execute();
+                .flatMap(new Func1<Campus, Observable<?>>() {
+                    @Override
+                    public Observable<?> call(Campus campus) {
+                        return Observable.just(campus)
+                                .doOnNext(new Action1<Campus>() {
+                                    @Override
+                                    public void call(Campus campus) {
+                                        try {
+                                            Response response = mOkHttpClient.newCall(
+                                                    new Request.Builder().url(
+                                                            CampusVideo.getConfigXml(campus.host)
+                                                    ).get().build()).execute();
 
-                                if (response.isSuccessful()) {
-                                    InputStream inputStream = response.body().byteStream();
-                                    if (inputStream != null) {
-                                        XmlPullParser parser = Xml.newPullParser();
-                                        parser.setInput(inputStream,
-                                                me.xiu.xiu.campusvideo.common.xml.Xml.ENCODING);
-                                        String namespace = parser.getNamespace();
+                                            if (response.isSuccessful()) {
+                                                InputStream inputStream = response.body().byteStream();
+                                                if (inputStream != null) {
+                                                    XmlPullParser parser = Xml.newPullParser();
+                                                    parser.setInput(inputStream,
+                                                            me.xiu.xiu.campusvideo.common.xml.Xml.ENCODING);
+                                                    String namespace = parser.getNamespace();
 
-                                        campus1.state = Campus.State.CONNECTION;
-                                        return;
+                                                    campus.state = Campus.State.CONNECTION;
+                                                    return;
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            Logger.e(TAG, e);
+                                        }
+                                        campus.state = Campus.State.DISCONNECTION;
                                     }
-                                }
-                            } catch (Exception e) {
-                                Logger.e(TAG, e);
-                            }
-                            campus1.state = Campus.State.DISCONNECTION;
-                        })
-                        .subscribeOn(Schedulers.from(service)))
+                                }).subscribeOn(Schedulers.from(service));
+                    }
+                })
                 .buffer(2, TimeUnit.SECONDS, 5)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> getViewer().onUpdateState(), throwable -> Logger.w(TAG, throwable),
-                        service::shutdown);
+                .subscribe(new Action1<List<Object>>() {
+                    @Override
+                    public void call(List<Object> objects) {
+                        getViewer().onUpdateState();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
+                }, new Action0() {
+                    @Override
+                    public void call() {
+                        service.shutdown();
+                    }
+                });
     }
 
     public void sortByName(List<Campus> campuses) {
         subscribe(Observable.just(campuses)
-                .map(campuses1 -> {
-                    Collections.sort(campuses1, (a, b) -> a.name.compareTo(b.name));
-                    return campuses1;
+                .map(new Func1<List<Campus>, List<Campus>>() {
+                    @Override
+                    public List<Campus> call(List<Campus> campuses) {
+                        Collections.sort(campuses, new Comparator<Campus>() {
+                            @Override
+                            public int compare(Campus a, Campus b) {
+                                return a.name.compareTo(b.name);
+                            }
+                        });
+                        return campuses;
+                    }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(campuses1 -> {
-                    getViewer().onUpdateState();
+                .subscribe(new Action1<List<Campus>>() {
+                    @Override
+                    public void call(List<Campus> campuses) {
+                        getViewer().onUpdateState();
+                    }
                 }));
     }
 
     public void sortByIQ(List<Campus> campuses) {
         subscribe(Observable.just(campuses)
-                .map(campuses1 -> {
-                    Collections.sort(campuses1, (a, b) -> b.connection_count - a.connection_count);
-                    return campuses1;
+                .map(new Func1<List<Campus>, List<Campus>>() {
+                    @Override
+                    public List<Campus> call(List<Campus> campuses) {
+                        Collections.sort(campuses, new Comparator<Campus>() {
+                            @Override
+                            public int compare(Campus a, Campus b) {
+                                return b.connection_count - a.connection_count;
+                            }
+                        });
+                        return campuses;
+                    }
                 })
-                .subscribe(campuses1 -> {
-                    getViewer().onUpdateState();
+                .subscribe(new Action1<List<Campus>>() {
+                    @Override
+                    public void call(List<Campus> campuses) {
+                        getViewer().onUpdateState();
+                    }
                 }));
     }
 
     public void loadAll(boolean isLoadAll) {
         subscribe(Observable.just(isLoadAll)
-                .map(isLoadAll1 -> {
-                    try {
-                        CampusDao campusDao = DatabaseHelper.getDao(DaoAlias.CAMPUS);
-                        return campusDao.queryCampus(!isLoadAll1);
-                    } catch (Exception e) {
-                        Logger.w(TAG, e);
+                .map(new Func1<Boolean, List<Campus>>() {
+                    @Override
+                    public List<Campus> call(Boolean isLoadAll1) {
+                        try {
+                            CampusDao campusDao = DatabaseHelper.getDao(DaoAlias.CAMPUS);
+                            return campusDao.queryCampus(!isLoadAll1);
+                        } catch (Exception e) {
+                            Logger.w(TAG, e);
+                        }
+                        return null;
                     }
-                    return null;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -196,21 +252,30 @@ public class CampusPresenter extends Presenter<CampusViewer> {
 
     public void searchCampus(String text) {
         subscribe(Observable.just(text)
-                .map(s -> {
-                    List<Campus> campuses = new ArrayList<>();
-                    for (Campus campus : mOriginalCampuses) {
-                        if (campus.name.contains(s)) {
-                            campuses.add(campus);
+                .map(new Func1<String, List<Campus>>() {
+                    @Override
+                    public List<Campus> call(String s) {
+                        List<Campus> campuses = new ArrayList<>();
+                        for (Campus campus : mOriginalCampuses) {
+                            if (campus.name.contains(s)) {
+                                campuses.add(campus);
+                            }
                         }
+                        return campuses;
                     }
-                    return campuses;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(campuses -> {
-                    getViewer().onUpdateCampuses(campuses);
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
+                .subscribe(new Action1<List<Campus>>() {
+                    @Override
+                    public void call(List<Campus> campuses) {
+                        getViewer().onUpdateCampuses(campuses);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
                 }));
     }
 }

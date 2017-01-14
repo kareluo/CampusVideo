@@ -47,5 +47,6 @@
     <string name="to_switch">去切换</string>
 
     <string name="server_logo">服务器图标</string>
+    <string name="pause_or_play">暂停/播放</string>
 
 </resources>

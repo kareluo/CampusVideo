@@ -8,17 +8,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import net.youmi.android.banner.AdSize;
-import net.youmi.android.banner.AdView;
+import net.youmi.android.normal.banner.BannerManager;
+import net.youmi.android.normal.banner.BannerViewListener;
 
 import org.apmem.tools.layouts.FlowLayout;
 
@@ -35,6 +36,7 @@ import me.xiu.xiu.campusvideo.ui.fragment.VideoStillFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.VideoSummaryFragment;
 import me.xiu.xiu.campusvideo.ui.view.ActorView;
 import me.xiu.xiu.campusvideo.util.CommonUtil;
+import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.util.ToastUtil;
 import me.xiu.xiu.campusvideo.work.presenter.VideoPresenter;
 import me.xiu.xiu.campusvideo.work.viewer.VideoViewer;
@@ -43,6 +45,8 @@ import me.xiu.xiu.campusvideo.work.viewer.VideoViewer;
  * Created by felix on 15/9/29.
  */
 public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements VideoViewer {
+
+    private static final String TAG = "VideoActivity";
 
     private String mVideoId;
 
@@ -86,7 +90,7 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
         mPosterImage = (ImageView) findViewById(R.id.iv_poster);
         mDirector = (TextView) findViewById(R.id.director);
         mActors = (FlowLayout) findViewById(R.id.actors);
-        mTabLayout = (TabLayout) findViewById(R.id.tl_tabs);
+        mTabLayout = (TabLayout) findViewById(R.id.tb_tabs);
 
         mViewPager = (ViewPager) findViewById(R.id.vp_pager);
 
@@ -95,8 +99,33 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
         mViewPager.setAdapter(mPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
-        ViewGroup adlayout = (ViewGroup) findViewById(R.id.adLayout);
-        adlayout.addView(new AdView(this, AdSize.FIT_SCREEN));
+
+        // 获取广告条
+        View bannerView = BannerManager.getInstance(this)
+                .getBannerView(this, new BannerViewListener() {
+                    @Override
+                    public void onRequestSuccess() {
+                        Logger.i(TAG, "onRequestSuccess");
+                    }
+
+                    @Override
+                    public void onSwitchBanner() {
+                        Logger.i(TAG, "onSwitchBanner");
+                    }
+
+                    @Override
+                    public void onRequestFailed() {
+                        Logger.i(TAG, "onRequestFailed");
+                    }
+                });
+
+        // 获取要嵌入广告条的布局
+        LinearLayout bannerLayout = (LinearLayout) findViewById(R.id.adLayout);
+
+        if (bannerView != null) {
+            // 将广告条加入到布局中
+            bannerLayout.addView(bannerView);
+        }
     }
 
     @Override
@@ -197,5 +226,7 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+        // 展示广告条窗口的 onDestroy() 回调方法中调用
+        BannerManager.getInstance(getContext()).onDestroy();
     }
 }

@@ -150,9 +150,12 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
 
         @Override
         public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
-            mMaterialRefreshLayout.postDelayed(() -> {
-                getPresenter().load();
-                mMaterialRefreshLayout.finishRefresh();
+            mMaterialRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getPresenter().load();
+                    mMaterialRefreshLayout.finishRefresh();
+                }
             }, 1000);
         }
     };
@@ -174,7 +177,12 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
             BannerView bannerView = new BannerView(getContext());
             final HomeBanner homeBanner = mBanners.get(position);
             bannerView.update(homeBanner);
-            bannerView.setOnClickListener(v -> VideoActivity.start(getContext(), homeBanner.getVid()));
+            bannerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VideoActivity.start(getContext(), homeBanner.getVid());
+                }
+            });
             container.addView(bannerView);
             return bannerView;
         }

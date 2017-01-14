@@ -2,6 +2,7 @@ package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -189,5 +190,20 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
 
     public P newPresenter() {
         return null;
+    }
+
+    public void hideNavigationBar() {
+        View decorView = getWindow().getDecorView();
+        if (decorView != null) {
+            int uiFlags = decorView.getSystemUiVisibility()
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+
+            if (Build.VERSION.SDK_INT >= 19) {
+                uiFlags |= 0x00001000;
+            } else {
+                uiFlags |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
+            }
+            decorView.setSystemUiVisibility(uiFlags);
+        }
     }
 }

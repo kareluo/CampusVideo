@@ -15,6 +15,7 @@ import me.xiu.xiu.campusvideo.work.viewer.fragment.OfflineViewer;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -46,10 +47,16 @@ public class OfflinePresenter extends Presenter<OfflineViewer> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(offlines -> {
-                    getViewer().onLoadSuccess(offlines);
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
+                .subscribe(new Action1<List<Offlines>>() {
+                    @Override
+                    public void call(List<Offlines> offlines) {
+                        getViewer().onLoadSuccess(offlines);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
                 }));
     }
 
@@ -57,25 +64,38 @@ public class OfflinePresenter extends Presenter<OfflineViewer> {
         if (!ValueUtil.isEmpty(offlines)) {
             subscribe(Observable.just(offlines)
                     .observeOn(Schedulers.io())
-                    .map((Func1<List<Offlines>, Boolean>) offlines1 -> {
-                        try {
-                            OfflineDao dao = DatabaseHelper.getDao(DaoAlias.OFFLINE);
-                            for (Offlines offline : offlines1) {
-                                List<Offline> os = offline.getOfflines();
-                                if (os != null) {
-                                    for (Offline o : os) {
-                                        FileUtils.delete(o.getDest());
+                    .map(new Func1<List<Offlines>, Boolean>() {
+                        @Override
+                        public Boolean call(List<Offlines> offlines) {
+                            try {
+                                OfflineDao dao = DatabaseHelper.getDao(DaoAlias.OFFLINE);
+                                for (Offlines offline : offlines) {
+                                    List<Offline> os = offline.getOfflines();
+                                    if (os != null) {
+                                        for (Offline o : os) {
+                                            FileUtils.delete(o.getDest());
+                                        }
                                     }
+                                    dao.clear(offline.getVid());
                                 }
-                                dao.clear(offline.getVid());
+                            } catch (Exception e) {
+                                Logger.w(TAG, e);
                             }
-                        } catch (Exception e) {
-                            Logger.w(TAG, e);
+                            return null;
                         }
-                        return null;
                     })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(success -> loadOfflines(), throwable -> Logger.w(TAG, throwable)));
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean success) {
+                            loadOfflines();
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Logger.w(TAG, throwable);
+                        }
+                    }));
         }
     }
 }

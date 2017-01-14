@@ -1,11 +1,13 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
 
-import net.youmi.android.spot.SplashView;
-import net.youmi.android.spot.SpotDialogListener;
-import net.youmi.android.spot.SpotManager;
+import net.youmi.android.normal.spot.SplashViewSettings;
+import net.youmi.android.normal.spot.SpotListener;
+import net.youmi.android.normal.spot.SpotManager;
 
+import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
@@ -18,32 +20,49 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SpotManager.getInstance(this).loadSpotAds();
-        SplashView splashView = new SplashView(this, HomeActivity.class);
-        splashView.setIsJumpTargetWhenFail(true);
-        setContentView(splashView.getSplashView());
+        setContentView(R.layout.activity_splash);
 
-        SpotManager.getInstance(this).showSplashSpotAds(this,
-                splashView, new SpotDialogListener() {
+        SplashViewSettings settings = new SplashViewSettings();
+        settings.setAutoJumpToTargetWhenShowFailed(true);
+        settings.setTargetClass(HomeActivity.class);
+
+        // 使用默认布局参数
+        settings.setSplashViewContainer((ViewGroup) findViewById(R.id.layout_container));
+
+        if (!SpotManager.getInstance(this).checkSpotAdConfig()) {
+            showToastMessage("配置不对");
+        }
+
+        SpotManager.getInstance(this).showSplash(this,
+                settings, new SpotListener() {
                     @Override
                     public void onShowSuccess() {
-                        Logger.d(TAG, "SUCCESS");
+                        Logger.i(TAG, "onShowSuccess");
                     }
 
                     @Override
-                    public void onShowFailed() {
-                        Logger.d(TAG, "FAILED");
+                    public void onShowFailed(int i) {
+                        Logger.i(TAG, "onShowFailed:" + i);
                     }
 
                     @Override
                     public void onSpotClosed() {
-
+                        Logger.i(TAG, "onSpotClosed");
                     }
 
                     @Override
-                    public void onSpotClick(boolean b) {
-
+                    public void onSpotClicked(boolean b) {
+                        Logger.i(TAG, "onSpotClicked:" + b);
                     }
                 });
+
+//        startActivity(new Intent(this, HomeActivity.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 开屏展示界面的 onDestroy() 回调方法中调用
+        SpotManager.getInstance(this).onDestroy();
     }
 }

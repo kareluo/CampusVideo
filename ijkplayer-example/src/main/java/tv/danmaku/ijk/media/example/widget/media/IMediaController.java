@@ -17,9 +17,10 @@
 package tv.danmaku.ijk.media.example.widget.media;
 
 import android.view.View;
-import android.widget.MediaController;
+import android.widget.MediaController.MediaPlayerControl;
 
 public interface IMediaController {
+
     void hide();
 
     boolean isShowing();
@@ -28,14 +29,11 @@ public interface IMediaController {
 
     void setEnabled(boolean enabled);
 
-    void setMediaPlayer(MediaController.MediaPlayerControl player);
+    void setMediaPlayer(MediaPlayerControl player);
 
     void show(int timeout);
 
     void show();
 
-    //----------
-    // Extends
-    //----------
     void showOnce(View view);
 }

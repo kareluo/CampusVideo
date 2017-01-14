@@ -16,6 +16,8 @@ import me.xiu.xiu.campusvideo.work.model.video.VideoInfo;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.BannerViewer;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -53,33 +55,45 @@ public class BannerPresenter extends Presenter<BannerViewer> {
 
     private void onGetBanners(Bundle[] elements) {
         subscribe(Observable.just(elements)
-                .map(bundles -> {
-                    List<HomeBanner> banners = new ArrayList<>();
-                    for (Bundle bundle : bundles) {
-                        banners.add(new HomeBanner(bundle));
+                .map(new Func1<Bundle[], List<HomeBanner>>() {
+                    @Override
+                    public List<HomeBanner> call(Bundle[] bundles) {
+                        List<HomeBanner> banners = new ArrayList<>();
+                        for (Bundle bundle : bundles) {
+                            banners.add(new HomeBanner(bundle));
+                        }
+                        return banners;
                     }
-                    return banners;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(banners -> {
-                    getViewer().onUpdateBanner(banners);
+                .subscribe(new Action1<List<HomeBanner>>() {
+                    @Override
+                    public void call(List<HomeBanner> banners) {
+                        getViewer().onUpdateBanner(banners);
+                    }
                 }));
     }
 
     private void onGetVideos(Bundle[] elements) {
         subscribe(Observable.just(elements)
-                .map(bundles -> {
-                    List<VInfo> infos = new ArrayList<>();
-                    for (Bundle bundle : bundles) {
-                        infos.add(VideoInfo.from(bundle));
+                .map(new Func1<Bundle[], List<VInfo>>() {
+                    @Override
+                    public List<VInfo> call(Bundle[] bundles) {
+                        List<VInfo> infos = new ArrayList<>();
+                        for (Bundle bundle : bundles) {
+                            infos.add(VideoInfo.from(bundle));
+                        }
+                        return infos;
                     }
-                    return infos;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(infos -> {
-                    getViewer().onUpdateVideos(infos);
+                .subscribe(new Action1<List<VInfo>>() {
+                    @Override
+                    public void call(List<VInfo> infos) {
+                        getViewer().onUpdateVideos(infos);
+                    }
                 }));
     }
 

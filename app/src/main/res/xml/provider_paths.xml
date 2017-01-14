@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- /storage/emulated/0/Download/${applicationId}/.beta/apk-->
-    <external-path name="beta_external_path" path="Download/"/>
+    <external-path
+        name="beta_external_path"
+        path="Download/" />
     <!--/storage/emulated/0/Android/data/${applicationId}/files/apk/-->
-    <external-path name="beta_external_files_path" path="Android/data/"/>
+    <external-path
+        name="beta_external_files_path"
+        path="Android/data/" />
+
+    <!--
+    有米sdk会将apk优先下载在sd卡中，如果sd卡不能使用，则会使用应用私有缓存目录context.getCache()
+    因此需要开发者配置下面两个路径方便有米sdk在下载完apk之后启动apk的安装页面
+    -->
+    <cache-path
+        name="apk1"
+        path="." />
+
+    <external-path
+        name="apk2"
+        path="." />
 </paths>

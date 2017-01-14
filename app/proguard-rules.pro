@@ -16,6 +16,8 @@
 #   public *;
 #}
 
+-printmapping
+
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
   **[] $VALUES;
@@ -52,10 +54,43 @@ public static final int *;
 }
 
 -dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
-
- -keep class android.support.**{*;}
+-keep public class com.tencent.bugly.** {
+    *;
+}
 
 -keep class me.xiu.xiu.campusvideo.core.app.** {
     *;
 }
+
+# rxjava
+-dontwarn sun.misc.**
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+ long producerIndex;
+ long consumerIndex;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+ rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+ rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+
+-dontwarn rx.**
+-keep class rx.**{*;}
+
+#okio
+-dontwarn okio.**
+-keep class okio.**{*;}
+-keep interface okio.**{*;}
+
+-keep class android.support.** {
+    *;
+}
+
+-keep class * extends android.support.v4.app.Fragment
+
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @de.greenrobot.event.Subscribe <methods>;
+}
+-keep enum de.greenrobot.event.ThreadMode { *; }

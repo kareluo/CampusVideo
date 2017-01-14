@@ -41,7 +41,7 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
         } catch (Exception e) {
             stopSelf();
         }
-        mCallbacks = Collections.synchronizedList(new LinkedList<>());
+        mCallbacks = Collections.synchronizedList(new LinkedList<IOffliningCallback>());
     }
 
     @Override

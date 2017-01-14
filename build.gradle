@@ -1,18 +1,21 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+
     repositories {
+
         jcenter()
+
+        mavenCentral()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
-
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-
+        
         classpath 'com.tencent.bugly:symtabfileuploader:latest.release'
 
         // Tinker gradle插件
-        classpath ('com.tencent.tinker:tinker-patch-gradle-plugin:1.7.5')
+        classpath 'com.tencent.tinker:tinker-patch-gradle-plugin:1.7.7'
 
         // Tinker support插件
         classpath "com.tencent.bugly:tinker-support:latest.release"
@@ -30,7 +33,11 @@ ext {
 }
 
 allprojects {
+
     repositories {
+
         jcenter()
+
+        mavenCentral()
     }
 }

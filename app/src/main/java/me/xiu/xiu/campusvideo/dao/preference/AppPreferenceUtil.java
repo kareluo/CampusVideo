@@ -8,6 +8,7 @@ import me.xiu.xiu.campusvideo.dao.DaoAlias;
 import me.xiu.xiu.campusvideo.dao.DatabaseHelper;
 import me.xiu.xiu.campusvideo.util.Logger;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -29,14 +30,17 @@ public enum AppPreferenceUtil {
         }
     }
 
-    public static void put(int key, String value) {
+    public static void put(final int key, String value) {
         Observable.just(value)
                 .observeOn(Schedulers.io())
-                .doOnNext(v -> {
-                    try {
-                        INSTANCE.mAppPreferenceDao.createOrUpdate(new AppPreference(key, v));
-                    } catch (SQLException e) {
-                        Logger.w(TAG, e);
+                .doOnNext(new Action1<String>() {
+                    @Override
+                    public void call(String v) {
+                        try {
+                            INSTANCE.mAppPreferenceDao.createOrUpdate(new AppPreference(key, v));
+                        } catch (SQLException e) {
+                            Logger.w(TAG, e);
+                        }
                     }
                 }).subscribe();
     }

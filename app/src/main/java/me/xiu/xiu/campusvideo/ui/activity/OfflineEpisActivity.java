@@ -26,6 +26,8 @@ import me.xiu.xiu.campusvideo.ui.view.Updatable;
 import me.xiu.xiu.campusvideo.util.Logger;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -140,20 +142,29 @@ class OfflineEpisPresenter extends Presenter<OfflineEpisViewer> {
     public void loadOfflines(String vid) {
         subscribe(Observable.just(vid)
                 .observeOn(Schedulers.io())
-                .map(s -> {
-                    try {
-                        OfflineDao dao = DatabaseHelper.getDao(DaoAlias.OFFLINE);
-                        return dao.queryOfflinesByVid(s);
-                    } catch (Exception e) {
-                        Logger.w(TAG, e);
+                .map(new Func1<String, List<Offline>>() {
+                    @Override
+                    public List<Offline> call(String s) {
+                        try {
+                            OfflineDao dao = DatabaseHelper.getDao(DaoAlias.OFFLINE);
+                            return dao.queryOfflinesByVid(s);
+                        } catch (Exception e) {
+                            Logger.w(TAG, e);
+                        }
+                        return null;
                     }
-                    return null;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(offlines -> {
-                    getViewer().onLoadSuccess(offlines);
-                }, throwable -> {
-                    Logger.w(TAG, throwable);
+                .subscribe(new Action1<List<Offline>>() {
+                    @Override
+                    public void call(List<Offline> offlines) {
+                        getViewer().onLoadSuccess(offlines);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Logger.w(TAG, throwable);
+                    }
                 }));
     }
 }

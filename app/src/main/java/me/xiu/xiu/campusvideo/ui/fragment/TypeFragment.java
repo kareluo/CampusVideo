@@ -65,7 +65,7 @@ public class TypeFragment extends BaseFragment<TypePresenter> implements TypeVie
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mTabLayout = (TabLayout) view.findViewById(R.id.tl_tabs);
+        mTabLayout = (TabLayout) view.findViewById(R.id.tb_tabs);
         mViewPager = (ViewPager) view.findViewById(R.id.vp_videos);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);

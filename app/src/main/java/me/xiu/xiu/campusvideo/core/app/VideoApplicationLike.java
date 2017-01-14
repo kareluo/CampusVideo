@@ -19,6 +19,7 @@ import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.Constants;
 import me.xiu.xiu.campusvideo.common.xml.XmlParser;
 import me.xiu.xiu.campusvideo.dao.DatabaseHelper;
+import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
  * Created by felix on 16/12/21.
@@ -36,11 +37,12 @@ public class VideoApplicationLike extends DefaultApplicationLike {
     @Override
     public void onCreate() {
         super.onCreate();
+        Logger.init();
 
         Bugly.init(getApplication(), Constants.Application.BUGLY_ID, BuildConfig.DEBUG);
 
-        AdManager.getInstance(getApplication())
-                .init(Constants.Application.AD_ID, Constants.Application.AD_SECRET, true);
+        AdManager.getInstance(getApplication()).init(Constants.Application.AD_ID,
+                Constants.Application.AD_SECRET, true, true);
 
         CampusVideo.init(getApplicationContext());
 

@@ -29,6 +29,7 @@ import me.xiu.xiu.campusvideo.work.service.OffliningService;
 import me.xiu.xiu.campusvideo.work.viewer.OffliningViewer;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by felix on 16/4/17.
@@ -196,15 +197,25 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
     };
 
     private void refresh(int position) {
-        Observable.just(position).observeOn(AndroidSchedulers.mainThread()).subscribe(index -> {
-            mAdapter.notifyItemChanged(index);
-        });
+        Observable.just(position)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer index) {
+                        mAdapter.notifyItemChanged(index);
+                    }
+                });
     }
 
     private void refresh() {
-        Observable.just(true).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
-            mAdapter.notifyDataSetChanged();
-        });
+        Observable.just(true)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean o) {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 
     private ServiceConnection mOffliningConnection = new ServiceConnection() {

@@ -39,7 +39,7 @@ public class FissionFragment extends BaseFragment<FissionPresenter> implements F
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mTabLayout = (TabLayout) view.findViewById(R.id.tl_tabs);
+        mTabLayout = (TabLayout) view.findViewById(R.id.tb_tabs);
         mViewPager = (ViewPager) view.findViewById(R.id.vp_fission);
 
         mTabLayout.setupWithViewPager(mViewPager);
