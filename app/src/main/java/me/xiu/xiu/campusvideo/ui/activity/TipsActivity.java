@@ -1,6 +1,7 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import me.xiu.xiu.campusvideo.R;
@@ -20,6 +21,19 @@ public class TipsActivity extends BaseActivity {
 
         nameTextView.setText(CampusVideo.campus.getName());
         hostTextView.setText(CampusVideo.campus.getHost());
+
+        findViewById(R.id.tv_not_mind).setOnClickListener(this);
+        findViewById(R.id.tv_ignore).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_ignore:
+            case R.id.tv_not_mind:
+                finish();
+                break;
+        }
     }
 
     @Override

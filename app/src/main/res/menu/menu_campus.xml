@@ -9,21 +9,9 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_sort_by_iq"
-        android:title="@string/sort_by_iq"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_sort_by_name"
-        android:title="@string/sort_by_name"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_show_all"
-        android:checkable="true"
-        android:checked="true"
-        android:enabled="true"
-        android:title="@string/show_all"
-        app:showAsAction="never" />
+        android:id="@+id/menu_add"
+        android:icon="@drawable/ic_add_white"
+        android:title="@string/add"
+        app:showAsAction="ifRoom" />
 
 </menu>

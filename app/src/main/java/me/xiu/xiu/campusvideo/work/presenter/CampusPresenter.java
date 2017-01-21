@@ -1,13 +1,8 @@
 package me.xiu.xiu.campusvideo.work.presenter;
 
 import android.os.Bundle;
-import android.util.Xml;
 
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.Presenter;
+import me.xiu.xiu.campusvideo.common.xml.Xml;
 import me.xiu.xiu.campusvideo.common.xml.XmlObject;
 import me.xiu.xiu.campusvideo.common.xml.XmlParser;
 import me.xiu.xiu.campusvideo.dao.DaoAlias;
@@ -115,7 +111,7 @@ public class CampusPresenter extends Presenter<CampusViewer> {
 
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(10);
 
-        Observable.from(campuses)
+        subscribe(Observable.from(campuses)
                 .flatMap(new Func1<Campus, Observable<?>>() {
                     @Override
                     public Observable<?> call(Campus campus) {
@@ -123,28 +119,11 @@ public class CampusPresenter extends Presenter<CampusViewer> {
                                 .doOnNext(new Action1<Campus>() {
                                     @Override
                                     public void call(Campus campus) {
-                                        try {
-                                            Response response = mOkHttpClient.newCall(
-                                                    new Request.Builder().url(
-                                                            CampusVideo.getConfigXml(campus.host)
-                                                    ).get().build()).execute();
-
-                                            if (response.isSuccessful()) {
-                                                InputStream inputStream = response.body().byteStream();
-                                                if (inputStream != null) {
-                                                    XmlPullParser parser = Xml.newPullParser();
-                                                    parser.setInput(inputStream,
-                                                            me.xiu.xiu.campusvideo.common.xml.Xml.ENCODING);
-                                                    String namespace = parser.getNamespace();
-
-                                                    campus.state = Campus.State.CONNECTION;
-                                                    return;
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            Logger.e(TAG, e);
+                                        if (isAvailable(campus)) {
+                                            campus.state = Campus.State.CONNECTION;
+                                        } else {
+                                            campus.state = Campus.State.DISCONNECTION;
                                         }
-                                        campus.state = Campus.State.DISCONNECTION;
                                     }
                                 }).subscribeOn(Schedulers.from(service));
                     }
@@ -167,7 +146,16 @@ public class CampusPresenter extends Presenter<CampusViewer> {
                     public void call() {
                         service.shutdown();
                     }
-                });
+                }));
+    }
+
+    private boolean isAvailable(Campus campus) {
+        try {
+            XmlObject xmlObject = XmlParser.parse(CampusVideo.getConfigXml(campus.host), Xml.TAG_ROOT);
+            return xmlObject != null && !xmlObject.isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void sortByName(List<Campus> campuses) {

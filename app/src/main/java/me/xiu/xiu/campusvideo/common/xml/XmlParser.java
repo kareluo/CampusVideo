@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.util.CommonUtil;
@@ -99,6 +100,7 @@ public class XmlParser {
         Logger.i(TAG, "Xml Cache Dir = " + mXmlCacheDir);
 
         mOkHttpClient = new OkHttpClient();
+        mOkHttpClient.setConnectTimeout(10, TimeUnit.SECONDS);
     }
 
     /**
@@ -454,6 +456,10 @@ public class XmlParser {
             CommonUtil.safeClose(fileOutputStream);
         }
         return false;
+    }
+
+    public static XmlObject parse(String url, XmlObject.Tag tag) {
+        return getInstance()._parse(url, tag, 2);
     }
 
     public static XmlObject parse(String shortUrl, XmlObject.Tag tag, int count) {

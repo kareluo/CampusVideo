@@ -75,20 +75,24 @@ public class CampusActivity extends SwipeBackActivity<CampusPresenter> implement
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_sync:
+                showToastMessage("正在进行检查，请耐心等待");
                 getPresenter().sync(mCampuses);
                 return true;
-            case R.id.menu_sort_by_iq:
-                getPresenter().sortByIQ(mCampuses);
-                return true;
+            case R.id.menu_add:
 
-            case R.id.menu_sort_by_name:
-                getPresenter().sortByName(mCampuses);
                 return true;
-
-            case R.id.menu_show_all:
-                item.setChecked(!item.isChecked());
-                getPresenter().loadAll(item.isChecked());
-                return true;
+//            case R.id.menu_sort_by_iq:
+//                getPresenter().sortByIQ(mCampuses);
+//                return true;
+//
+//            case R.id.menu_sort_by_name:
+//                getPresenter().sortByName(mCampuses);
+//                return true;
+//
+//            case R.id.menu_show_all:
+//                item.setChecked(!item.isChecked());
+//                getPresenter().loadAll(item.isChecked());
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }

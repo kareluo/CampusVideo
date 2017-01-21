@@ -3,13 +3,15 @@ package me.xiu.xiu.campusvideo.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TableLayout;
 
 import net.youmi.android.normal.spot.SpotListener;
 import net.youmi.android.normal.spot.SpotManager;
@@ -63,19 +65,36 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
 
     private void initParams(Intent intent) {
         if (intent == null) return;
-        mVideo = intent.getParcelableExtra(EXTRA_VIDEO);
+        String action = intent.getAction();
+        if (!TextUtils.isEmpty(action) && action.equals(Intent.ACTION_VIEW)) {
+            Uri data = intent.getData();
+            if (data != null) {
+                mVideo = new Video();
+                String path = data.getPath();
+                if (path.startsWith("file://")) {
+                    path = path.substring(7);
+                }
+                mVideo.setName(path);
+                mVideo.setPath(path);
+            }
+        } else {
+            mVideo = intent.getParcelableExtra(EXTRA_VIDEO);
+        }
         setTitle(mVideo.getName());
     }
 
     private void play() {
         if (mVideo != null) {
             switch (mVideo.getType()) {
+                case Video.TYPE_ONLINE:
+                    mVideoView.setVideoPath(mVideo.getCurrentEpisode().getVideoPath());
+                    break;
                 case Video.TYPE_OFFLINE:
                     String path = mVideo.getCurrentEpisode().getPath();
                     mVideoView.setVideoPath(path);
                     break;
                 default:
-                    mVideoView.setVideoPath(mVideo.getCurrentEpisode().getVideoPath());
+                    mVideoView.setVideoPath(mVideo.getPath());
                     break;
             }
             mVideoView.start();
@@ -92,6 +111,13 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
 
         mVideoView.setHudView(mController.getTableLayout());
         mVideoView.setMediaController(mController);
+        mVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mController.show();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -107,8 +133,8 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
                 finish();
                 return true;
             case R.id.menu_epis:
-//                mMediaController.toggleDisplayMode(MediaController.DISPLAY_OPT_EPISODE);
-//                mMediaController.show();
+                mController.toggleDisplayMode(CVMediaController.DISPLAY_OPT_EPISODE);
+                mController.show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -200,28 +226,32 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
     public void onEvent(CVMediaController.Event event) {
         switch (event) {
             case PAUSE:
-                SpotManager.getInstance(this).showSpot(this, new SpotListener() {
-                    @Override
-                    public void onShowSuccess() {
-                        Logger.i(TAG, "onShowSuccess");
-                    }
-
-                    @Override
-                    public void onShowFailed(int i) {
-                        Logger.i(TAG, "onShowFailed:" + i);
-                    }
-
-                    @Override
-                    public void onSpotClosed() {
-                        Logger.i(TAG, "onSpotClosed");
-                    }
-
-                    @Override
-                    public void onSpotClicked(boolean b) {
-                        Logger.i(TAG, "onSpotClicked:" + b);
-                    }
-                });
+                showAd();
                 break;
         }
+    }
+
+    private void showAd() {
+        SpotManager.getInstance(this).showSpot(this, new SpotListener() {
+            @Override
+            public void onShowSuccess() {
+                Logger.i(TAG, "onShowSuccess");
+            }
+
+            @Override
+            public void onShowFailed(int i) {
+                Logger.i(TAG, "onShowFailed:" + i);
+            }
+
+            @Override
+            public void onSpotClosed() {
+                Logger.i(TAG, "onSpotClosed");
+            }
+
+            @Override
+            public void onSpotClicked(boolean b) {
+                Logger.i(TAG, "onSpotClicked:" + b);
+            }
+        });
     }
 }

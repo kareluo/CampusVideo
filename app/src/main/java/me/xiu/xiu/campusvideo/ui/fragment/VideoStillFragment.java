@@ -49,32 +49,32 @@ public class VideoStillFragment extends BaseFragment<VideoStillPresenter> implem
         mStillViews[1] = (ImageView) view.findViewById(R.id.iv_still1);
         mStillViews[2] = (ImageView) view.findViewById(R.id.iv_still2);
 
-        // 获取广告条
-        View bannerView = BannerManager.getInstance(getContext())
-                .getBannerView(getContext(), new BannerViewListener() {
-                    @Override
-                    public void onRequestSuccess() {
-                        Logger.i(TAG, "onRequestSuccess");
-                    }
-
-                    @Override
-                    public void onSwitchBanner() {
-                        Logger.i(TAG, "onSwitchBanner");
-                    }
-
-                    @Override
-                    public void onRequestFailed() {
-                        Logger.i(TAG, "onRequestFailed");
-                    }
-                });
-
-        // 获取要嵌入广告条的布局
-        LinearLayout bannerLayout = (LinearLayout) view.findViewById(R.id.adLayout);
-
-        if (bannerView != null) {
-            // 将广告条加入到布局中
-            bannerLayout.addView(bannerView);
-        }
+//        // 获取广告条
+//        View bannerView = BannerManager.getInstance(getContext())
+//                .getBannerView(getContext(), new BannerViewListener() {
+//                    @Override
+//                    public void onRequestSuccess() {
+//                        Logger.i(TAG, "onRequestSuccess");
+//                    }
+//
+//                    @Override
+//                    public void onSwitchBanner() {
+//                        Logger.i(TAG, "onSwitchBanner");
+//                    }
+//
+//                    @Override
+//                    public void onRequestFailed() {
+//                        Logger.i(TAG, "onRequestFailed");
+//                    }
+//                });
+//
+//        // 获取要嵌入广告条的布局
+//        LinearLayout bannerLayout = (LinearLayout) view.findViewById(R.id.adLayout);
+//
+//        if (bannerView != null) {
+//            // 将广告条加入到布局中
+//            bannerLayout.addView(bannerView);
+//        }
 
         update();
     }

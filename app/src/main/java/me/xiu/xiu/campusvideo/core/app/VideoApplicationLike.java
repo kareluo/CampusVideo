@@ -41,8 +41,10 @@ public class VideoApplicationLike extends DefaultApplicationLike {
 
         Bugly.init(getApplication(), Constants.Application.BUGLY_ID, BuildConfig.DEBUG);
 
-        AdManager.getInstance(getApplication()).init(Constants.Application.AD_ID,
-                Constants.Application.AD_SECRET, true, true);
+        AdManager.getInstance(getApplication()).init(
+                Constants.Application.AD_ID,
+                Constants.Application.AD_SECRET,
+                false, false);
 
         CampusVideo.init(getApplicationContext());
 

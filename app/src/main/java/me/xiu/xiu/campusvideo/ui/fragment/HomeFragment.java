@@ -50,6 +50,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
 
     private List<VideoSeries> mVideoSeries;
 
+    private View mProgressBar;
+
     private MaterialRefreshLayout mMaterialRefreshLayout;
 
     @Override
@@ -84,7 +86,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setNavigationIcon(R.drawable.ic_view_headline_white);
-
+        mProgressBar = view.findViewById(R.id.pb_progress);
         mMaterialRefreshLayout = (MaterialRefreshLayout) view.findViewById(R.id.mrl_home);
         mMaterialRefreshLayout.setMaterialRefreshListener(mOnRefreshListener);
 
@@ -124,6 +126,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         mBanners.clear();
         mBanners.addAll(banners);
         mHomePagerAdapter.notifyDataSetChanged();
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -131,6 +134,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         mVideoSeries.clear();
         mVideoSeries.addAll(videoSeries);
         mVideoSeriesAdapter.notifyDataSetChanged();
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override

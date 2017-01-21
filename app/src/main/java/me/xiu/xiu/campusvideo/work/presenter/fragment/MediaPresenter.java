@@ -3,6 +3,7 @@ package me.xiu.xiu.campusvideo.work.presenter.fragment;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +52,14 @@ public class MediaPresenter extends Presenter<MediaViewer> {
                         Cursor query = MediaStore.Video.query(mMediaResolver,
                                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI, PROJECTION);
                         while (query.moveToNext()) {
-                            Media media = new Media();
-                            media.setTitle(query.getString(query.getColumnIndex(MediaStore.Video.Media.TITLE)));
-                            medias.add(media);
+                            try {
+                                Media media = new Media();
+                                media.setPath(query.getString(query.getColumnIndex(MediaStore.Video.Media.DATA)));
+                                media.setTitle(query.getString(query.getColumnIndex(MediaStore.Video.Media.TITLE)));
+                                medias.add(media);
+                            } catch (Exception e) {
+                                Logger.w(TAG, e);
+                            }
                         }
                         query.close();
 

@@ -252,4 +252,7 @@ dependencies {
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     // xlog, 日志记录库
     compile 'com.elvishew:xlog:1.3.0'
+
+    // 权限请求
+    compile 'pub.devrel:easypermissions:0.2.1'
 }

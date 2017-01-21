@@ -1,6 +1,7 @@
 package me.xiu.xiu.campusvideo.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import me.kareluo.intensify.gridview.IntensifyGridAdapter;
+import me.kareluo.intensify.gridview.IntensifyGridView;
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.common.video.Video;
 import me.xiu.xiu.campusvideo.dao.media.Media;
+import me.xiu.xiu.campusvideo.dao.offline.Offline;
+import me.xiu.xiu.campusvideo.ui.activity.PlayerActivity;
 import me.xiu.xiu.campusvideo.ui.view.MediaItemView;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.MediaPresenter;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.MediaViewer;
@@ -20,17 +26,17 @@ import me.xiu.xiu.campusvideo.work.viewer.fragment.MediaViewer;
 /**
  * Created by felix on 16/4/16.
  */
-public class MediaFragment extends BaseFragment<MediaPresenter> implements MediaViewer {
+public class MediaFragment extends BaseFragment<MediaPresenter> implements MediaViewer,
+        IntensifyGridView.OnItemClickListener {
 
     private List<Media> mMedias;
     private MediaAdapter mAdapter;
-    private RecyclerView mRecyclerView;
+    private IntensifyGridView mRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMedias = new ArrayList<>();
-        mAdapter = new MediaAdapter();
     }
 
     @Nullable
@@ -42,8 +48,9 @@ public class MediaFragment extends BaseFragment<MediaPresenter> implements Media
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_local);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView = (IntensifyGridView) view.findViewById(R.id.rv_local);
+        mAdapter = new MediaAdapter(mRecyclerView);
+        mRecyclerView.setOnItemClickListener(this);
         getPresenter().scan();
         setTitle(R.string.local_media);
     }
@@ -70,20 +77,34 @@ public class MediaFragment extends BaseFragment<MediaPresenter> implements Media
         mAdapter.notifyDataSetChanged();
     }
 
-    private class MediaAdapter extends RecyclerView.Adapter<MediaViewHolder> {
+    @Override
+    public void onItemClick(RecyclerView.ViewHolder holder) {
+        int position = holder.getAdapterPosition();
+        if (position >= 0 && position < mMedias.size()) {
+            Media media = mMedias.get(position);
+            Video video = Video.valueOf(media);
+            PlayerActivity.play(getContext(), video);
+        }
+    }
 
-        @Override
-        public MediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MediaViewHolder(new MediaItemView(getContext()));
+    private class MediaAdapter extends IntensifyGridAdapter<MediaViewHolder> {
+
+        public MediaAdapter(@NonNull IntensifyGridView intensifyGridView) {
+            super(intensifyGridView);
         }
 
         @Override
-        public void onBindViewHolder(MediaViewHolder holder, int position) {
+        protected void onBindCommonViewHolder(MediaViewHolder holder, int position) {
             holder.update(mMedias.get(position));
         }
 
         @Override
-        public int getItemCount() {
+        public MediaViewHolder onCreateCommonViewHolder(ViewGroup parent, int viewType) {
+            return new MediaViewHolder(new MediaItemView(getContext()));
+        }
+
+        @Override
+        public int getCount() {
             return mMedias.size();
         }
     }

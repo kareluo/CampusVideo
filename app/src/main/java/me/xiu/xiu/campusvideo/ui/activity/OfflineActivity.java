@@ -1,9 +1,9 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -17,11 +17,15 @@ import java.util.List;
 import me.kareluo.intensify.gridview.IntensifyGridAdapter;
 import me.kareluo.intensify.gridview.IntensifyGridView;
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.video.Video;
 import me.xiu.xiu.campusvideo.ui.view.EpisodeItemView;
 import me.xiu.xiu.campusvideo.ui.view.Updatable;
 import me.xiu.xiu.campusvideo.work.presenter.OfflinePresenter;
 import me.xiu.xiu.campusvideo.work.viewer.OfflineViewer;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * Created by felix on 16/4/30.
@@ -31,13 +35,15 @@ public class OfflineActivity extends SwipeBackActivity<OfflinePresenter>
 
     private String mVideoId;
 
-    private List<Video.Episode> mEpisodes = new ArrayList<>();
-
     private EpisodeAdapter mAdapter;
 
     private String mDestPath;
 
     private String mVideoName;
+
+    private List<Video.Episode> mEpisodes = new ArrayList<>();
+
+    private static final int RC_CAMERA_PERM = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +52,20 @@ public class OfflineActivity extends SwipeBackActivity<OfflinePresenter>
         IntensifyGridView intensifyGridView = (IntensifyGridView) findViewById(R.id.igv_videos);
         mAdapter = new EpisodeAdapter(intensifyGridView);
         intensifyGridView.setOnItemClickListener(this);
+        offlining();
+    }
 
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            File path = Environment.getExternalStorageDirectory();
-            File file = new File(path, "Campusvideo/videos/");
-            file.mkdirs();
+    @AfterPermissionGranted(RC_CAMERA_PERM)
+    private void offlining() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            File file = CampusVideo.getVideoDir(this);
             mDestPath = file.getAbsolutePath();
+            getPresenter().load(mVideoId);
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(this, getString(R.string.storage_tips),
+                    RC_CAMERA_PERM, Manifest.permission.CAMERA);
         }
-
-        getPresenter().load(mVideoId);
     }
 
     @Override
@@ -97,6 +108,20 @@ public class OfflineActivity extends SwipeBackActivity<OfflinePresenter>
     public void onItemClick(RecyclerView.ViewHolder holder) {
         int position = holder.getAdapterPosition();
         getPresenter().offline(mVideoName, mVideoId, mDestPath, mEpisodes.get(position));
+        showToastMessage("下载中,请在离线中查看");
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this, getString(R.string.storage_tips))
+                    .setTitle(getString(R.string.storage_tips))
+                    .setPositiveButton(getString(R.string.setting))
+                    .setNegativeButton(getString(R.string.cancel), null /* click listener */)
+                    .setRequestCode(RC_CAMERA_PERM)
+                    .build()
+                    .show();
+        }
     }
 
     private class EpisodeAdapter extends IntensifyGridAdapter<EpisodeVideoHolder> {

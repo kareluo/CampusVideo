@@ -63,7 +63,9 @@ public class OffliningItemView extends FrameLayout implements Updatable2<Offlini
 
     @Override
     public void update(Offlining offlining, Boolean deleteMode) {
-        mNameText.setText(offlining.getName());
+        mNameText.setText(String.format(Locale.CHINA, "%s (%d)",
+                offlining.getName(), offlining.getEpisode()));
+
         Glide.with(getContext())
                 .load(CampusVideo.getPoster(offlining.getVid()))
                 .dontAnimate()

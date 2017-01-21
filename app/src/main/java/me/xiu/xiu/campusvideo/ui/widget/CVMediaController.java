@@ -4,9 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.MediaController.MediaPlayerControl;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
@@ -24,7 +26,6 @@ import java.util.Locale;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.util.Logger;
 import tv.danmaku.ijk.media.example.widget.media.IMediaController;
-
 
 /**
  * Created by felix on 17/1/7.
@@ -51,13 +52,19 @@ public class CVMediaController extends FrameLayout implements IMediaController,
 
     private ImageButton mPauseButton;
 
-    private boolean mDragging, mShowing;
-
     private CVControllerHandler mHandler;
+
+    private ViewSwitcher mOptionSwitcher;
 
     private boolean mDebug = false;
 
+    private boolean mDragging = false, mShowing = false;
+
     private OnMediaEventCallback mCallback;
+
+    private int mMode = DISPLAY_OPT_NEXT;
+
+    private GestureDetectorCompat mGestureDetectorCompat;
 
     private static final int MAX_PROGRESS = 1000;
 
@@ -66,6 +73,10 @@ public class CVMediaController extends FrameLayout implements IMediaController,
     private static final int MSG_UPDATE_PROGRESS = 1;
 
     private static final int MSG_FADE_OUT = 2;
+
+    public static final int DISPLAY_OPT_NEXT = 0;
+
+    public static final int DISPLAY_OPT_EPISODE = 1;
 
     public CVMediaController(Context context) {
         super(context);
@@ -80,6 +91,11 @@ public class CVMediaController extends FrameLayout implements IMediaController,
     }
 
     private void initialize(Context context) {
+        if (getChildCount() == 0) {
+            inflate(context, R.layout.layout_media_controller, this);
+        }
+        mGestureDetectorCompat = new GestureDetectorCompat(context, new CVGestureAdapter());
+
         mPauseButton = (ImageButton) findViewById(R.id.ib_pause);
         mPauseButton.setOnClickListener(this);
 
@@ -96,6 +112,8 @@ public class CVMediaController extends FrameLayout implements IMediaController,
         mTimeFormatter = new Formatter(mStringBuilder, Locale.getDefault());
 
         mTableLayout = (TableLayout) findViewById(R.id.tb_tabs);
+
+        mOptionSwitcher = (ViewSwitcher) findViewById(R.id.vs_opts);
 
         mHandler = new CVControllerHandler(this);
     }
@@ -146,6 +164,15 @@ public class CVMediaController extends FrameLayout implements IMediaController,
     @Override
     public void setMediaPlayer(MediaPlayerControl player) {
         mMediaPlayer = player;
+    }
+
+    public void toggleDisplayMode(int mode) {
+        mMode = mode;
+        if (mMode == DISPLAY_OPT_EPISODE) {
+            mOptionSwitcher.setDisplayedChild(1);
+        } else {
+            mOptionSwitcher.setDisplayedChild(0);
+        }
     }
 
     @Override
@@ -200,18 +227,10 @@ public class CVMediaController extends FrameLayout implements IMediaController,
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                show(0); // show until hide is called
-                break;
-            case MotionEvent.ACTION_UP:
-                show(DEFAULT_TIMEOUT); // start timeout
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                hide();
-                break;
+        if (mGestureDetectorCompat != null) {
+            return mGestureDetectorCompat.onTouchEvent(event);
         }
-        return true;
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -360,9 +379,9 @@ public class CVMediaController extends FrameLayout implements IMediaController,
 
     private void updatePausePlay() {
         if (mMediaPlayer.isPlaying()) {
-            mPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+            mPauseButton.setImageResource(R.drawable.ic_media_pause);
         } else {
-            mPauseButton.setImageResource(android.R.drawable.ic_media_play);
+            mPauseButton.setImageResource(R.drawable.ic_media_play);
         }
     }
 
@@ -373,6 +392,20 @@ public class CVMediaController extends FrameLayout implements IMediaController,
                 doPauseResume();
                 show(DEFAULT_TIMEOUT);
                 break;
+        }
+    }
+
+    private class CVGestureAdapter extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            hide();
+            return true;
         }
     }
 

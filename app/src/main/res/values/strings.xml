@@ -43,10 +43,15 @@
     <string name="server_inaccessible">服务器无法连接</string>
     <string name="not_mind">不在提醒</string>
     <string name="ignore">忽略</string>
-    <string name="switch_server">切换服务器</string>
+    <string name="switch_server">切换服务器(侧滑菜单->设置)</string>
     <string name="to_switch">去切换</string>
+    <string name="cancel">取消</string>
 
     <string name="server_logo">服务器图标</string>
     <string name="pause_or_play">暂停/播放</string>
+    <string name="storage_tips">需要存储权限保存视频文件</string>
+    <string name="collection">收藏</string>
+    <string name="add">添加</string>
+    <string name="save">保存</string>
 
 </resources>

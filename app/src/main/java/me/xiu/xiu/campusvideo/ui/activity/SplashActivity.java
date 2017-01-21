@@ -21,17 +21,13 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        
         SplashViewSettings settings = new SplashViewSettings();
         settings.setAutoJumpToTargetWhenShowFailed(true);
         settings.setTargetClass(HomeActivity.class);
 
         // 使用默认布局参数
         settings.setSplashViewContainer((ViewGroup) findViewById(R.id.layout_container));
-
-        if (!SpotManager.getInstance(this).checkSpotAdConfig()) {
-            showToastMessage("配置不对");
-        }
 
         SpotManager.getInstance(this).showSplash(this,
                 settings, new SpotListener() {
@@ -55,8 +51,6 @@ public class SplashActivity extends BaseActivity {
                         Logger.i(TAG, "onSpotClicked:" + b);
                     }
                 });
-
-//        startActivity(new Intent(this, HomeActivity.class));
     }
 
     @Override

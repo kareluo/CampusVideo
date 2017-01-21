@@ -10,12 +10,14 @@
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:clickable="false" />
 
     <me.xiu.xiu.campusvideo.ui.widget.CVMediaController
         android:id="@+id/cv_media_controller"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <include layout="@layout/layout_media_controller" />
 

@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.xiu.xiu.campusvideo.common.CampusVideo;
+import me.xiu.xiu.campusvideo.dao.media.Media;
 import me.xiu.xiu.campusvideo.dao.offline.Offline;
 import me.xiu.xiu.campusvideo.util.ValueUtil;
 
@@ -24,12 +26,13 @@ public class Video implements Parcelable {
     private Bundle info;
     private List<Episode> episodes;
 
-    public static final int TYPE_DEFAULT = 0;
+    public static final int TYPE_LOCAL = 0;
     public static final int TYPE_OFFLINE = 1;
     public static final int TYPE_ONLINE = 2;
+    public static final int TYPE_MEDIA = 3;
 
     public Video() {
-        type = TYPE_DEFAULT;
+        type = TYPE_LOCAL;
         epindex = 0;
         episodes = new ArrayList<>();
     }
@@ -156,6 +159,16 @@ public class Video implements Parcelable {
                 episodes.add(new Episode(o.getEpisode(), o.getDest()));
             }
             video.setEpisodes(episodes);
+        }
+        return video;
+    }
+
+    public static Video valueOf(Media media) {
+        Video video = new Video();
+        if (media != null) {
+            video.setType(TYPE_MEDIA);
+            video.setName(media.getTitle());
+            video.setPath(media.getPath());
         }
         return video;
     }

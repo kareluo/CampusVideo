@@ -116,7 +116,7 @@ public class OfflinePresenter extends Presenter<OfflineViewer> {
                                     List<Offline> offlinings = new ArrayList<>();
                                     for (Video.Episode episode : episodes) {
                                         if (episode.isValid())
-                                            offlinings.add(new Offline(name, videoId, destDir + episode.getSid(), episode));
+                                            offlinings.add(new Offline(name, videoId, assembleDestFile(videoId, destDir, episode.getSid()), episode));
                                     }
                                     return offlinings;
                                 }
@@ -142,5 +142,14 @@ public class OfflinePresenter extends Presenter<OfflineViewer> {
                         OffliningService.postAction(getViewer().getContext(), OffliningService.ACTION_START);
                     }
                 }));
+    }
+
+    private String assembleDestFile(String videoId, String destDir, String sid) {
+        destDir = destDir.trim();
+        if (destDir.endsWith("/")) {
+            return String.format("%s%s/%s", destDir, videoId, sid);
+        } else {
+            return String.format("%s/%s/%s", destDir, videoId, sid);
+        }
     }
 }

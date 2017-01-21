@@ -2,28 +2,42 @@ package me.xiu.xiu.campusvideo.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 
+import java.io.File;
 import java.util.Locale;
 
 import me.xiu.xiu.campusvideo.BuildConfig;
 import me.xiu.xiu.campusvideo.common.xml.Xml;
 import me.xiu.xiu.campusvideo.dao.common.Campus;
+import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
  * Created by felix on 15/9/28.
  */
 public class CampusVideo {
 
-    private static final Campus DEFAULT_CAMPUS = new Campus("上海海洋大学", "netkuu.gcp.edu.cn");
+    private static final String TAG = "CampusVideo";
+
+    private static final Campus DEFAULT_CAMPUS = new Campus("安徽中医药大学", "210.45.16.230");
 
     public static Campus campus = DEFAULT_CAMPUS;
+
     public static String protocol = "http://";
+
     public static String port = "80";
+
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
     private static final String SHARED_CONFIG = "configs";
+
     private static final String CONFIG_CAMPUS = "Campus";
+
     private static final String CONFIG_HOST = "Host";
+
+    public static final boolean ENABLE_AD = false;
+
+    public static final String VIDEO_DIR = "Campusvideo/videos/";
 
     public static synchronized void init(Context context) {
         SharedPreferences shared = context.getSharedPreferences(SHARED_CONFIG, Context.MODE_PRIVATE);
@@ -120,5 +134,28 @@ public class CampusVideo {
      */
     public static String getStillUrl(String vid, int index) {
         return getUrl(String.format(Locale.ROOT, "/mov/%s/jzd%d.jpg", vid, index));
+    }
+
+    public static File getVideoDir(Context context) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            File path = Environment.getExternalStorageDirectory();
+            File file = new File(path, CampusVideo.VIDEO_DIR);
+            boolean mkdirs = file.mkdirs();
+            if (mkdirs) {
+                Logger.i(TAG, "mkdirs=true");
+            }
+            return file;
+        } else {
+            File dir = context.getExternalFilesDir(null);
+            if (dir != null) {
+                File file = new File(dir, "videos/");
+                boolean mkdirs = file.mkdirs();
+                if (mkdirs) {
+                    Logger.i(TAG, "internal mkdirs=true");
+                }
+                return file;
+            }
+        }
+        return context.getExternalFilesDir(Environment.DIRECTORY_MOVIES);
     }
 }

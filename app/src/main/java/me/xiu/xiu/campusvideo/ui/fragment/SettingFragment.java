@@ -108,8 +108,9 @@ public class SettingFragment extends BaseFragment<SettingPresenter> implements S
                 if (resultCode == Activity.RESULT_OK) {
                     Campus campus = CampusActivity.getResult(data);
                     if (campus != null) {
-                        CampusVideo.campus = campus;
+                        CampusVideo.update(getContext(), campus);
                         updateCampus();
+                        showToastMessage("设置成功，请刷新重试");
                     }
                 }
                 break;

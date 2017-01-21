@@ -9,6 +9,7 @@ import android.content.Intent;
 import java.util.List;
 
 import me.xiu.xiu.campusvideo.common.xml.Xml;
+import me.xiu.xiu.campusvideo.common.xml.XmlObject;
 import me.xiu.xiu.campusvideo.common.xml.XmlParser;
 import me.xiu.xiu.campusvideo.ui.activity.PlayerActivity;
 import me.xiu.xiu.campusvideo.ui.activity.TipsActivity;
@@ -27,8 +28,6 @@ public class InspectService extends IntentService {
 
     @Override
     protected synchronized void onHandleIntent(Intent intent) {
-        startActivity(new Intent(getApplicationContext(), TipsActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         if (ConnectivityUtils.isAvailable(getApplicationContext())) {
             if (!isAvailable() && shouldShowTips()) {
                 startActivity(new Intent(getApplicationContext(), TipsActivity.class)
@@ -39,7 +38,8 @@ public class InspectService extends IntentService {
 
     private boolean isAvailable() {
         try {
-            return XmlParser.parse(Xml.BARSET, Xml.TAG_ROOT, 1) != null;
+            XmlObject xmlObject = XmlParser.parse(Xml.BARSET, Xml.TAG_ROOT, 1);
+            return xmlObject != null && !xmlObject.isEmpty();
         } catch (Exception e) {
             return false;
         }

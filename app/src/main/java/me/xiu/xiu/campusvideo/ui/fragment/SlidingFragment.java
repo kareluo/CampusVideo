@@ -15,6 +15,7 @@ import net.youmi.android.normal.banner.BannerViewListener;
 
 import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.Threshold;
 import me.xiu.xiu.campusvideo.ui.view.CampusHeadView;
 import me.xiu.xiu.campusvideo.ui.view.SlidingGroupView;
@@ -64,31 +65,33 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
 
-        // 获取广告条
-        View bannerView = BannerManager.getInstance(getContext())
-                .getBannerView(getContext(), new BannerViewListener() {
-                    @Override
-                    public void onRequestSuccess() {
-                        Logger.i(TAG, "onRequestSuccess");
-                    }
+        if (CampusVideo.ENABLE_AD) {
+            // 获取广告条
+            View bannerView = BannerManager.getInstance(getContext())
+                    .getBannerView(getContext(), new BannerViewListener() {
+                        @Override
+                        public void onRequestSuccess() {
+                            Logger.i(TAG, "onRequestSuccess");
+                        }
 
-                    @Override
-                    public void onSwitchBanner() {
-                        Logger.i(TAG, "onSwitchBanner");
-                    }
+                        @Override
+                        public void onSwitchBanner() {
+                            Logger.i(TAG, "onSwitchBanner");
+                        }
 
-                    @Override
-                    public void onRequestFailed() {
-                        Logger.i(TAG, "onRequestFailed");
-                    }
-                });
+                        @Override
+                        public void onRequestFailed() {
+                            Logger.i(TAG, "onRequestFailed");
+                        }
+                    });
 
-        // 获取要嵌入广告条的布局
-        LinearLayout bannerLayout = (LinearLayout) view.findViewById(R.id.adLayout);
+            // 获取要嵌入广告条的布局
+            LinearLayout bannerLayout = (LinearLayout) view.findViewById(R.id.adLayout);
 
-        if (bannerView != null) {
-            // 将广告条加入到布局中
-            bannerLayout.addView(bannerView);
+            if (bannerView != null) {
+                // 将广告条加入到布局中
+                bannerLayout.addView(bannerView);
+            }
         }
     }
 

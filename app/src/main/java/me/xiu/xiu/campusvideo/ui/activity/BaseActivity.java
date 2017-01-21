@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -11,15 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.Viewer;
 import me.xiu.xiu.campusvideo.util.Logger;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * Created by felix on 15/9/18.
  */
 public abstract class BaseActivity<P extends Presenter> extends AppCompatActivity implements
-        View.OnClickListener, Viewer {
+        View.OnClickListener, Viewer, EasyPermissions.PermissionCallbacks {
     private static final String TAG = "BaseActivity";
 
     private AlertDialog mLoadingDialog;
@@ -205,5 +209,24 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
             }
             decorView.setSystemUiVisibility(uiFlags);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
     }
 }

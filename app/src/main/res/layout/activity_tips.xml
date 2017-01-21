@@ -73,7 +73,8 @@
                 android:paddingLeft="@dimen/video_actor_half"
                 android:paddingRight="@dimen/video_actor_half"
                 android:text="@string/to_switch"
-                android:textColor="@color/white_milk" />
+                android:textColor="@color/white_milk"
+                android:visibility="gone" />
         </FrameLayout>
 
     </LinearLayout>
@@ -98,7 +99,8 @@
             android:padding="@dimen/padding_normal"
             android:text="@string/not_mind"
             android:textColor="@color/gray"
-            android:textSize="@dimen/text_normal" />
+            android:textSize="@dimen/text_normal"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_ignore"

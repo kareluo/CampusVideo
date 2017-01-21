@@ -54,7 +54,6 @@ public class HomePresenter extends Presenter<HomeViewer> {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-
                     }
                 }));
     }
@@ -100,6 +99,11 @@ public class HomePresenter extends Presenter<HomeViewer> {
                             }
                         }
                         getViewer().onUpdateVideoSeries(videoSeries);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
                     }
                 }));
     }
