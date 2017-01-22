@@ -91,7 +91,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="video/*" />
-                
+
             </intent-filter>
 
         </activity>
@@ -121,6 +121,10 @@
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:theme="@android:style/Theme.Translucent" />
+
+        <activity
+            android:name=".ui.activity.AddCampusActivity"
+            android:label="@string/label_add_campus" />
 
         <service android:name=".work.service.OffliningService" />
 

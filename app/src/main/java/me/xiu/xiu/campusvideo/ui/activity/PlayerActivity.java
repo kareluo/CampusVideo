@@ -1,10 +1,14 @@
 package me.xiu.xiu.campusvideo.ui.activity;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -19,7 +23,9 @@ import net.youmi.android.normal.spot.SpotManager;
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.video.Video;
+import me.xiu.xiu.campusvideo.dao.media.Media;
 import me.xiu.xiu.campusvideo.ui.widget.CVMediaController;
+import me.xiu.xiu.campusvideo.util.FileUtils;
 import me.xiu.xiu.campusvideo.util.Logger;
 import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -38,6 +44,13 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
     private CVMediaController mController;
 
     private static final String EXTRA_VIDEO = "video";
+
+    private static String[] PROJECTION = {
+            MediaStore.Video.Media.DATA,
+            MediaStore.Video.Media._ID,
+            MediaStore.Video.Media.TITLE,
+            MediaStore.Video.Media.MIME_TYPE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +80,24 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
         if (intent == null) return;
         String action = intent.getAction();
         if (!TextUtils.isEmpty(action) && action.equals(Intent.ACTION_VIEW)) {
+            mVideo = new Video();
             Uri data = intent.getData();
             if (data != null) {
-                mVideo = new Video();
-                String path = data.getPath();
-                if (path.startsWith("file://")) {
-                    path = path.substring(7);
+                if (data.getScheme().equalsIgnoreCase("content")) {
+                    ContentResolver contentResolver = getContentResolver();
+                    Cursor cursor = contentResolver.query(data, PROJECTION, null, null, null);
+                    if (cursor != null) {
+                        if (cursor.moveToFirst()) {
+                            mVideo.setPath(cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA)));
+                            mVideo.setName(cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE)));
+                        }
+                        cursor.close();
+                    }
+                } else {
+                    String path = data.getPath();
+                    mVideo.setName(FileUtils.getFileName(path));
+                    mVideo.setPath(path);
                 }
-                mVideo.setName(path);
-                mVideo.setPath(path);
             }
         } else {
             mVideo = intent.getParcelableExtra(EXTRA_VIDEO);

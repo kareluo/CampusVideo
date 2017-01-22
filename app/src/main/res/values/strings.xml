@@ -54,4 +54,5 @@
     <string name="add">添加</string>
     <string name="save">保存</string>
 
+    <string name="label_add_campus">添加服务器</string>
 </resources>

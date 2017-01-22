@@ -13,6 +13,8 @@ public interface Viewer {
         TEXT;
     }
 
+    void finish();
+
     void showLoadingDialog();
 
     void showToastMessage(String msg);

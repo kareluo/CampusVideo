@@ -46,3 +46,7 @@ file=/Users/felix/Workspace/Application/Campusvideo/app/build/outputs/mapping/re
 sha1=72fc5f2cb80992b6007bb414f960339a4325173e
 appId=5a6c633bfa
 
+file=/Users/felix/Workspace/Application/Campusvideo/app/build/outputs/mapping/release/mapping.txt
+sha1=8fcf7e79fe40710dfddd9011555be1dc2eeee7f6
+appId=5a6c633bfa
+

@@ -94,6 +94,11 @@ public class BaseFragment<P extends Presenter> extends Fragment implements Viewe
     }
 
     @Override
+    public void finish() {
+
+    }
+
+    @Override
     public void showToastMessage(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }

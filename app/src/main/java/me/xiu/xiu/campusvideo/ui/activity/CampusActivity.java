@@ -79,7 +79,7 @@ public class CampusActivity extends SwipeBackActivity<CampusPresenter> implement
                 getPresenter().sync(mCampuses);
                 return true;
             case R.id.menu_add:
-
+                startActivity(new Intent(this, AddCampusActivity.class));
                 return true;
 //            case R.id.menu_sort_by_iq:
 //                getPresenter().sortByIQ(mCampuses);
