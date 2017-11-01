@@ -10,8 +10,6 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.tinker.loader.BuildConfig;
 import com.tencent.tinker.loader.app.DefaultApplicationLike;
 
-import net.youmi.android.AdManager;
-
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.Constants;
 import me.xiu.xiu.campusvideo.common.xml.XmlParser;
@@ -36,11 +34,6 @@ public class VideoApplicationLike extends DefaultApplicationLike {
         Logger.init();
 
         Bugly.init(getApplication(), Constants.Application.BUGLY_ID, BuildConfig.DEBUG);
-
-        AdManager.getInstance(getApplication()).init(
-                Constants.Application.AD_ID,
-                Constants.Application.AD_SECRET,
-                false, false);
 
         CampusVideo.init(getApplicationContext());
 

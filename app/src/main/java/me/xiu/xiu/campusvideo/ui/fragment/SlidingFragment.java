@@ -7,20 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-
-import net.youmi.android.normal.banner.BannerManager;
-import net.youmi.android.normal.banner.BannerViewListener;
 
 import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
-import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.common.Threshold;
 import me.xiu.xiu.campusvideo.ui.view.CampusHeadView;
 import me.xiu.xiu.campusvideo.ui.view.SlidingGroupView;
 import me.xiu.xiu.campusvideo.ui.view.SlidingItemView;
-import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.work.model.SlidingItem;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.SlidingPresenter;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.SlidingViewer;
@@ -64,42 +58,6 @@ public class SlidingFragment extends BaseFragment<SlidingPresenter> implements S
         mListView.addHeaderView(headView);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
-
-        if (CampusVideo.ENABLE_AD) {
-            // 获取广告条
-            View bannerView = BannerManager.getInstance(getContext())
-                    .getBannerView(getContext(), new BannerViewListener() {
-                        @Override
-                        public void onRequestSuccess() {
-                            Logger.i(TAG, "onRequestSuccess");
-                        }
-
-                        @Override
-                        public void onSwitchBanner() {
-                            Logger.i(TAG, "onSwitchBanner");
-                        }
-
-                        @Override
-                        public void onRequestFailed() {
-                            Logger.i(TAG, "onRequestFailed");
-                        }
-                    });
-
-            // 获取要嵌入广告条的布局
-            LinearLayout bannerLayout = (LinearLayout) view.findViewById(R.id.adLayout);
-
-            if (bannerView != null) {
-                // 将广告条加入到布局中
-                bannerLayout.addView(bannerView);
-            }
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // 展示广告条窗口的 onDestroy() 回调方法中调用
-        BannerManager.getInstance(getContext()).onDestroy();
     }
 
     @Override

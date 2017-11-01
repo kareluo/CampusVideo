@@ -48,11 +48,6 @@ public static final int *;
     public static ** valueOf(java.lang.String);
 }
 
--dontwarn net.youmi.android.**
--keep class net.youmi.android.** {
-    *;
-}
-
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.** {
     *;

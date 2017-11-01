@@ -4,10 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-
-import net.youmi.android.normal.spot.SpotManager;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -15,10 +12,10 @@ import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.xml.Rules;
 import me.xiu.xiu.campusvideo.core.InspectService;
 import me.xiu.xiu.campusvideo.ui.fragment.BannerFragment;
+import me.xiu.xiu.campusvideo.ui.fragment.HomeFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.MediaFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.OfflineFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.SettingFragment;
-import me.xiu.xiu.campusvideo.ui.fragment.HomeFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.TypeFragment;
 import me.xiu.xiu.campusvideo.ui.widget.sliding.SlidingLayout;
 import me.xiu.xiu.campusvideo.work.model.SlidingItem;
@@ -149,7 +146,6 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        SpotManager.getInstance(this).onAppExit();
     }
 
     @Override

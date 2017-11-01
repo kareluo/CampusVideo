@@ -2,7 +2,6 @@ package me.xiu.xiu.campusvideo.ui.activity;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -19,17 +18,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
-import net.youmi.android.normal.spot.SpotListener;
-import net.youmi.android.normal.spot.SpotManager;
-
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.video.Video;
-import me.xiu.xiu.campusvideo.dao.media.Media;
 import me.xiu.xiu.campusvideo.dao.media.MediaPoint;
 import me.xiu.xiu.campusvideo.ui.widget.CVMediaController;
 import me.xiu.xiu.campusvideo.util.FileUtils;
-import me.xiu.xiu.campusvideo.util.Logger;
 import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -70,9 +64,6 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
         initViews();
         initParams(getIntent());
         play();
-
-        SpotManager.getInstance(this).setImageType(SpotManager.IMAGE_TYPE_HORIZONTAL);
-        SpotManager.getInstance(this).setAnimationType(SpotManager.ANIMATION_TYPE_SIMPLE);
     }
 
     @Override
@@ -204,37 +195,12 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        // 如果有需要，可以点击后退关闭插播广告。
-        if (SpotManager.getInstance(this).isSpotShowing()) {
-            SpotManager.getInstance(this).hideSpot();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // 插屏广告
-        SpotManager.getInstance(this).onPause();
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         mVideoView.stopPlayback();
         mVideoView.release(true);
         mVideoView.stopBackgroundPlay();
         IjkMediaPlayer.native_profileEnd();
-        // 插屏广告
-        SpotManager.getInstance(this).onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // 插屏广告
-        SpotManager.getInstance(this).onDestroy();
     }
 
     @Override
@@ -251,39 +217,6 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
             hideNavigationBar();
         }
         return onKeyUp;
-    }
-
-    @Override
-    public void onEvent(CVMediaController.Event event) {
-        switch (event) {
-            case PAUSE:
-                showAd();
-                break;
-        }
-    }
-
-    private void showAd() {
-        SpotManager.getInstance(this).showSpot(this, new SpotListener() {
-            @Override
-            public void onShowSuccess() {
-                Logger.i(TAG, "onShowSuccess");
-            }
-
-            @Override
-            public void onShowFailed(int i) {
-                Logger.i(TAG, "onShowFailed:" + i);
-            }
-
-            @Override
-            public void onSpotClosed() {
-                Logger.i(TAG, "onSpotClosed");
-            }
-
-            @Override
-            public void onSpotClicked(boolean b) {
-                Logger.i(TAG, "onSpotClicked:" + b);
-            }
-        });
     }
 
     @Override
@@ -338,5 +271,10 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
                 return null;
         }
         return mediaPoint;
+    }
+
+    @Override
+    public void onEvent(CVMediaController.Event event) {
+
     }
 }

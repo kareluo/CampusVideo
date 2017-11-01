@@ -10,16 +10,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import net.youmi.android.normal.banner.BannerManager;
-import net.youmi.android.normal.banner.BannerViewListener;
 
 import org.apmem.tools.layouts.FlowLayout;
 
@@ -36,7 +30,6 @@ import me.xiu.xiu.campusvideo.ui.fragment.VideoStillFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.VideoSummaryFragment;
 import me.xiu.xiu.campusvideo.ui.view.ActorView;
 import me.xiu.xiu.campusvideo.util.CommonUtil;
-import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.util.ToastUtil;
 import me.xiu.xiu.campusvideo.work.presenter.VideoPresenter;
 import me.xiu.xiu.campusvideo.work.viewer.VideoViewer;
@@ -100,35 +93,6 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
         mViewPager.setAdapter(mPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
-
-        if (CampusVideo.ENABLE_AD) {
-            // 获取广告条
-            View bannerView = BannerManager.getInstance(this)
-                    .getBannerView(this, new BannerViewListener() {
-                        @Override
-                        public void onRequestSuccess() {
-                            Logger.i(TAG, "onRequestSuccess");
-                        }
-
-                        @Override
-                        public void onSwitchBanner() {
-                            Logger.i(TAG, "onSwitchBanner");
-                        }
-
-                        @Override
-                        public void onRequestFailed() {
-                            Logger.i(TAG, "onRequestFailed");
-                        }
-                    });
-
-            // 获取要嵌入广告条的布局
-            LinearLayout bannerLayout = (LinearLayout) findViewById(R.id.adLayout);
-
-            if (bannerView != null) {
-                // 将广告条加入到布局中
-                bannerLayout.addView(bannerView);
-            }
-        }
     }
 
     @Override
@@ -229,7 +193,5 @@ public class VideoActivity extends SwipeBackActivity<VideoPresenter> implements 
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
-        // 展示广告条窗口的 onDestroy() 回调方法中调用
-        BannerManager.getInstance(getContext()).onDestroy();
     }
 }
