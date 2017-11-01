@@ -5,12 +5,12 @@ import com.j256.ormlite.support.ConnectionSource;
 import java.sql.SQLException;
 import java.util.List;
 
-import me.xiu.xiu.campusvideo.dao.base.BaseDaoImpl;
+import me.xiu.xiu.campusvideo.dao.base.CVBaseDaoImpl;
 
 /**
  * Created by felix on 16/4/14.
  */
-public class CampusDaoImpl extends BaseDaoImpl<Campus, Long> implements CampusDao {
+public class CampusDaoImpl extends CVBaseDaoImpl<Campus, Long> implements CampusDao {
 
     public CampusDaoImpl(ConnectionSource connectionSource) throws SQLException {
         super(connectionSource, Campus.class);

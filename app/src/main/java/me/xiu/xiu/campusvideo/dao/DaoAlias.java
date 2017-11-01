@@ -4,13 +4,16 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 
-import me.xiu.xiu.campusvideo.dao.base.BaseDao;
+import me.xiu.xiu.campusvideo.dao.base.CVBaseDao;
 import me.xiu.xiu.campusvideo.dao.classify.Classify;
 import me.xiu.xiu.campusvideo.dao.classify.ClassifyDao;
 import me.xiu.xiu.campusvideo.dao.classify.ClassifyDaoImpl;
 import me.xiu.xiu.campusvideo.dao.common.Campus;
 import me.xiu.xiu.campusvideo.dao.common.CampusDao;
 import me.xiu.xiu.campusvideo.dao.common.CampusDaoImpl;
+import me.xiu.xiu.campusvideo.dao.media.MediaPoint;
+import me.xiu.xiu.campusvideo.dao.media.MediaPointDao;
+import me.xiu.xiu.campusvideo.dao.media.MediaPointDaoImpl;
 import me.xiu.xiu.campusvideo.dao.offline.Offline;
 import me.xiu.xiu.campusvideo.dao.offline.OfflineDao;
 import me.xiu.xiu.campusvideo.dao.offline.OfflineDaoImpl;
@@ -29,7 +32,6 @@ public enum DaoAlias {
         public ClassifyDao createDao(ConnectionSource connectionSource) throws SQLException {
             return new ClassifyDaoImpl(connectionSource);
         }
-
     },
     CAMPUS(Campus.class) {
         @Override
@@ -48,11 +50,17 @@ public enum DaoAlias {
         public OfflineDao createDao(ConnectionSource connectionSource) throws SQLException {
             return new OfflineDaoImpl(connectionSource);
         }
+    },
+    MEDIA_POINT(MediaPoint.class) {
+        @Override
+        public MediaPointDao createDao(ConnectionSource connectionSource) throws SQLException {
+            return new MediaPointDaoImpl(connectionSource);
+        }
     };
 
     Class<?> modelClass;
 
-    private BaseDao<?, ?> mBaseDao;
+    private CVBaseDao<?, ?> mBaseDao;
 
     DaoAlias(Class<?> modelClass) {
         this.modelClass = modelClass;

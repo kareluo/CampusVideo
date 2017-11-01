@@ -69,7 +69,7 @@ public class OfflineEpisActivity extends BaseActivity<OfflineEpisPresenter>
         int position = holder.getAdapterPosition();
         if (position < mOfflines.size()) {
             Video video = Video.valueOf(mOfflines);
-            video.setEpindex(position);
+            video.setIndex(position);
             PlayerActivity.play(this, video);
             finish();
         }

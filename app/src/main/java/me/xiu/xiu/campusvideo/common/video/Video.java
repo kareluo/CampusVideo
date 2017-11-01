@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.dao.media.Media;
+import me.xiu.xiu.campusvideo.dao.media.MediaPoint;
 import me.xiu.xiu.campusvideo.dao.offline.Offline;
 import me.xiu.xiu.campusvideo.util.ValueUtil;
 
@@ -19,7 +19,7 @@ import me.xiu.xiu.campusvideo.util.ValueUtil;
  */
 public class Video implements Parcelable {
     private int type;
-    private int epindex;
+    private int index;
     private String vid;
     private String name;
     private String path;
@@ -33,17 +33,17 @@ public class Video implements Parcelable {
 
     public Video() {
         type = TYPE_LOCAL;
-        epindex = 0;
+        index = 0;
         episodes = new ArrayList<>();
     }
 
     protected Video(Parcel in) {
         type = in.readInt();
-        epindex = in.readInt();
+        index = in.readInt();
         vid = in.readString();
         name = in.readString();
         path = in.readString();
-        info = in.readBundle();
+        info = in.readBundle(getClass().getClassLoader());
         episodes = in.createTypedArrayList(Episode.CREATOR);
     }
 
@@ -101,7 +101,7 @@ public class Video implements Parcelable {
     }
 
     public void setEpi(int epi) {
-        this.epindex = epi;
+        this.index = epi;
     }
 
     public Episode getEpisode(int index) {
@@ -109,7 +109,7 @@ public class Video implements Parcelable {
     }
 
     public Episode getCurrentEpisode() {
-        return episodes.get(epindex);
+        return episodes.get(index);
     }
 
     public String getDirector() {
@@ -124,12 +124,12 @@ public class Video implements Parcelable {
         return info == null ? new String[0] : info.getString("actor", "").split(",");
     }
 
-    public int getEpindex() {
-        return epindex;
+    public int getIndex() {
+        return index;
     }
 
-    public void setEpindex(int epindex) {
-        this.epindex = epindex;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public List<Episode> getEpisodes() {
@@ -181,7 +181,7 @@ public class Video implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(type);
-        dest.writeInt(epindex);
+        dest.writeInt(index);
         dest.writeString(vid);
         dest.writeString(name);
         dest.writeString(path);
@@ -190,7 +190,9 @@ public class Video implements Parcelable {
     }
 
     public static class Episode implements Parcelable {
+
         private int epi;
+
         private String path;
 
         public int getEpi() {

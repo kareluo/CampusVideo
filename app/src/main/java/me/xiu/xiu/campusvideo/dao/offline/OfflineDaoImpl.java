@@ -9,13 +9,13 @@ import java.util.List;
 
 import me.xiu.xiu.campusvideo.aidls.Offlining;
 import me.xiu.xiu.campusvideo.common.OfflineState;
-import me.xiu.xiu.campusvideo.dao.base.BaseDaoImpl;
+import me.xiu.xiu.campusvideo.dao.base.CVBaseDaoImpl;
 import me.xiu.xiu.campusvideo.util.ValueUtil;
 
 /**
  * Created by felix on 16/4/26.
  */
-public class OfflineDaoImpl extends BaseDaoImpl<Offline, Long> implements OfflineDao {
+public class OfflineDaoImpl extends CVBaseDaoImpl<Offline, Long> implements OfflineDao {
 
     public OfflineDaoImpl(ConnectionSource connectionSource) throws SQLException {
         super(connectionSource, Offline.class);

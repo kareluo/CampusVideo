@@ -9,8 +9,10 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,17 +26,21 @@ import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.Presenter;
 import me.xiu.xiu.campusvideo.common.video.Video;
 import me.xiu.xiu.campusvideo.dao.media.Media;
+import me.xiu.xiu.campusvideo.dao.media.MediaPoint;
 import me.xiu.xiu.campusvideo.ui.widget.CVMediaController;
 import me.xiu.xiu.campusvideo.util.FileUtils;
 import me.xiu.xiu.campusvideo.util.Logger;
 import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
+import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
  * Created by felix on 15/9/19.
  */
 public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoListener,
-        MediaPlayer.OnBufferingUpdateListener, CVMediaController.OnMediaEventCallback {
+        MediaPlayer.OnBufferingUpdateListener, CVMediaController.OnMediaEventCallback,
+        IMediaPlayer.OnInfoListener, IMediaPlayer.OnCompletionListener,
+        IMediaPlayer.OnErrorListener, IMediaPlayer.OnPreparedListener {
     private static final String TAG = "PlayerActivity";
 
     private Video mVideo;
@@ -74,6 +80,28 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
         super.onNewIntent(intent);
         initParams(intent);
         play();
+    }
+
+    protected void initViews() {
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        mVideoView = (IjkVideoView) findViewById(R.id.video_view);
+        mVideoView.setOnCompletionListener(this);
+        mVideoView.setOnErrorListener(this);
+        mVideoView.setOnPreparedListener(this);
+
+        mController = (CVMediaController) findViewById(R.id.cv_media_controller);
+        mController.setSupportBar(getSupportActionBar());
+        mController.setOnMediaEventCallback(this);
+
+        mVideoView.setHudView(mController.getTableLayout());
+        mVideoView.setMediaController(mController);
+        mVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mController.show();
+                return true;
+            }
+        });
     }
 
     private void initParams(Intent intent) {
@@ -121,25 +149,6 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
             }
             mVideoView.start();
         }
-    }
-
-    protected void initViews() {
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        mVideoView = (IjkVideoView) findViewById(R.id.video_view);
-
-        mController = (CVMediaController) findViewById(R.id.cv_media_controller);
-        mController.setSupportBar(getSupportActionBar());
-        mController.setOnMediaEventCallback(this);
-
-        mVideoView.setHudView(mController.getTableLayout());
-        mVideoView.setMediaController(mController);
-        mVideoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mController.show();
-                return true;
-            }
-        });
     }
 
     @Override
@@ -275,5 +284,59 @@ public class PlayerActivity extends BaseActivity implements MediaPlayer.OnInfoLi
                 Logger.i(TAG, "onSpotClicked:" + b);
             }
         });
+    }
+
+    @Override
+    public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+        Log.d(TAG, "WHAT=" + what);
+        switch (what) {
+
+        }
+        return false;
+    }
+
+    @Override
+    public void onCompletion(IMediaPlayer mp) {
+
+    }
+
+    @Override
+    public boolean onError(IMediaPlayer mp, int what, int extra) {
+
+        return false;
+    }
+
+    @Override
+    public void onPrepared(IMediaPlayer mp) {
+
+    }
+
+    @Nullable
+    private MediaPoint getMediaPoint() {
+        if (mVideo == null || mVideoView == null) return null;
+        int type = mVideo.getType();
+        MediaPoint mediaPoint = new MediaPoint();
+        mediaPoint.setType(type);
+        mediaPoint.setPoint((long) mVideoView.getCurrentPosition());
+        switch (type) {
+            case Video.TYPE_LOCAL:
+            case Video.TYPE_MEDIA:
+                mediaPoint.setUid(mVideo.getPath());
+                break;
+            case Video.TYPE_OFFLINE:
+            case Video.TYPE_ONLINE:
+                Video.Episode episode = mVideo.getCurrentEpisode();
+                if (episode != null) {
+                    String vid = mVideo.getVid();
+                    String sid = episode.getSid();
+                    if (!TextUtils.isEmpty(vid) && !TextUtils.isEmpty(sid)) {
+                        mediaPoint.setUid(String.format("%s:%s", mVideo.getVid(), episode.getSid()));
+                    }
+                }
+                break;
+            default:
+                return null;
+        }
+        return mediaPoint;
     }
 }

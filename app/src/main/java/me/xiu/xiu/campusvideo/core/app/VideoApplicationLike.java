@@ -3,13 +3,10 @@ package me.xiu.xiu.campusvideo.core.app;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.support.multidex.MultiDex;
 
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.tinker.loader.BuildConfig;
 import com.tencent.tinker.loader.app.DefaultApplicationLike;
 
@@ -28,10 +25,9 @@ public class VideoApplicationLike extends DefaultApplicationLike {
 
     public VideoApplicationLike(Application application, int tinkerFlags,
                                 boolean tinkerLoadVerifyFlag, long applicationStartElapsedTime,
-                                long applicationStartMillisTime, Intent tinkerResultIntent,
-                                Resources[] resources, ClassLoader[] classLoader, AssetManager[] assetManager) {
+                                long applicationStartMillisTime, Intent tinkerResultIntent) {
         super(application, tinkerFlags, tinkerLoadVerifyFlag, applicationStartElapsedTime,
-                applicationStartMillisTime, tinkerResultIntent, resources, classLoader, assetManager);
+                applicationStartMillisTime, tinkerResultIntent);
     }
 
     @Override
@@ -66,9 +62,5 @@ public class VideoApplicationLike extends DefaultApplicationLike {
 
     public Context getApplicationContext() {
         return getApplication().getApplicationContext();
-    }
-
-    public void registerActivityLifecycleCallback(Application.ActivityLifecycleCallbacks callbacks) {
-        getApplication().registerActivityLifecycleCallbacks(callbacks);
     }
 }
