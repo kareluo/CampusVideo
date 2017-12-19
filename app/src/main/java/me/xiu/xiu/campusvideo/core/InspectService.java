@@ -8,9 +8,9 @@ import android.content.Intent;
 
 import java.util.List;
 
-import me.xiu.xiu.campusvideo.common.xml.Xml;
-import me.xiu.xiu.campusvideo.common.xml.XmlObject;
-import me.xiu.xiu.campusvideo.common.xml.XmlParser;
+import me.xiu.xiu.campusvideo.core.xml.Xml;
+import me.xiu.xiu.campusvideo.core.xml.XmlObject;
+import me.xiu.xiu.campusvideo.core.xml.XmlParser;
 import me.xiu.xiu.campusvideo.ui.activity.PlayerActivity;
 import me.xiu.xiu.campusvideo.ui.activity.TipsActivity;
 import me.xiu.xiu.campusvideo.util.ConnectivityUtils;

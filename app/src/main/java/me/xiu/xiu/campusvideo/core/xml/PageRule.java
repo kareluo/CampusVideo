@@ -1,4 +1,4 @@
-package me.xiu.xiu.campusvideo.common.xml;
+package me.xiu.xiu.campusvideo.core.xml;
 
 import android.os.Bundle;
 import android.os.Parcel;

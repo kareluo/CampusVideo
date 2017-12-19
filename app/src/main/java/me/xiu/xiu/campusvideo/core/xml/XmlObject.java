@@ -1,4 +1,4 @@
-package me.xiu.xiu.campusvideo.common.xml;
+package me.xiu.xiu.campusvideo.core.xml;
 
 import android.os.Bundle;
 import android.os.Parcel;
@@ -12,6 +12,7 @@ import java.util.List;
 public class XmlObject implements Parcelable {
 
     private Tag tag;
+
     private Bundle[] elements;
 
     public XmlObject(Tag tag, Bundle[] elements) {
@@ -69,14 +70,6 @@ public class XmlObject implements Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "XmlObject{" +
-                "tag=" + tag +
-                ", elements=" + elements +
-                '}';
-    }
-
-    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(tag, flags);
         dest.writeTypedArray(elements, flags);
@@ -87,8 +80,18 @@ public class XmlObject implements Parcelable {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "XmlObject{" +
+                "tag=" + tag +
+                ", elements=" + elements +
+                '}';
+    }
+
     public static class Tag implements Parcelable {
+
         public final String begin;
+
         public final String end;
 
         public static final Tag EMPTY = create("", "");

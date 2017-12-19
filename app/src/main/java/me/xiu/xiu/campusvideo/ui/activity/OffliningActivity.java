@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import me.kareluo.intensify.gridview.IntensifyGridAdapter;
 import me.kareluo.intensify.gridview.IntensifyGridView;
 import me.xiu.xiu.campusvideo.R;
@@ -27,9 +30,6 @@ import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.work.presenter.OffliningPresenter;
 import me.xiu.xiu.campusvideo.work.service.OffliningService;
 import me.xiu.xiu.campusvideo.work.viewer.OffliningViewer;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by felix on 16/4/17.
@@ -197,22 +197,22 @@ public class OffliningActivity extends SwipeBackActivity<OffliningPresenter>
     };
 
     private void refresh(int position) {
-        Observable.just(position)
+        Flowable.just(position)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
+                .subscribe(new Consumer<Integer>() {
                     @Override
-                    public void call(Integer index) {
+                    public void accept(Integer index) throws Exception {
                         mAdapter.notifyItemChanged(index);
                     }
                 });
     }
 
     private void refresh() {
-        Observable.just(true)
+        Flowable.just(true)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Boolean>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void call(Boolean o) {
+                    public void accept(Boolean o) throws Exception {
                         mAdapter.notifyDataSetChanged();
                     }
                 });

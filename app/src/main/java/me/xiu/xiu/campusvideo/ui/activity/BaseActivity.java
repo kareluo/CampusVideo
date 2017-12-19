@@ -179,7 +179,7 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
     protected void onDestroy() {
         if (mPresenter != null) {
             try {
-                mPresenter.unsubscribeAll();
+                mPresenter.disposeAll();
             } catch (Exception e) {
                 Logger.w(TAG, e);
             }

@@ -1,4 +1,4 @@
-package me.xiu.xiu.campusvideo.common.xml;
+package me.xiu.xiu.campusvideo.core.xml;
 
 /**
  * Created by felix on 15/9/27.

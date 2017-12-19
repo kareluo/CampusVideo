@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.xiu.xiu.campusvideo.common.Presenter;
-import me.xiu.xiu.campusvideo.common.xml.Xml;
-import me.xiu.xiu.campusvideo.common.xml.XmlObject;
-import me.xiu.xiu.campusvideo.common.xml.XmlParser;
+import me.xiu.xiu.campusvideo.core.xml.Xml;
+import me.xiu.xiu.campusvideo.core.xml.XmlObject;
+import me.xiu.xiu.campusvideo.core.xml.XmlParser;
 import me.xiu.xiu.campusvideo.util.CommonUtil;
 import me.xiu.xiu.campusvideo.util.ValueUtil;
 import me.xiu.xiu.campusvideo.work.model.HomeBanner;
@@ -37,75 +37,75 @@ public class HomePresenter extends Presenter<HomeViewer> {
     }
 
     public void loadBanner() {
-        subscribe(XmlParser.parseMesses(Xml.HOME_BANNER,
-                Xml.TAG_IMG, MAX_BANNER, new XmlParser.ParseSubscription<XmlObject>() {
-                    @Override
-                    public void onResult(XmlObject result) {
-                        Bundle[] elements = result.getElements();
-                        if (!CommonUtil.isEmpty(elements)) {
-                            List<HomeBanner> banners = new ArrayList<>();
-                            for (Bundle element : elements) {
-                                banners.add(new HomeBanner(element));
-                            }
-                            getViewer().onUpdateBanner(banners);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-                }));
+//        subscribe(XmlParser.parseMesses(Xml.HOME_BANNER,
+//                Xml.TAG_IMG, MAX_BANNER, new XmlParser.ParseSubscription<XmlObject>() {
+//                    @Override
+//                    public void onResult(XmlObject result) {
+//                        Bundle[] elements = result.getElements();
+//                        if (!CommonUtil.isEmpty(elements)) {
+//                            List<HomeBanner> banners = new ArrayList<>();
+//                            for (Bundle element : elements) {
+//                                banners.add(new HomeBanner(element));
+//                            }
+//                            getViewer().onUpdateBanner(banners);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        super.onError(e);
+//                    }
+//                }));
     }
 
     public void loadVideoSeries() {
-        subscribe(XmlParser.parse(
-                new String[]{
-                        Xml.PUBLIC_CLASS_DATE,
-                        Xml.DOCUMENTARY_DATE,
-                        Xml.CATHEDRA_DATE,
-                        Xml.MOVIE_ACTION_DATE,
-                        Xml.TELEPLAY_MAINLAND_DATE,
-                        Xml.ANIME_DATE,
-                        Xml.TV_SHOW_DATE
-                },
-                new XmlObject.Tag[]{
-                        Xml.TAG_M,
-                        Xml.TAG_M,
-                        Xml.TAG_M,
-                        Xml.TAG_M,
-                        Xml.TAG_M,
-                        Xml.TAG_M,
-                        Xml.TAG_M
-                },
-                new int[]{
-                        MAX_ITEMS,
-                        MAX_ITEMS,
-                        MAX_ITEMS,
-                        MAX_ITEMS,
-                        MAX_ITEMS,
-                        MAX_ITEMS,
-                        MAX_ITEMS
-                },
-                new XmlParser.ParseSubscription<List<XmlObject>>() {
-                    @Override
-                    public void onResult(List<XmlObject> result) {
-                        if (ValueUtil.isEmpty(result)) return;
-                        List<VideoSeries> videoSeries = new ArrayList<>();
-                        for (int i = 0; i < result.size(); i++) {
-                            VideoSeries series = obtainMovieSeries(i, result.get(i));
-                            if (series != null) {
-                                videoSeries.add(series);
-                            }
-                        }
-                        getViewer().onUpdateVideoSeries(videoSeries);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                    }
-                }));
+//        subscribe(XmlParser.parse(
+//                new String[]{
+//                        Xml.PUBLIC_CLASS_DATE,
+//                        Xml.DOCUMENTARY_DATE,
+//                        Xml.CATHEDRA_DATE,
+//                        Xml.MOVIE_ACTION_DATE,
+//                        Xml.TELEPLAY_MAINLAND_DATE,
+//                        Xml.ANIME_DATE,
+//                        Xml.TV_SHOW_DATE
+//                },
+//                new XmlObject.Tag[]{
+//                        Xml.TAG_M,
+//                        Xml.TAG_M,
+//                        Xml.TAG_M,
+//                        Xml.TAG_M,
+//                        Xml.TAG_M,
+//                        Xml.TAG_M,
+//                        Xml.TAG_M
+//                },
+//                new int[]{
+//                        MAX_ITEMS,
+//                        MAX_ITEMS,
+//                        MAX_ITEMS,
+//                        MAX_ITEMS,
+//                        MAX_ITEMS,
+//                        MAX_ITEMS,
+//                        MAX_ITEMS
+//                },
+//                new XmlParser.ParseSubscription<List<XmlObject>>() {
+//                    @Override
+//                    public void onResult(List<XmlObject> result) {
+//                        if (ValueUtil.isEmpty(result)) return;
+//                        List<VideoSeries> videoSeries = new ArrayList<>();
+//                        for (int i = 0; i < result.size(); i++) {
+//                            VideoSeries series = obtainMovieSeries(i, result.get(i));
+//                            if (series != null) {
+//                                videoSeries.add(series);
+//                            }
+//                        }
+//                        getViewer().onUpdateVideoSeries(videoSeries);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        super.onError(e);
+//                    }
+//                }));
     }
 
     private VideoSeries obtainMovieSeries(int index, XmlObject result) {

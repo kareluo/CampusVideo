@@ -1,4 +1,4 @@
-package me.xiu.xiu.campusvideo.common.xml;
+package me.xiu.xiu.campusvideo.core.xml;
 
 import android.os.Bundle;
 import android.os.Parcel;
@@ -53,7 +53,7 @@ public class Rules {
         PageRule[] RULES = {
                 new PageRule("新番", PageRule.Page.VIDEOS, VideosFragment.newArgument(Xml.ANIME_DATE, Xml.TAG_M, Integer.MAX_VALUE, new Filter<XmlObject>() {
                     @Override
-                    public XmlObject call(XmlObject xmlObject) {
+                    public XmlObject apply(XmlObject xmlObject) throws Exception {
                         List<Bundle> bundles = new ArrayList<>();
                         Bundle[] elements = xmlObject.getElements();
                         for (Bundle element : elements) {
@@ -77,7 +77,7 @@ public class Rules {
                 })),
                 new PageRule("连载", PageRule.Page.VIDEOS, VideosFragment.newArgument(Xml.ANIME_DATE, Xml.TAG_M, Integer.MAX_VALUE, new Filter<XmlObject>() {
                     @Override
-                    public XmlObject call(XmlObject xmlObject) {
+                    public XmlObject apply(XmlObject xmlObject) throws Exception {
                         List<Bundle> bundles = new ArrayList<>();
                         Bundle[] elements = xmlObject.getElements();
                         for (Bundle element : elements) {
@@ -101,7 +101,7 @@ public class Rules {
                 })),
                 new PageRule("完结", PageRule.Page.VIDEOS, VideosFragment.newArgument(Xml.ANIME_DATE, Xml.TAG_M, Integer.MAX_VALUE, new Filter<XmlObject>() {
                     @Override
-                    public XmlObject call(XmlObject xmlObject) {
+                    public XmlObject apply(XmlObject xmlObject) throws Exception {
                         List<Bundle> bundles = new ArrayList<>();
                         Bundle[] elements = xmlObject.getElements();
                         for (Bundle element : elements) {
@@ -125,7 +125,7 @@ public class Rules {
                 })),
                 new PageRule("剧场版", PageRule.Page.VIDEOS, VideosFragment.newArgument(Xml.ANIME_DATE, Xml.TAG_M, Integer.MAX_VALUE, new Filter<XmlObject>() {
                     @Override
-                    public XmlObject call(XmlObject xmlObject) {
+                    public XmlObject apply(XmlObject xmlObject) throws Exception {
                         List<Bundle> bundles = new ArrayList<>();
                         Bundle[] elements = xmlObject.getElements();
                         for (Bundle element : elements) {
@@ -154,7 +154,7 @@ public class Rules {
         PageRule[] RULES = {
                 new PageRule("综艺节目", PageRule.Page.VIDEOS, VideosFragment.newArgument(Xml.TV_SHOW_DATE, Xml.TAG_M, Integer.MAX_VALUE, new Filter<XmlObject>() {
                     @Override
-                    public XmlObject call(XmlObject xmlObject) {
+                    public XmlObject apply(XmlObject xmlObject) throws Exception {
                         List<Bundle> bundles = new ArrayList<>();
                         Bundle[] elements = xmlObject.getElements();
                         for (Bundle element : elements) {
@@ -178,7 +178,7 @@ public class Rules {
                 })),
                 new PageRule("MV演唱会", PageRule.Page.VIDEOS, VideosFragment.newArgument(Xml.TV_SHOW_DATE, Xml.TAG_M, Integer.MAX_VALUE, new Filter<XmlObject>() {
                     @Override
-                    public XmlObject call(XmlObject xmlObject) {
+                    public XmlObject apply(XmlObject xmlObject) throws Exception {
                         List<Bundle> bundles = new ArrayList<>();
                         Bundle[] elements = xmlObject.getElements();
                         for (Bundle element : elements) {

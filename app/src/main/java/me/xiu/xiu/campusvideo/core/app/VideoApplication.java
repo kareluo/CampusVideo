@@ -1,17 +1,30 @@
 package me.xiu.xiu.campusvideo.core.app;
 
-import com.tencent.tinker.loader.app.TinkerApplication;
-import com.tencent.tinker.loader.shareutil.ShareConstants;
+import android.app.Application;
+
+import me.xiu.xiu.campusvideo.common.CampusVideo;
+import me.xiu.xiu.campusvideo.dao.DatabaseHelper;
+import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
  * Created by felix on 15/9/18.
  */
-public class VideoApplication extends TinkerApplication {
+public class VideoApplication extends Application {
 
-    public VideoApplication() {
-        super(ShareConstants.TINKER_ENABLE_ALL,
-                "me.xiu.xiu.campusvideo.core.app.VideoApplicationLike",
-                "com.tencent.tinker.loader.TinkerLoader", false);
+    private static VideoApplication sInstance;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        sInstance = this;
+
+        Logger.init();
+
+        CampusVideo.init(getApplicationContext());
     }
 
+    public static VideoApplication getApplication() {
+        return sInstance;
+    }
 }

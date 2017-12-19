@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import me.xiu.xiu.campusvideo.R;
-import me.xiu.xiu.campusvideo.common.xml.Rules;
+import me.xiu.xiu.campusvideo.core.xml.Rules;
 import me.xiu.xiu.campusvideo.core.InspectService;
 import me.xiu.xiu.campusvideo.ui.fragment.BannerFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.HomeFragment;

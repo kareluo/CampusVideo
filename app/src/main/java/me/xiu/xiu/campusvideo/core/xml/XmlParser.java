@@ -1,13 +1,7 @@
-package me.xiu.xiu.campusvideo.common.xml;
+package me.xiu.xiu.campusvideo.core.xml;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -26,26 +20,40 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import me.xiu.xiu.campusvideo.App;
 import me.xiu.xiu.campusvideo.common.CampusVideo;
+import me.xiu.xiu.campusvideo.core.net.XmlConverterFactory;
+import me.xiu.xiu.campusvideo.core.net.service.XmlService;
 import me.xiu.xiu.campusvideo.util.CommonUtil;
 import me.xiu.xiu.campusvideo.util.Logger;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by felix on 15/9/28.
  */
 public class XmlParser {
+
     private static final String TAG = "XmlParser";
-    private Context mContext;
-    private static File mXmlCacheDir;
-    private OkHttpClient mOkHttpClient;
+
     private static String ENCODING;
 
+    private static Retrofit sRetrofit;
+
+    private XmlService mXmlService;
+
     private static final int BUFFER_SIZE = 8192;
+
     private static final String DEFAULT_ENCODING = "GB-2312";
+
     private static final String DIR = "xmls";
 
     static {
@@ -53,63 +61,100 @@ public class XmlParser {
     }
 
     private static class GENERATOR {
-        private static XmlParser mInstance = new XmlParser();
+        final static XmlParser sInstance = new XmlParser();
+    }
 
+    private XmlParser() {
+        File file = new File(App.getContext().getExternalCacheDir(), DIR);
+        if (!file.exists()) {
+            boolean mkdirs = file.mkdirs();
+            Logger.i(TAG, "make xml's cache dir: " + mkdirs);
+        }
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(32, TimeUnit.SECONDS)
+                .writeTimeout(32, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .cache(new Cache(file, 2 << 25))
+                .build();
+
+        sRetrofit = new Retrofit.Builder()
+                .baseUrl("http://" + CampusVideo.campus.getHost())
+                .client(client)
+                .addConverterFactory(new XmlConverterFactory())
+                .build();
     }
 
     private static XmlParser getInstance() {
-        return GENERATOR.mInstance;
+        return GENERATOR.sInstance;
     }
 
-    public static void init(Context context) {
-        getInstance().initialize(context);
+    public XmlService getXmlService() {
+        if (mXmlService == null) {
+            mXmlService = sRetrofit.create(XmlService.class);
+        }
+        return mXmlService;
     }
 
-    /**
-     * 初始化缓存目录
-     *
-     * @param context
-     */
-    private void initialize(Context context) {
-        mContext = context;
-        File externalCacheDir = mContext.getExternalCacheDir();
-        if (externalCacheDir != null) {
-            File dir = new File(externalCacheDir, DIR);
-            CommonUtil.mkdirs(dir);
-            mXmlCacheDir = dir;
+    public static abstract class Callback<T> {
+
+        public abstract void onSuccess(T obj);
+
+        public void onFailure(Throwable t) {
+            Logger.e(TAG, t);
+        }
+    }
+
+    public static class XmlFetchErrorException extends Exception {
+
+        public XmlFetchErrorException(String message) {
+            super(message);
         }
 
-        if (mXmlCacheDir == null) {
-            File filesDir = mContext.getFilesDir();
-            if (filesDir != null) {
-                File dir = new File(filesDir, DIR);
-                CommonUtil.mkdirs(dir);
-                mXmlCacheDir = dir;
+    }
+
+    public static class CallbackAdapter<T> implements retrofit2.Callback<T> {
+
+        private Callback<T> mCallback;
+
+        public CallbackAdapter(Callback<T> callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        public void onResponse(Call<T> call, Response<T> response) {
+            if (mCallback != null) {
+                if (response.isSuccessful()) {
+                    mCallback.onSuccess(response.body());
+                } else {
+                    mCallback.onFailure(new XmlFetchErrorException(response.message()));
+                }
             }
         }
 
-        if (mXmlCacheDir == null) {
-            File cacheDir = mContext.getCacheDir();
-            if (cacheDir != null) {
-                File dir = new File(cacheDir, DIR);
-                CommonUtil.mkdirs(dir);
-                mXmlCacheDir = dir;
+        @Override
+        public void onFailure(Call<T> call, Throwable t) {
+            if (mCallback != null) {
+                mCallback.onFailure(t);
             }
         }
+    }
 
-        Logger.i(TAG, "Xml Cache Dir = " + mXmlCacheDir);
+    public <T> void fetch(String path, Callback<T> callback) {
+        Call<T> fetch = getXmlService().fetch(getUrl(path));
+        fetch.enqueue(new CallbackAdapter<>(callback));
+    }
 
-        mOkHttpClient = new OkHttpClient();
-        mOkHttpClient.setConnectTimeout(10, TimeUnit.SECONDS);
+    public void getBarSet(Callback<XmlObject> callback) {
+        fetch(Xml.BARSET, callback);
+    }
+
+    public static String getUrl(String path) {
+        return CampusVideo.getUrl(path);
     }
 
     /**
      * 解析全url的
-     *
-     * @param url
-     * @param tag
-     * @param subscription
-     * @return
      */
     public static ParseSubscription<XmlObject> parseXml(
             String url, XmlObject.Tag tag,
@@ -142,62 +187,72 @@ public class XmlParser {
     private ParseSubscription<List<XmlObject>> _parse(
             final String[] urls, final XmlObject.Tag[] tags, final int[] counts,
             ParseSubscription<List<XmlObject>> subscription) {
-        Observable
-                .create(new Observable.OnSubscribe<List<XmlObject>>() {
-                            @Override
-                            public void call(Subscriber<? super List<XmlObject>> subscriber) {
-                                subscriber.onStart();
-                                List<XmlObject> results = new ArrayList<>();
-                                for (int i = 0; i < urls.length; i++) {
-                                    try {
-                                        String filename = CommonUtil.hashName(urls[i]);
-                                        File cacheFile = new File(mXmlCacheDir, filename);
-                                        if (cacheFile.exists() && cacheFile.length() > 0) {
-                                            Logger.d(TAG, "Cache-file exists.");
-                                            results.add(parse(cacheFile, tags[i], counts[i]));
-                                            Response response = obtainXml(urls[i]);
-                                            if (response.isSuccessful()) {
-                                                cacheFile(response.body().byteStream(), cacheFile);
-                                            }
-                                        } else {
-                                            Logger.d(TAG, "Cache-file not exists.");
-                                            Response response = obtainXml(urls[i]);
-                                            if (response.isSuccessful()) {
-                                                cacheFile(response.body().byteStream(), cacheFile);
-                                            }
-                                            if (cacheFile.exists() && cacheFile.length() > 0) {
-                                                Logger.d(TAG, "Cache success.");
-                                                results.add(parse(cacheFile, tags[i], counts[i]));
-                                            } else {
-                                                Logger.d(TAG, "Cache failed, from stream.");
-                                                response = obtainXml(urls[i]);
-                                                results.add(_parse(response.body().byteStream(),
-                                                        tags[i], counts[i], ENCODING));
-                                            }
-                                        }
-                                    } catch (Exception ignored) {
+//        Observable.create(new ObservableOnSubscribe<List<XmlObject>>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<List<XmlObject>> subscriber) throws Exception {
+//                List<XmlObject> results = new ArrayList<>();
+//                for (int i = 0; i < urls.length; i++) {
+//                    try {
+//                        String filename = CommonUtil.hashName(urls[i]);
+//                        File cacheFile = new File(App.getContext().getExternalCacheDir(), filename);
+//                        if (cacheFile.exists() && cacheFile.length() > 0) {
+//                            Logger.d(TAG, "Cache-file exists.");
+//                            results.add(parse(cacheFile, tags[i], counts[i]));
+//                            Response response = obtainXml(urls[i]);
+//                            if (response.isSuccessful()) {
+//                                cacheFile(response.body().byteStream(), cacheFile);
+//                            }
+//                        } else {
+//                            Logger.d(TAG, "Cache-file not exists.");
+//                            Response response = obtainXml(urls[i]);
+//                            if (response.isSuccessful()) {
+//                                cacheFile(response.body().byteStream(), cacheFile);
+//                            }
+//                            if (cacheFile.exists() && cacheFile.length() > 0) {
+//                                Logger.d(TAG, "Cache success.");
+//                                results.add(parse(cacheFile, tags[i], counts[i]));
+//                            } else {
+//                                Logger.d(TAG, "Cache failed, from stream.");
+//                                response = obtainXml(urls[i]);
+//                                results.add(_parse(response.body().byteStream(),
+//                                        tags[i], counts[i], ENCODING));
+//                            }
+//                        }
+//                    } catch (Exception ignored) {
+//
+//                    }
+//                }
+//                subscriber.onNext(results);
+//                subscriber.onComplete();
+//            }
+//        })
+//                .subscribe(new Observer<List<XmlObject>>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(List<XmlObject> xmlObjects) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
 
-                                    }
-                                }
-                                subscriber.onNext(results);
-                                subscriber.onCompleted();
-                            }
-                        }
-                )
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscription);
         return subscription;
     }
 
     /**
      * 解析没有root tag的
-     *
-     * @param shortUrl
-     * @param tag
-     * @param count
-     * @param subscription
-     * @return
      */
     public static ParseSubscription<XmlObject> parseMesses(
             String shortUrl, XmlObject.Tag tag, int count,
@@ -235,47 +290,47 @@ public class XmlParser {
             final @NonNull String url, final XmlObject.Tag tag, final int count,
             ParseSubscription<XmlObject> subscription) {
 
-        Observable
-                .create(new Observable.OnSubscribe<XmlObject>() {
-                            @Override
-                            public void call(Subscriber<? super XmlObject> subscriber) {
-                                subscriber.onStart();
-                                try {
-                                    String filename = CommonUtil.hashName(url);
-                                    File cacheFile = new File(mXmlCacheDir, filename);
-                                    if (cacheFile.exists() && cacheFile.length() > 0) {
-                                        Logger.d(TAG, "Cache-file exists.");
-                                        subscriber.onNext(parse(cacheFile, tag, count));
-                                        Response response = obtainXml(url);
-                                        if (response.isSuccessful()) {
-                                            cacheFile(response.body().byteStream(), cacheFile);
-                                        }
-                                    } else {
-                                        Logger.d(TAG, "Cache-file not exists.");
-                                        Response response = obtainXml(url);
-                                        if (response.isSuccessful()) {
-                                            cacheFile(response.body().byteStream(), cacheFile);
-                                        }
-                                        if (cacheFile.exists() && cacheFile.length() > 0) {
-                                            Logger.d(TAG, "Cache success.");
-                                            subscriber.onNext(parse(cacheFile, tag, count));
-                                        } else {
-                                            Logger.d(TAG, "Cache failed, from stream.");
-                                            response = obtainXml(url);
-                                            subscriber.onNext(_parse(
-                                                    response.body().byteStream(), tag, count, ENCODING));
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    subscriber.onError(e);
-                                }
-                                subscriber.onCompleted();
-                            }
-                        }
-                )
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscription);
+//        Observable
+//                .create(new Observable.OnSubscribe<XmlObject>() {
+//                            @Override
+//                            public void call(Subscriber<? super XmlObject> subscriber) {
+//                                subscriber.onStart();
+//                                try {
+//                                    String filename = CommonUtil.hashName(url);
+//                                    File cacheFile = new File(mXmlCacheDir, filename);
+//                                    if (cacheFile.exists() && cacheFile.length() > 0) {
+//                                        Logger.d(TAG, "Cache-file exists.");
+//                                        subscriber.onNext(parse(cacheFile, tag, count));
+//                                        Response response = obtainXml(url);
+//                                        if (response.isSuccessful()) {
+//                                            cacheFile(response.body().byteStream(), cacheFile);
+//                                        }
+//                                    } else {
+//                                        Logger.d(TAG, "Cache-file not exists.");
+//                                        Response response = obtainXml(url);
+//                                        if (response.isSuccessful()) {
+//                                            cacheFile(response.body().byteStream(), cacheFile);
+//                                        }
+//                                        if (cacheFile.exists() && cacheFile.length() > 0) {
+//                                            Logger.d(TAG, "Cache success.");
+//                                            subscriber.onNext(parse(cacheFile, tag, count));
+//                                        } else {
+//                                            Logger.d(TAG, "Cache failed, from stream.");
+//                                            response = obtainXml(url);
+//                                            subscriber.onNext(_parse(
+//                                                    response.body().byteStream(), tag, count, ENCODING));
+//                                        }
+//                                    }
+//                                } catch (Exception e) {
+//                                    subscriber.onError(e);
+//                                }
+//                                subscriber.onCompleted();
+//                            }
+//                        }
+//                )
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(subscription);
         return subscription;
     }
 
@@ -283,46 +338,46 @@ public class XmlParser {
             final @NonNull String url, final XmlObject.Tag tag, final int count,
             ParseSubscription<XmlObject> subscription) {
 
-        Observable.create(
-                new Observable.OnSubscribe<XmlObject>() {
-                    @Override
-                    public void call(Subscriber<? super XmlObject> subscriber) {
-                        subscriber.onStart();
-                        try {
-                            String filename = CommonUtil.hashName(url);
-                            File cacheFile = new File(mXmlCacheDir, filename);
-                            if (cacheFile.exists() && cacheFile.length() > 0) {
-                                Logger.d(TAG, "Cache-file exists.");
-                                subscriber.onNext(parseMesses(cacheFile, tag, count));
-                                Response response = obtainXml(url);
-                                if (response.isSuccessful()) {
-                                    cacheFile(response.body().byteStream(), cacheFile);
-                                }
-                            } else {
-                                Logger.d(TAG, "Cache-file not exists.");
-                                Response response = obtainXml(url);
-                                if (response.isSuccessful()) {
-                                    cacheFile(response.body().byteStream(), cacheFile);
-                                }
-                                if (cacheFile.exists() && cacheFile.length() > 0) {
-                                    Logger.d(TAG, "Cache success.");
-                                    subscriber.onNext(parseMesses(cacheFile, tag, count));
-                                } else {
-                                    Logger.d(TAG, "Cache failed, from stream.");
-                                    response = obtainXml(url);
-                                    subscriber.onNext(parseMesses(
-                                            response.body().byteStream(), tag, count, ENCODING));
-                                }
-                            }
-                        } catch (Exception e) {
-                            subscriber.onError(e);
-                        }
-                        subscriber.onCompleted();
-                    }
-                }
-        ).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscription);
+//        Observable.create(
+//                new Observable.OnSubscribe<XmlObject>() {
+//                    @Override
+//                    public void call(Subscriber<? super XmlObject> subscriber) {
+//                        subscriber.onStart();
+//                        try {
+//                            String filename = CommonUtil.hashName(url);
+//                            File cacheFile = new File(mXmlCacheDir, filename);
+//                            if (cacheFile.exists() && cacheFile.length() > 0) {
+//                                Logger.d(TAG, "Cache-file exists.");
+//                                subscriber.onNext(parseMesses(cacheFile, tag, count));
+//                                Response response = obtainXml(url);
+//                                if (response.isSuccessful()) {
+//                                    cacheFile(response.body().byteStream(), cacheFile);
+//                                }
+//                            } else {
+//                                Logger.d(TAG, "Cache-file not exists.");
+//                                Response response = obtainXml(url);
+//                                if (response.isSuccessful()) {
+//                                    cacheFile(response.body().byteStream(), cacheFile);
+//                                }
+//                                if (cacheFile.exists() && cacheFile.length() > 0) {
+//                                    Logger.d(TAG, "Cache success.");
+//                                    subscriber.onNext(parseMesses(cacheFile, tag, count));
+//                                } else {
+//                                    Logger.d(TAG, "Cache failed, from stream.");
+//                                    response = obtainXml(url);
+//                                    subscriber.onNext(parseMesses(
+//                                            response.body().byteStream(), tag, count, ENCODING));
+//                                }
+//                            }
+//                        } catch (Exception e) {
+//                            subscriber.onError(e);
+//                        }
+//                        subscriber.onCompleted();
+//                    }
+//                }
+//        ).subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(subscription);
         return subscription;
     }
 
@@ -330,47 +385,47 @@ public class XmlParser {
             final @NonNull String url, final XmlObject.Tag[] tags, final int[] counts,
             ParseSubscription<XmlObject[]> subscription) {
 
-        Observable
-                .create(new Observable.OnSubscribe<XmlObject[]>() {
-                            @Override
-                            public void call(Subscriber<? super XmlObject[]> subscriber) {
-                                subscriber.onStart();
-                                try {
-                                    String filename = CommonUtil.hashName(url);
-                                    File cacheFile = new File(mXmlCacheDir, filename);
-                                    if (cacheFile.exists() && cacheFile.length() > 0) {
-                                        Logger.d(TAG, "Cache-file exists.");
-                                        subscriber.onNext(parse(cacheFile, tags, counts));
-                                        Response response = obtainXml(url);
-                                        if (response.isSuccessful()) {
-                                            cacheFile(response.body().byteStream(), cacheFile);
-                                        }
-                                    } else {
-                                        Logger.d(TAG, "Cache-file not exists.");
-                                        Response response = obtainXml(url);
-                                        if (response.isSuccessful()) {
-                                            cacheFile(response.body().byteStream(), cacheFile);
-                                        }
-                                        if (cacheFile.exists() && cacheFile.length() > 0) {
-                                            Logger.d(TAG, "Cache success.");
-                                            subscriber.onNext(parse(cacheFile, tags, counts));
-                                        } else {
-                                            Logger.d(TAG, "Cache failed, from stream.");
-                                            response = obtainXml(url);
-                                            subscriber.onNext(parse(
-                                                    response.body().byteStream(), tags, counts, ENCODING));
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    subscriber.onError(e);
-                                }
-                                subscriber.onCompleted();
-                            }
-                        }
-                )
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscription);
+//        Observable
+//                .create(new Observable.OnSubscribe<XmlObject[]>() {
+//                            @Override
+//                            public void call(Subscriber<? super XmlObject[]> subscriber) {
+//                                subscriber.onStart();
+//                                try {
+//                                    String filename = CommonUtil.hashName(url);
+//                                    File cacheFile = new File(mXmlCacheDir, filename);
+//                                    if (cacheFile.exists() && cacheFile.length() > 0) {
+//                                        Logger.d(TAG, "Cache-file exists.");
+//                                        subscriber.onNext(parse(cacheFile, tags, counts));
+//                                        Response response = obtainXml(url);
+//                                        if (response.isSuccessful()) {
+//                                            cacheFile(response.body().byteStream(), cacheFile);
+//                                        }
+//                                    } else {
+//                                        Logger.d(TAG, "Cache-file not exists.");
+//                                        Response response = obtainXml(url);
+//                                        if (response.isSuccessful()) {
+//                                            cacheFile(response.body().byteStream(), cacheFile);
+//                                        }
+//                                        if (cacheFile.exists() && cacheFile.length() > 0) {
+//                                            Logger.d(TAG, "Cache success.");
+//                                            subscriber.onNext(parse(cacheFile, tags, counts));
+//                                        } else {
+//                                            Logger.d(TAG, "Cache failed, from stream.");
+//                                            response = obtainXml(url);
+//                                            subscriber.onNext(parse(
+//                                                    response.body().byteStream(), tags, counts, ENCODING));
+//                                        }
+//                                    }
+//                                } catch (Exception e) {
+//                                    subscriber.onError(e);
+//                                }
+//                                subscriber.onCompleted();
+//                            }
+//                        }
+//                )
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(subscription);
         return subscription;
     }
 
@@ -424,16 +479,16 @@ public class XmlParser {
         }
     }
 
-    private Response obtainXml(String url) throws IOException {
-        return mOkHttpClient.newCall(new Request.Builder().url(url).get().build()).execute();
-    }
-
-    private Response obtainXml(String url, long since) throws IOException {
-        return mOkHttpClient.newCall(
-                new Request.Builder().url(url)
-                        .header("If-Modified-Since", new Date(since).toGMTString())
-                        .get().build()).execute();
-    }
+//    private Response obtainXml(String url) throws IOException {
+//        return mOkHttpClient.newCall(new Request.Builder().url(url).get().build()).execute();
+//    }
+//
+//    private Response obtainXml(String url, long since) throws IOException {
+//        return mOkHttpClient.newCall(
+//                new Request.Builder().url(url)
+//                        .header("If-Modified-Since", new Date(since).toGMTString())
+//                        .get().build()).execute();
+//    }
 
     private boolean cacheFile(InputStream inputStream, File file) {
         Logger.d(TAG, "Cache File...");
@@ -467,12 +522,12 @@ public class XmlParser {
     }
 
     private XmlObject _parse(String url, XmlObject.Tag tag, int count) {
-        try {
-            Response response = obtainXml(url);
-            return _parse(response.body().byteStream(), tag, count, ENCODING);
-        } catch (IOException e) {
-            Logger.w(TAG, e);
-        }
+//        try {
+//            Response response = obtainXml(url);
+//            return _parse(response.body().byteStream(), tag, count, ENCODING);
+//        } catch (IOException e) {
+//            Logger.w(TAG, e);
+//        }
         return null;
     }
 
@@ -626,7 +681,7 @@ public class XmlParser {
         return -1;
     }
 
-    public static abstract class ParseSubscription<T> extends Subscriber<T> {
+    public static abstract class ParseSubscription<T>  {
 
         private Filter<T> mFilter;
 
@@ -638,25 +693,21 @@ public class XmlParser {
             mFilter = filter;
         }
 
-        @Override
         public final void onStart() {
             onPreParse();
         }
 
-        @Override
         public void onCompleted() {
 
         }
 
-        @Override
         public void onError(Throwable e) {
             Logger.e(TAG, e);
         }
 
-        @Override
         public final void onNext(T next) {
             if (mFilter != null) {
-                next = mFilter.call(next);
+//                next = mFilter.call(next);
             }
             onResult(next);
         }

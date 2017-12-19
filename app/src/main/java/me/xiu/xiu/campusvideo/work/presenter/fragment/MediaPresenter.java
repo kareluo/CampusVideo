@@ -1,22 +1,10 @@
 package me.xiu.xiu.campusvideo.work.presenter.fragment;
 
 import android.content.ContentResolver;
-import android.database.Cursor;
 import android.provider.MediaStore;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import me.xiu.xiu.campusvideo.common.Presenter;
-import me.xiu.xiu.campusvideo.dao.media.Media;
-import me.xiu.xiu.campusvideo.util.Logger;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.MediaViewer;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by felix on 16/4/16.
@@ -44,47 +32,47 @@ public class MediaPresenter extends Presenter<MediaViewer> {
     }
 
     public void scan() {
-        subscribe(Observable
-                .create(new Observable.OnSubscribe<List<Media>>() {
-                    @Override
-                    public void call(Subscriber<? super List<Media>> subscriber) {
-                        List<Media> medias = new ArrayList<>();
-                        Cursor query = MediaStore.Video.query(mMediaResolver,
-                                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, PROJECTION);
-                        while (query.moveToNext()) {
-                            try {
-                                Media media = new Media();
-                                media.setPath(query.getString(query.getColumnIndex(MediaStore.Video.Media.DATA)));
-                                media.setTitle(query.getString(query.getColumnIndex(MediaStore.Video.Media.TITLE)));
-                                medias.add(media);
-                            } catch (Exception e) {
-                                Logger.w(TAG, e);
-                            }
-                        }
-                        query.close();
-
-//                    Cursor thumb = mMediaResolver.query(
-//                            MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, PROJECTION, null, null, null);
-//                    while (thumb.moveToNext()) {
-//                        thumb.getString(thumb.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
+//        subscribe(Observable
+//                .create(new Observable.OnSubscribe<List<Media>>() {
+//                    @Override
+//                    public void call(Subscriber<? super List<Media>> subscriber) {
+//                        List<Media> medias = new ArrayList<>();
+//                        Cursor query = MediaStore.Video.query(mMediaResolver,
+//                                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, PROJECTION);
+//                        while (query.moveToNext()) {
+//                            try {
+//                                Media media = new Media();
+//                                media.setPath(query.getString(query.getColumnIndex(MediaStore.Video.Media.DATA)));
+//                                media.setTitle(query.getString(query.getColumnIndex(MediaStore.Video.Media.TITLE)));
+//                                medias.add(media);
+//                            } catch (Exception e) {
+//                                Logger.w(TAG, e);
+//                            }
+//                        }
+//                        query.close();
+//
+////                    Cursor thumb = mMediaResolver.query(
+////                            MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, PROJECTION, null, null, null);
+////                    while (thumb.moveToNext()) {
+////                        thumb.getString(thumb.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
+////                    }
+//
+//                        subscriber.onNext(medias);
 //                    }
-
-                        subscriber.onNext(medias);
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Media>>() {
-                    @Override
-                    public void call(List<Media> medias) {
-                        getViewer().onUpdate(medias);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Logger.w(TAG, throwable);
-                    }
-                }));
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<List<Media>>() {
+//                    @Override
+//                    public void call(List<Media> medias) {
+//                        getViewer().onUpdate(medias);
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        Logger.w(TAG, throwable);
+//                    }
+//                }));
     }
 
 }

@@ -16,31 +16,34 @@ import me.xiu.xiu.campusvideo.aidls.IOffliningService;
 import me.xiu.xiu.campusvideo.aidls.Offlining;
 import me.xiu.xiu.campusvideo.dao.offline.OffliningDelegate;
 import me.xiu.xiu.campusvideo.util.Logger;
-import rx.functions.Action0;
 
 /**
  * Created by felix on 16/4/30.
  */
 public class OffliningService extends Service implements OffliningDelegate.OffliningCallback {
+
     private static final String TAG = "OffliningService";
 
     private List<IOffliningCallback> mCallbacks;
 
-    private OffliningDelegate mOffliningDelegate;
+//    private OffliningDelegate mOffliningDelegate;
 
     public static final String ACTION_START = "campusvideo.offline.START";
+
     public static final String ACTION_RESUME_ALL = "campusvideo.offline.RESUME_ALL";
+
     public static final String ACTION_PAUSE_ALL = "campusvideo.offline.PAUSE_ALL";
+
     public static final String ACTION_REMOVE_ALL = "campusvideo.offline.REMOVE_ALL";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        try {
-            mOffliningDelegate = new OffliningDelegate(this);
-        } catch (Exception e) {
-            stopSelf();
-        }
+//        try {
+//            mOffliningDelegate = new OffliningDelegate(this);
+//        } catch (Exception e) {
+//            stopSelf();
+//        }
         mCallbacks = Collections.synchronizedList(new LinkedList<IOffliningCallback>());
     }
 
@@ -50,13 +53,13 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
             String action = intent.getAction();
             switch (action) {
                 case ACTION_START:
-                    mOffliningDelegate.actionStart();
+//                    mOffliningDelegate.actionStart();
                     break;
                 case ACTION_RESUME_ALL:
-                    mOffliningDelegate.actionResumeAll();
+//                    mOffliningDelegate.actionResumeAll();
                     break;
                 case ACTION_PAUSE_ALL:
-                    mOffliningDelegate.actionPauseAll();
+//                    mOffliningDelegate.actionPauseAll();
                     break;
             }
         }
@@ -83,22 +86,22 @@ public class OffliningService extends Service implements OffliningDelegate.Offli
 
         @Override
         public void obtainOfflinings() throws RemoteException {
-            mOffliningDelegate.sync(new Action0() {
-                @Override
-                public void call() {
-                    update(mOffliningDelegate.getOfflinings());
-                }
-            });
+//            mOffliningDelegate.sync(new Action0() {
+//                @Override
+//                public void call() {
+//                    update(mOffliningDelegate.getOfflinings());
+//                }
+//            });
         }
 
         @Override
         public void remove(long id) throws RemoteException {
-            mOffliningDelegate.remove(id);
+//            mOffliningDelegate.remove(id);
         }
 
         @Override
         public void toggle(long id) throws RemoteException {
-            mOffliningDelegate.toggle(id);
+//            mOffliningDelegate.toggle(id);
         }
 
     };

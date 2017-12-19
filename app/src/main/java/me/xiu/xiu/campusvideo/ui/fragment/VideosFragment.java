@@ -2,7 +2,6 @@ package me.xiu.xiu.campusvideo.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +16,9 @@ import java.util.List;
 
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.adapter.VideosAdapter;
-import me.xiu.xiu.campusvideo.common.xml.Filter;
-import me.xiu.xiu.campusvideo.common.xml.ParseRule;
-import me.xiu.xiu.campusvideo.common.xml.XmlObject;
+import me.xiu.xiu.campusvideo.core.xml.Filter;
+import me.xiu.xiu.campusvideo.core.xml.ParseRule;
+import me.xiu.xiu.campusvideo.core.xml.XmlObject;
 import me.xiu.xiu.campusvideo.work.model.video.VInfo;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.VideosPresenter;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.VideosViewer;

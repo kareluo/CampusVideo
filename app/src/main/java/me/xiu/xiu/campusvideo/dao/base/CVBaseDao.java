@@ -3,17 +3,14 @@ package me.xiu.xiu.campusvideo.dao.base;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by felix on 16/3/20.
  */
 public interface CVBaseDao<T, ID> extends Dao<T, ID> {
 
+    int clearAll() throws SQLException;
+
     boolean isEmpty() throws SQLException;
-
-    void createIfNotExists(List<T> datas) throws SQLException;
-
-    void createOrUpdate(List<T> datas) throws SQLException;
 
 }

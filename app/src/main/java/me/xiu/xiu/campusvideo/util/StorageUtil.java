@@ -11,6 +11,7 @@ import java.io.File;
 public class StorageUtil {
 
     private static final String APPDIR = "Campusvideo";
+
     private static final String XMLDIR = "xmls";
 
     public static File sdcard(Context c) {

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
-import me.xiu.xiu.campusvideo.common.xml.PageRule;
+import me.xiu.xiu.campusvideo.core.xml.PageRule;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.TypePresenter;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.TypeViewer;
 

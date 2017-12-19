@@ -2,7 +2,6 @@ package me.xiu.xiu.campusvideo.dao.offline;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by felix on 16/9/4.

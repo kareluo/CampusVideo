@@ -3,8 +3,6 @@ package me.xiu.xiu.campusvideo.aidls;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import rx.Subscription;
-
 /**
  * Created by felix on 16/5/6.
  */

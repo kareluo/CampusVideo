@@ -10,7 +10,7 @@ public interface Viewer {
     enum IntentKey {
         VIDEO_ID,
         VIDEO_NAME,
-        TEXT;
+        TEXT
     }
 
     void finish();

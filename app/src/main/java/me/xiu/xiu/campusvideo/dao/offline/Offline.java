@@ -11,29 +11,9 @@ import me.xiu.xiu.campusvideo.common.video.Video;
  * Created by felix on 16/4/17.
  */
 @DatabaseTable(tableName = Offline.TABLE_NAME)
-public class Offline {
+public class Offline implements OfflineFields {
 
     public static final String TABLE_NAME = "Offline";
-
-    public static final String FIELD_ID = "offline_id";
-
-    public static final String FIELD_VID = "offline_vid";
-
-    public static final String FIELD_SID = "offline_sid";
-
-    public static final String FIELD_NAME = "offline_name";
-
-    public static final String FIELD_PATH = "offline_path";
-
-    public static final String FIELD_EPISODE = "offline_episode";
-
-    public static final String FIELD_PROGRESS = "offline_progress";
-
-    public static final String FIELD_TOTAL = "offline_total";
-
-    public static final String FIELD_STATE = "offline_state";
-
-    public static final String FIELD_DEST = "offline_dest";
 
     public Offline() {
 

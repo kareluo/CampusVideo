@@ -21,7 +21,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/debug" />
     <exclude-output />
@@ -89,69 +89,81 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bugly_intermediates" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-safeguard" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/multi-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/processing-tools" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/proguard-rules" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/sourceFolderJavaResources" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/splits-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tinker_intermediates" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 24 Platform (1)" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="com.android.support:multidex-1.0.1" level="project" />
+    <orderEntry type="library" name="com.android.support:multidex-1.0.2" level="project" />
+    <orderEntry type="library" name="com.android.support:support-media-compat-26.1.0" level="project" />
     <orderEntry type="library" name="jp.co.recruit_mp:android-HeaderFooterGridView-0.2.4" level="project" />
     <orderEntry type="library" name="com.google.android.exoplayer:exoplayer-r1.5.11" level="project" />
-    <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.2.0@jar" level="project" />
+    <orderEntry type="library" name="com.android.support:recyclerview-v7-26.1.0" level="project" />
     <orderEntry type="library" name="com.joooonho:selectableroundedimageview-1.0.1" level="project" />
-    <orderEntry type="library" name="com.android.support:support-annotations:24.2.1@jar" level="project" />
+    <orderEntry type="library" name="android.arch.lifecycle:common:1.0.0@jar" level="project" />
     <orderEntry type="library" name="de.greenrobot:eventbus:3.0.0-beta1@jar" level="project" />
+    <orderEntry type="library" name="com.android.support:support-fragment-26.1.0" level="project" />
     <orderEntry type="library" name="org.apache.directory.studio:org.apache.commons.codec:1.8@jar" level="project" />
-    <orderEntry type="library" name="com.squareup.okhttp:okhttp:2.5.0@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:support-fragment-24.2.1" level="project" />
-    <orderEntry type="library" name="io.reactivex:rxandroid-1.1.0" level="project" />
-    <orderEntry type="library" name="com.android.support:support-v4-24.2.1" level="project" />
+    <orderEntry type="library" name="com.android.support:support-vector-drawable-26.1.0" level="project" />
+    <orderEntry type="library" name="com.google.code.gson:gson:2.8.1@jar" level="project" />
+    <orderEntry type="library" name="android.arch.lifecycle:runtime-1.0.0" level="project" />
+    <orderEntry type="library" name="com.android.support:appcompat-v7-26.1.0" level="project" />
     <orderEntry type="library" name="com.squareup:otto:1.3.8@jar" level="project" />
-    <orderEntry type="library" name="com.j256.ormlite:ormlite-android:4.48@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:cardview-v7-24.2.1" level="project" />
-    <orderEntry type="library" name="com.android.support:animated-vector-drawable-24.2.1" level="project" />
-    <orderEntry type="library" name="com.tencent.bugly:crashreport_upgrade-1.3.3" level="project" />
+    <orderEntry type="library" name="com.android.support:support-annotations:26.1.0@jar" level="project" />
+    <orderEntry type="library" name="org.reactivestreams:reactive-streams:1.0.1@jar" level="project" />
+    <orderEntry type="library" name="com.android.support:support-core-utils-26.1.0" level="project" />
+    <orderEntry type="library" name="com.android.support:support-core-ui-26.1.0" level="project" />
+    <orderEntry type="library" name="com.squareup.okio:okio:1.13.0@jar" level="project" />
     <orderEntry type="library" name="com.bartoszlipinski.recyclerviewheader:library-1.2.0" level="project" />
-    <orderEntry type="library" name="com.android.support:design-24.2.1" level="project" />
-    <orderEntry type="library" name="com.tencent.bugly:nativecrashreport-3.3.1" level="project" />
+    <orderEntry type="library" name="com.squareup.retrofit2:retrofit:2.3.0@jar" level="project" />
+    <orderEntry type="library" name="com.android.support:support-compat-26.1.0" level="project" />
+    <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.8.0@jar" level="project" />
     <orderEntry type="library" name="com.elvishew:xlog-1.3.0" level="project" />
+    <orderEntry type="library" name="io.reactivex.rxjava2:rxandroid-2.0.1" level="project" />
     <orderEntry type="library" name="com.cjj.materialrefeshlayout:library-1.3.0" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/felix/Workspace/Application/Campusvideo/app/libs/Volley.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:recyclerview-v7-24.2.1" level="project" />
+    <orderEntry type="library" name="android.arch.core:common:1.0.0@jar" level="project" />
     <orderEntry type="library" name="de.greenrobot:java-common:2.0.0@jar" level="project" />
     <orderEntry type="library" name="pub.devrel:easypermissions-0.2.1" level="project" />
-    <orderEntry type="library" name="com.j256.ormlite:ormlite-core:4.48@jar" level="project" />
+    <orderEntry type="library" name="io.reactivex.rxjava2:rxjava:2.1.6@jar" level="project" />
     <orderEntry type="library" name="commons-codec:commons-codec:1.8@jar" level="project" />
     <orderEntry type="library" name="org.apmem.tools:layouts-1.10" level="project" />
-    <orderEntry type="library" name="com.android.support:support-media-compat-24.2.1" level="project" />
-    <orderEntry type="library" name="com.squareup.okio:okio:1.6.0@jar" level="project" />
-    <orderEntry type="library" name="io.reactivex:rxjava:1.1.0@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:support-vector-drawable-24.2.1" level="project" />
-    <orderEntry type="library" name="com.android.support:support-core-utils-24.2.1" level="project" />
+    <orderEntry type="library" name="com.android.support:support-v4-26.1.0" level="project" />
+    <orderEntry type="library" name="com.j256.ormlite:ormlite-android:5.0@jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="com.android.support:multidex-instrumentation-1.0.2" level="project" />
+    <orderEntry type="library" name="com.android.support:animated-vector-drawable-26.1.0" level="project" />
+    <orderEntry type="library" name="com.j256.ormlite:ormlite-core:5.0@jar" level="project" />
     <orderEntry type="library" name="com.android.support:preference-v7-23.0.1" level="project" />
+    <orderEntry type="library" name="com.android.support:transition-26.1.0" level="project" />
+    <orderEntry type="library" name="com.android.support:design-26.1.0" level="project" />
     <orderEntry type="library" name="me.kareluo.intensify:gridview-1.0.2" level="project" />
-    <orderEntry type="library" name="com.android.support:appcompat-v7-24.2.1" level="project" />
-    <orderEntry type="library" name="com.android.support:support-core-ui-24.2.1" level="project" />
+    <orderEntry type="library" name="com.android.support:cardview-v7-26.1.0" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:glide:3.7.0@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:support-compat-24.2.1" level="project" />
-    <orderEntry type="module" module-name="ijkplayer-x86_64" />
     <orderEntry type="module" module-name="ijkplayer-java" />
+    <orderEntry type="module" module-name="ijkplayer-x86_64" />
     <orderEntry type="module" module-name="ijkplayer-example" />
     <orderEntry type="module" module-name="ijkplayer-x86" />
     <orderEntry type="module" module-name="ijkplayer-armv5" />

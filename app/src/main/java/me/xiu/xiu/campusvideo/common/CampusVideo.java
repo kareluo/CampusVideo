@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.Locale;
 
 import me.xiu.xiu.campusvideo.BuildConfig;
-import me.xiu.xiu.campusvideo.common.xml.Xml;
+import me.xiu.xiu.campusvideo.core.xml.Xml;
 import me.xiu.xiu.campusvideo.dao.common.Campus;
 import me.xiu.xiu.campusvideo.util.Logger;
 
@@ -67,9 +67,6 @@ public class CampusVideo {
 
     /**
      * 获取海报图片300*400
-     *
-     * @param vid
-     * @return
      */
     public static String getPoster(String vid) {
         return getUrl(String.format("/mov/%s/1.jpg", vid));
@@ -77,9 +74,6 @@ public class CampusVideo {
 
     /**
      * 获取海报图片120*160
-     *
-     * @param vid
-     * @return
      */
     public static String getPoster2(String vid) {
         return getUrl(String.format("/mov/%s/2.jpg", vid));
@@ -87,9 +81,6 @@ public class CampusVideo {
 
     /**
      * 获取视频详细信息
-     *
-     * @param vid
-     * @return
      */
     public static String getFilm(String vid) {
         return getUrl(String.format("/mov/%s/film.xml", vid));
@@ -97,9 +88,6 @@ public class CampusVideo {
 
     /**
      * 获取视频剧集详细信息
-     *
-     * @param vid
-     * @return
      */
     public static String getEpisode(String vid) {
         return getUrl(String.format("/mov/%s/url2.xml", vid));
@@ -127,10 +115,6 @@ public class CampusVideo {
 
     /**
      * 650 X 430
-     *
-     * @param vid
-     * @param index
-     * @return
      */
     public static String getStillUrl(String vid, int index) {
         return getUrl(String.format(Locale.ROOT, "/mov/%s/jzd%d.jpg", vid, index));
