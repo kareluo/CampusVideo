@@ -4,13 +4,15 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import me.xiu.xiu.campusvideo.R;
-import me.xiu.xiu.campusvideo.core.xml.Rules;
 import me.xiu.xiu.campusvideo.core.InspectService;
+import me.xiu.xiu.campusvideo.core.xml.Rules;
+import me.xiu.xiu.campusvideo.core.xml.XmlParser;
 import me.xiu.xiu.campusvideo.ui.fragment.BannerFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.HomeFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.MediaFragment;
@@ -19,6 +21,7 @@ import me.xiu.xiu.campusvideo.ui.fragment.SettingFragment;
 import me.xiu.xiu.campusvideo.ui.fragment.TypeFragment;
 import me.xiu.xiu.campusvideo.ui.widget.sliding.SlidingLayout;
 import me.xiu.xiu.campusvideo.work.model.SlidingItem;
+import me.xiu.xiu.campusvideo.work.model.xml.TotalVideo;
 
 /**
  * Created by felix on 15/9/18.
@@ -38,6 +41,8 @@ public class HomeActivity extends BaseActivity implements SlidingLayout.OnOpened
         EventBus.getDefault().register(this);
         initViews();
         InspectService.inspect(this);
+
+
     }
 
     @Override

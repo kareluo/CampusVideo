@@ -21,6 +21,10 @@ android {
         multiDexKeepProguard file("keep_in_main_dex.txt")
     }
 
+    dataBinding{
+        enabled = true
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'src/main/AndroidManifest.xml'
@@ -118,4 +122,7 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.2.1'
 
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-simplexml:2.3.0'
+
+    compile 'com.facebook.fresco:fresco:1.7.1'
 }

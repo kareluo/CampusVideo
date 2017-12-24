@@ -20,6 +20,7 @@ import me.xiu.xiu.campusvideo.util.ValueUtil;
  * Created by felix on 16/12/23.
  */
 public class InspectService extends IntentService {
+
     private static final String TAG = "InspectService";
 
     public InspectService() {
@@ -37,12 +38,8 @@ public class InspectService extends IntentService {
     }
 
     private boolean isAvailable() {
-        try {
-            XmlObject xmlObject = XmlParser.parse(Xml.BARSET, Xml.TAG_ROOT, 1);
-            return xmlObject != null && !xmlObject.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
+        // TODO
+        return true;
     }
 
     public boolean shouldShowTips() {

@@ -18,18 +18,12 @@
 
     </style>
 
-    <style name="ActivityAnimation" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/open_enter</item>
-        <item name="android:windowExitAnimation">@anim/close_exit</item>
-    </style>
-
     <style name="App" parent="Base">
         <item name="navigationIcon">@drawable/ic_back</item>
     </style>
 
     <style name="App.Default">
-        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
-        <item name="android:windowIsTranslucent">true</item>
+
     </style>
 
     <style name="App.Player">

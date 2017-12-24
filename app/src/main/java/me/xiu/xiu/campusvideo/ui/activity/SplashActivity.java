@@ -17,6 +17,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        startActivity(new Intent(this, HomeActivity.class));
+        startActivity(new Intent(this, me.xiu.xiu.campusvideo.ui.HomeActivity.class));
+        finish();
     }
 }

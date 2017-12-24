@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="video"
+            type="me.xiu.xiu.campusvideo.work.model.xml.Video" />
+        
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:roundBottomEnd="true"
+            app:roundBottomLeft="true"
+            app:roundBottomRight="true"
+            app:roundBottomStart="true"
+            app:roundTopEnd="true"
+            app:roundTopLeft="true"
+            app:roundTopRight="true"
+            app:roundTopStart="true"
+            app:roundedCornerRadius="@dimen/video_poster_radius"
+            app:video_poster2="@{video.id}"
+            app:viewAspectRatio="0.75" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{video.name}"
+            tools:text="白日梦想家" />
+
+    </LinearLayout>
+
+
+</layout>

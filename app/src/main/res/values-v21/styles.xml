@@ -4,7 +4,6 @@
     <style name="App" parent="Base">
         <item name="navigationIcon">@drawable/ic_back</item>
         <item name="android:navigationIcon">@drawable/ic_back</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="App.Home">

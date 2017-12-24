@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.xiu.xiu.campusvideo.R;
+import me.xiu.xiu.campusvideo.core.xml.XmlParser;
 import me.xiu.xiu.campusvideo.ui.activity.SearchActivity;
 import me.xiu.xiu.campusvideo.ui.activity.VideoActivity;
 import me.xiu.xiu.campusvideo.ui.view.BannerView;
@@ -28,6 +30,7 @@ import me.xiu.xiu.campusvideo.ui.view.SpaceItemDecoration;
 import me.xiu.xiu.campusvideo.ui.view.VideoSeriesItemView;
 import me.xiu.xiu.campusvideo.work.model.HomeBanner;
 import me.xiu.xiu.campusvideo.work.model.video.VideoSeries;
+import me.xiu.xiu.campusvideo.work.model.xml.TotalVideo;
 import me.xiu.xiu.campusvideo.work.presenter.fragment.HomePresenter;
 import me.xiu.xiu.campusvideo.work.viewer.fragment.HomeViewer;
 
@@ -144,7 +147,15 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
                 EventBus.getDefault().post(true);
                 return true;
             case R.id.menu_search:
-                SearchActivity.start(getContext());
+//                SearchActivity.start(getContext());
+
+                XmlParser.fetchXml("http://vod.shou.edu.cn/bar/list/Total.xml", new XmlParser.Callback<TotalVideo>() {
+                    @Override
+                    public void onSuccess(TotalVideo obj) {
+
+                        Log.d(TAG, "" + obj);
+                    }
+                });
                 return true;
         }
         return super.onMenuItemClick(item);

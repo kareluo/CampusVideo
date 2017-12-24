@@ -120,15 +120,6 @@ public class CampusPresenter extends Presenter<CampusViewer> {
 //                }));
     }
 
-    private boolean isAvailable(Campus campus) {
-        try {
-            XmlObject xmlObject = XmlParser.parse(CampusVideo.getConfigXml(campus.host), Xml.TAG_ROOT);
-            return xmlObject != null && !xmlObject.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public void sortByName(List<Campus> campuses) {
 //        subscribe(Observable.just(campuses)
 //                .map(new Func1<List<Campus>, List<Campus>>() {

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="video_poster2" format="string" />
+    <attr name="video_vertical_space" format="dimension" />
+    <attr name="video_horizontal_space" format="dimension" />
+
     <declare-styleable name="SwipeBackLayout">
         <attr name="edge_size" format="dimension" />
         <attr name="edge_flag">

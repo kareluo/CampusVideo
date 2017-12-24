@@ -2,8 +2,9 @@ package me.xiu.xiu.campusvideo.core.app;
 
 import android.app.Application;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import me.xiu.xiu.campusvideo.common.CampusVideo;
-import me.xiu.xiu.campusvideo.dao.DatabaseHelper;
 import me.xiu.xiu.campusvideo.util.Logger;
 
 /**
@@ -22,6 +23,8 @@ public class VideoApplication extends Application {
         Logger.init();
 
         CampusVideo.init(getApplicationContext());
+
+        Fresco.initialize(getApplicationContext());
     }
 
     public static VideoApplication getApplication() {
