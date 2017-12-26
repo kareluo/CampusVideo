@@ -23,7 +23,7 @@ public class Presenter<V extends Viewer> {
     public void subscribe(Disposable disposable) {
         mDisposables.add(disposable);
     }
-
+    
     public void dispose(Disposable disposable) {
         disposable.dispose();
         mDisposables.remove(disposable);

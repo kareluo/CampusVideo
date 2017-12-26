@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="episode"
+            type="me.xiu.xiu.campusvideo.work.model.video.VideoEpisodeViewModel" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        tools:background="@color/gray">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_episode"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@{episode.indexText}"
+            android:textColor="@color/black"
+            tools:text="1" />
+
+    </FrameLayout>
+
+</layout>

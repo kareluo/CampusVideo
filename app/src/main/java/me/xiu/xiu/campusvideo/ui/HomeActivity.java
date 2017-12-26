@@ -1,7 +1,10 @@
 package me.xiu.xiu.campusvideo.ui;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import me.xiu.xiu.campusvideo.R;
 import me.xiu.xiu.campusvideo.common.Presenter;
@@ -9,14 +12,16 @@ import me.xiu.xiu.campusvideo.common.Viewer;
 import me.xiu.xiu.campusvideo.core.xml.XmlParser;
 import me.xiu.xiu.campusvideo.databinding.ActivityHome2Binding;
 import me.xiu.xiu.campusvideo.ui.activity.BaseActivity;
+import me.xiu.xiu.campusvideo.ui.activity.SearchActivity;
 import me.xiu.xiu.campusvideo.ui.video.VideoAdapter;
 import me.xiu.xiu.campusvideo.work.model.xml.TotalVideo;
+import me.xiu.xiu.campusvideo.work.model.xml.Video;
 
 /**
  * Created by felix on 2017/12/21 下午11:12.
  */
 
-public class HomeActivity extends BaseActivity<HomePresenter> implements HomeViewer {
+public class HomeActivity extends BaseActivity<HomePresenter> implements HomeViewer, VideoAdapter.Callback {
 
     private VideoAdapter mAdapter;
 
@@ -26,9 +31,12 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home2);
-        mBinding.rvVideos.setAdapter(mAdapter = new VideoAdapter());
+        mAdapter = new VideoAdapter(VideoAdapter.Mode.GRID);
+        mBinding.rvVideos.setAdapter(mAdapter);
 
-        XmlParser.fetchXml("http://vod.shou.edu.cn/bar/list/Total.xml", new XmlParser.Callback<TotalVideo>() {
+        mAdapter.setCallback(this);
+
+        XmlParser.fetchTotal(new XmlParser.Callback<TotalVideo>() {
             @Override
             public void onSuccess(TotalVideo obj) {
                 if (obj != null) {
@@ -37,6 +45,30 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeVie
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                startActivity(new Intent(this, SearchActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onVideo(Video video) {
+        if (video != null) {
+            startActivity(new Intent(this, VideoActivity.class)
+                    .putExtra(VideoActivity.EXTRA_VIDEO_ID, video.getId()));
+        }
     }
 }
 

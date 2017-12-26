@@ -14,8 +14,13 @@ import me.xiu.xiu.campusvideo.ui.view.SpaceDecoration;
 
 public class VideoBindingAdapter {
 
+    @BindingAdapter("video_poster")
+    public static void setPoster(SimpleDraweeView view, String vid) {
+        view.setImageURI(CampusVideo.getPoster(vid));
+    }
+
     @BindingAdapter("video_poster2")
-    public static void loadPoster2(SimpleDraweeView view, String vid) {
+    public static void setPoster2(SimpleDraweeView view, String vid) {
         view.setImageURI(CampusVideo.getPoster2(vid));
     }
 

@@ -19,7 +19,7 @@ public class CampusVideo {
 
     private static final String TAG = "CampusVideo";
 
-    private static final Campus DEFAULT_CAMPUS = new Campus("安徽中医药大学", "210.45.16.230");
+    private static final Campus DEFAULT_CAMPUS = new Campus("校园视频", "vod.shou.edu.cn");
 
     public static Campus campus = DEFAULT_CAMPUS;
 

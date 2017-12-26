@@ -8,7 +8,7 @@
         <variable
             name="video"
             type="me.xiu.xiu.campusvideo.work.model.xml.Video" />
-        
+
     </data>
 
     <LinearLayout
@@ -40,6 +40,5 @@
             tools:text="白日梦想家" />
 
     </LinearLayout>
-
-
+    
 </layout>

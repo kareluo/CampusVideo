@@ -121,6 +121,9 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
     }
 
     public P getPresenter() {
+        if (mPresenter == null) {
+            mPresenter = newPresenter();
+        }
         return mPresenter;
     }
 

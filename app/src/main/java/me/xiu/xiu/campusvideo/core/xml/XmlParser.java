@@ -9,6 +9,8 @@ import me.xiu.xiu.campusvideo.common.CampusVideo;
 import me.xiu.xiu.campusvideo.core.net.XmlInterceptor;
 import me.xiu.xiu.campusvideo.core.net.service.XmlService;
 import me.xiu.xiu.campusvideo.util.Logger;
+import me.xiu.xiu.campusvideo.work.model.xml.Film;
+import me.xiu.xiu.campusvideo.work.model.xml.FilmEpisode;
 import me.xiu.xiu.campusvideo.work.model.xml.TotalVideo;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -69,25 +71,20 @@ public class XmlParser {
         return mXmlService;
     }
 
-    public <T> void fetch(String path, Callback<T> callback) {
-        Call<T> fetch = getXmlService().fetch(getUrl(path));
-        fetch.enqueue(new CallbackAdapter<>(callback));
+    public static void fetchBarset(Callback<Object> callback) {
+        getInstance().getXmlService().fetchBarSet().enqueue(new CallbackAdapter<>(callback));
     }
 
-    public void fetchTotal(String path, Callback<TotalVideo> callback) {
-        getXmlService().fetchTotal(path).enqueue(new CallbackAdapter<>(callback));
+    public static void fetchTotal(Callback<TotalVideo> callback) {
+        getInstance().getXmlService().fetchTotal().enqueue(new CallbackAdapter<>(callback));
     }
 
-    public static void fetchXml(String path, Callback<TotalVideo> callback) {
-        getInstance().fetchTotal(path, callback);
+    public static void fetchFilm(String videoId, Callback<Film> callback) {
+        getInstance().getXmlService().fetchFilm(videoId).enqueue(new CallbackAdapter<>(callback));
     }
 
-    public void getBarSet(Callback<XmlObject> callback) {
-        fetch(Xml.BARSET, callback);
-    }
-
-    public static String getUrl(String path) {
-        return CampusVideo.getUrl(path);
+    public static void fetchFilmEpisode(String videoId, Callback<FilmEpisode> callback) {
+        getInstance().getXmlService().fetchFilmEpisode(videoId).enqueue(new CallbackAdapter<>(callback));
     }
 
     public static abstract class Callback<T> {
