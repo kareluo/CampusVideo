@@ -62,6 +62,7 @@ public class VideoActivity extends BaseActivity<VideoPresenter> implements Video
         }
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_video2);
+        setSupportActionBar(mBinding.toolbar);
 
         Uri posterUri = Uri.parse(CampusVideo.getPoster2(mVideoId));
 

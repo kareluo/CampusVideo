@@ -5,14 +5,4 @@
         <item name="navigationIcon">@drawable/ic_back</item>
     </style>
 
-    <style name="App.Player">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-    </style>
-
 </resources>

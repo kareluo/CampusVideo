@@ -14,7 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="4dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:layout_width="match_parent"
@@ -37,8 +38,9 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@{video.name}"
+            android:textColor="@color/white"
             tools:text="白日梦想家" />
 
     </LinearLayout>
-    
+
 </layout>

@@ -51,11 +51,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.HomeActivity" />
+        <activity
+            android:name=".ui.HomeActivity"
+            android:theme="@style/App.Home" />
 
         <activity android:name=".ui.SearchActivity" />
 
-        <activity android:name=".ui.VideoActivity" />
+        <activity
+            android:name=".ui.VideoActivity"
+            android:theme="@style/App.Video" />
 
         <activity android:name=".ui.PlayerActivity" />
 

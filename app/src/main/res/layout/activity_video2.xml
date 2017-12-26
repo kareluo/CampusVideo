@@ -20,12 +20,25 @@
             android:layout_height="match_parent"
             app:actualImageScaleType="centerCrop" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_videos"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="GridLayoutManager"
-            app:spanCount="5" />
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:fitsSystemWindows="true" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_videos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="GridLayoutManager"
+                app:spanCount="5" />
+
+        </LinearLayout>
 
     </FrameLayout>
 
